@@ -1,0 +1,254 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3FE18D21-6B6F-4918-BDD4-BC68C4877202}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>LipiDex_2._0</RootNamespace>
+    <AssemblyName>LipiDex 2.0</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="DataCleanerGui.xaml.cs">
+      <DependentUpon>DataCleanerGui.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LibraryForgeGui.xaml.cs">
+      <DependentUpon>LibraryForgeGui.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LibraryGeneratorGui.xaml.cs">
+      <DependentUpon>LibraryGeneratorGui.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LibraryGenerator\Adduct.cs" />
+    <Compile Include="LibraryGenerator\CustomException.cs" />
+    <Compile Include="LibraryGenerator\Lipid.cs" />
+    <Compile Include="LibraryGenerator\MS2.cs" />
+    <Compile Include="LibraryGenerator\MS2Template.cs" />
+    <Compile Include="LibraryGenerator\Transition.cs" />
+    <Compile Include="LibraryGenerator\TransitionDefinition.cs" />
+    <Compile Include="LibraryGenerator\Utilities.cs" />
+    <Compile Include="LibraryGenerator\ConsensusLipidClass.cs" />
+    <Compile Include="LibraryGenerator\FattyAcid.cs" />
+    <Compile Include="LibraryGenerator\LipidClass.cs" />
+    <Compile Include="PeakFinderGui.xaml.cs">
+      <DependentUpon>PeakFinderGui.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SpectrumGeneratorGui.xaml.cs">
+      <DependentUpon>SpectrumGeneratorGui.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SpectrumSearcherGui.xaml.cs">
+      <DependentUpon>SpectrumSearcherGui.xaml</DependentUpon>
+    </Compile>
+    <Page Include="DataCleanerGui.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LibraryForgeGui.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="LibraryGeneratorGui.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PeakFinderGui.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SpectrumGeneratorGui.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SpectrumSearcherGui.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\..\Software\CSMSLx64\CSMSL\CSMSL.csproj">
+      <Project>{3c8c9f05-9c19-4251-95fa-05d7edc8cae6}</Project>
+      <Name>CSMSL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\..\Software\CSMSLx64\CSMSL\IO\Thermo\Thermo.csproj">
+      <Project>{24dc85ff-e97b-4140-9614-77dd8fddd32f}</Project>
+      <Name>Thermo</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\Book_Icon.ico" />
+    <Resource Include="icons\Book_Icon.png" />
+    <Resource Include="icons\Book_Icon_Frame.png" />
+    <Resource Include="icons\Book_Icon_White.png" />
+    <Resource Include="icons\browser_icon.png" />
+    <Resource Include="icons\Coon_Lab_Logo.png" />
+    <Resource Include="icons\Coon_Lab_Logo_Hover.png" />
+    <Resource Include="icons\Error_Icon.png" />
+    <Resource Include="icons\Error_Icon_Small.png" />
+    <Resource Include="icons\Gray_Background.png" />
+    <Resource Include="icons\LD_Background_Menu.png" />
+    <Resource Include="icons\Leaf_Icon.png" />
+    <Resource Include="icons\lf_16_icon.png" />
+    <Resource Include="icons\lf_menu.png" />
+    <Resource Include="icons\lf_menu_open.png" />
+    <Resource Include="icons\lg_16_icon.png" />
+    <Resource Include="icons\lg_menu.png" />
+    <Resource Include="icons\lg_menu_open.png" />
+    <Resource Include="icons\library_forge_icon.png" />
+    <Resource Include="icons\library_forge_icon_gray.png" />
+    <Resource Include="icons\library_generator_icon.png" />
+    <Resource Include="icons\library_generator_icon_gray.png" />
+    <Resource Include="icons\LipiDex_Icon_16.png" />
+    <Resource Include="icons\LipiDex_Icon_256.png" />
+    <Resource Include="icons\LipiDex_Icon_32.png" />
+    <Resource Include="icons\LipiDex_Icon_48.png" />
+    <Resource Include="icons\LipiDex_Icon_512.png" />
+    <Resource Include="icons\LipiDex_Icon_Blue_16.png" />
+    <Resource Include="icons\LipiDex_Icon_Blue_48.png" />
+    <Resource Include="icons\LipiDex_Logo.png" />
+    <Resource Include="icons\LipiDex_MouseOver.png" />
+    <Resource Include="icons\menu_separator.png" />
+    <Resource Include="icons\peak_finder_icon.png" />
+    <Resource Include="icons\peak_finder_icon_gray.png" />
+    <Resource Include="icons\pf_16_icon.png" />
+    <Resource Include="icons\pf_menu.png" />
+    <Resource Include="icons\pf_menu_open.png" />
+    <Resource Include="icons\sg_16_icon.png" />
+    <Resource Include="icons\sg_menu.png" />
+    <Resource Include="icons\sg_menu_open.png" />
+    <Resource Include="icons\spectrum_generator_icon.png" />
+    <Resource Include="icons\spectrum_generator_icon_gray.png" />
+    <Resource Include="icons\Spectrum_Icon.png" />
+    <Resource Include="icons\spectrum_searcher_icon.png" />
+    <Resource Include="icons\spectrum_searcher_icon_gray.png" />
+    <Resource Include="icons\ss_16_icon.png" />
+    <Resource Include="icons\ss_menu.png" />
+    <Resource Include="icons\ss_menu_open.png" />
+    <Resource Include="icons\Valid_Icon_Small.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons_v2\coonLogo.png" />
+    <Resource Include="icons_v2\coonLogoActive.png" />
+    <Resource Include="icons_v2\libraryForge.png" />
+    <Resource Include="icons_v2\libraryForgeActive.png" />
+    <Resource Include="icons_v2\libraryGenerator.png" />
+    <Resource Include="icons_v2\libraryGeneratorActive.png" />
+    <Resource Include="icons_v2\lipidexLogo.png" />
+    <Resource Include="icons_v2\lipidexLogoActive.png" />
+    <Resource Include="icons_v2\peakFinder.png" />
+    <Resource Include="icons_v2\peakFinderActive.png" />
+    <Resource Include="icons_v2\resultCleanerBroom.png" />
+    <Resource Include="icons_v2\resultCleanerBroomActive.png" />
+    <Resource Include="icons_v2\resultCleanerBroomOutline.png" />
+    <Resource Include="icons_v2\resultCleanerBroomOutlineActive.png" />
+    <Resource Include="icons_v2\resultCleanerBucket.png" />
+    <Resource Include="icons_v2\resultCleanerBucketActive.png" />
+    <Resource Include="icons_v2\spectrumGenerator.png" />
+    <Resource Include="icons_v2\spectrumGeneratorActive.png" />
+    <Resource Include="icons_v2\spectrumSearcher.png" />
+    <Resource Include="icons_v2\spectrumSearcherActive.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
