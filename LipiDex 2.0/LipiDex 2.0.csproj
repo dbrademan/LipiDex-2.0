@@ -81,7 +81,7 @@
     <Compile Include="LibraryForgeGui.xaml.cs">
       <DependentUpon>LibraryForgeGui.xaml</DependentUpon>
     </Compile>
-    <Compile Include="LibraryGeneratorGui.xaml.cs">
+    <Compile Include="LibraryGenerator\LibraryGeneratorGui.xaml.cs">
       <DependentUpon>LibraryGeneratorGui.xaml</DependentUpon>
     </Compile>
     <Compile Include="LibraryGenerator\Adduct.cs" />
@@ -91,6 +91,7 @@
     <Compile Include="LibraryGenerator\MS2Template.cs" />
     <Compile Include="LibraryGenerator\Transition.cs" />
     <Compile Include="LibraryGenerator\TransitionDefinition.cs" />
+    <Compile Include="LibraryGenerator\TransitionType.cs" />
     <Compile Include="LibraryGenerator\Utilities.cs" />
     <Compile Include="LibraryGenerator\ConsensusLipidClass.cs" />
     <Compile Include="LibraryGenerator\FattyAcid.cs" />
@@ -124,7 +125,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="LibraryGeneratorGui.xaml">
+    <Page Include="LibraryGenerator\LibraryGeneratorGui.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -249,6 +250,9 @@
     <Resource Include="icons_v2\spectrumGeneratorActive.png" />
     <Resource Include="icons_v2\spectrumSearcher.png" />
     <Resource Include="icons_v2\spectrumSearcherActive.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons_v2\backgroundTile.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,0 +1,28 @@
+﻿<Window x:Name="Library_Selector" x:Class="LipiDex_2._0.LibraryGeneratorGui"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LipiDex_2._0"
+        mc:Ignorable="d"
+        Title="Library Selector - Library Generator" Height="350" Width="644" MinWidth="644" MinHeight="350">
+    <Grid MinWidth="3" Background="#FFF1F1F1">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Label Content="Available Libraries" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        <ListBox x:Name="LipidexLibraries_ListBox" d:ItemsSource="{d:SampleData ItemCount=5}" Grid.ColumnSpan="4" Margin="10,41,10,10"/>
+        <TextBox x:Name="LibraryName_Textbox" HorizontalAlignment="Center" Margin="10,38,0,20" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Bottom" Width="238" Grid.Row="1"/>
+        <Label Content="New Library Name" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Grid.Row="1"/>
+        <Button x:Name="CreateNewLib_Button" Grid.Column="1" Content="Create New Library" HorizontalAlignment="Center" Margin="0,0,0,20" VerticalAlignment="Bottom" RenderTransformOrigin="-0.505,-0.138" Grid.Row="1" Click="CreateNewLib_Button_Click"/>
+        <Button x:Name="DeleteLib_Button" Grid.Column="2" Content="Delete Library" HorizontalAlignment="Center" Margin="0,0,0,20" VerticalAlignment="Bottom" Grid.Row="1" Click="DeleteLib_Button_Click"/>
+        <Button x:Name="ChooseLib_Button" Grid.Column="3" Content="Choose Library" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Bottom" Margin="0,0,0,20" Click="ChooseLib_Button_Click"/>
+    </Grid>
+</Window>

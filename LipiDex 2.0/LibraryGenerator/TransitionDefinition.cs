@@ -150,88 +150,104 @@ namespace LipiDex_2._0.LibraryGenerator
 				throw new CustomException("Error updating entry. Please check formatting", new ApplicationException("Error updating entry. Please check formatting"));
 				//CustomError ce = new CustomError("Error updating entry.  Please check formatting", null);
 			}
-}
+		}
 
-	//Format transition for display in tree
-	public string ParseDisplayName(string name)
-	{
-		string result = "";
-		string[] split;
-
-		if (name.Contains(","))
+		//Format transition for display in tree
+		public string ParseDisplayName(string name)
 		{
-			split = name.Split(',');
+			string result = "";
+			string[] split;
 
-			if (split[0].Contains("."))
+			if (name.Contains(","))
 			{
-				split[0] = Convert.ToString(Math.Round(Convert.ToDouble(split[0]) * 10000.0) / 10000.0);
+				split = name.Split(',');
+
+				if (split[0].Contains("."))
+				{
+					split[0] = Convert.ToString(Math.Round(Convert.ToDouble(split[0]) * 10000.0) / 10000.0);
+				}
+
+				result += string.Format("{0}", split[0]).PadRight(20);
+				result += string.Format("{0}", Math.Round(relativeIntensity)).PadRight(5);
+				result += string.Format("{0}", charge).PadRight(3);
+				result += split[3];
+			}
+			else
+			{
+				split = name.Split(new string[] { " +" }, StringSplitOptions.None);
+
+				if (split[0].Contains("."))
+				{
+					split[0] = Convert.ToString(Math.Round(Convert.ToDouble(split[0]) * 10000.0) / 10000.0);
+				}
+
+					result += string.Format("{0}", split[0]).PadRight(20);
+					result += string.Format("{0}", Math.Round(relativeIntensity)).PadRight(5);
+					result += string.Format("{0}", charge).PadRight(3);
+					result += split[3];
 			}
 
-			result += string.Format("{0}", split[0]).PadRight(20);
-			result += string.Format("{0}", Math.Round(relativeIntensity)).PadRight(5);
-			result += string.Format("{0}", charge).PadRight(3);
-			result += split[3];
+			return result;
 		}
-		else
+
+		//Adds elemental formula to transition
+		public void AddFormula(string formula)
 		{
-			split = name.Split(new string[] { " +" }, StringSplitOptions.None);
-
-			if (split[0].contains(".")) split[0] = String.valueOf(Math.round(Double.valueOf(split[0]) * 10000.0) / 10000.0);
-			result += String.format("%1$-" + 20 + "s", split[0]);
-			result += String.format("%1$-" + 5 + "s", Math.round(relativeIntensity));
-			result += String.format("%1$-" + 3 + "s", charge);
-			result += split[3];
+			this.formula = formula;
 		}
-		return result;
-	}
 
-	//Adds elemental formula to transition
-	public void addFormula(String formula)
-	{
-		this.formula = formula;
-	}
+		//Returns elemental formula
+		public string GetFormula()
+		{
+			return this.formula;
+		}
 
-	//Returns elemental formula
-	public String getFormula()
-	{
-		return formula;
-	}
+		//Returns mass as double
+		public double GetMass()
+		{
+			return this.mass;
+		}
 
-	//Returns mass as double
-	public Double getMass()
-	{
-		return mass;
-	}
+		//Returns relative intensity
+		public double GetRelativeIntensity()
+		{
+			return this.relativeIntensity;
+		}
 
-	//Returns relative intensity
-	public Double getRelativeIntensity()
-	{
-		return relativeIntensity;
-	}
+		//Calculate elemental formula for transitions based on precursor formula
+		public void CalculateElementalComposition(string precursorFormula)
+		{
+			AddFormula(Utilities.AnnotateMassWithMZTolerance(mass, precursorFormula));
 
-	//Calculate elemental formula for transitions based on precursor formula
-	public void calculateElementalComposition(String precursorFormula)
-	{
-		addFormula(annotateMassWithMZTolerance(mass, precursorFormula));
+			if (!formula.Equals(""))
+            {
+				mass = Utilities.CalculateMassFromFormula(formula);
+            }
+		}
 
-		if (!formula.equals(""))
-			mass = calculateMassFromFormula(formula);
-	}
+		//Returns string representation of transition
+		public override string ToString()
+		{
+			string result = "";
+			result = massFormula + "," + relativeIntensity + "," + charge + "," + type;
+			return result;
+		}
 
-	//Returns string representation of transition
-	public String toString()
-	{
-		String result = "";
-		result = massFormula + "," + relativeIntensity + "," + charge + "," + type;
-		return result;
+		//Comparator for sorting by intensity
+		public int CompareTo(Transition t2)
+		{
+			if (t2.GetIntensity() > this.relativeIntensity)
+			{
+				return 1;
+			}
+			else if (t2.GetIntensity() < this.relativeIntensity) 
+			{
+				return -1;
+			}
+            else
+            {
+				return 0;
+            }
+		}
 	}
-
-	//Comparator for sorting by intensity
-	public int compareTo(Transition t2)
-	{
-		if (t2.getIntensity() > relativeIntensity) return 1;
-		else if (t2.getIntensity() < relativeIntensity) return -1;
-		return 0;
-	}
-}
 }

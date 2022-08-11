@@ -254,7 +254,7 @@ namespace LipiDex_2._0.LibraryGenerator
 							faArray.Add(lipid.fattyAcids[faCounter]);
 
 							//For PUFA transitions
-							if (transitions[i].typeObject.name.contains("PUFA"))
+							if (transitions[i].typeObject.name.Contains("PUFA"))
 							{
 								if (faArray[0].polyUnsaturatedFattyAcid)
 								{
