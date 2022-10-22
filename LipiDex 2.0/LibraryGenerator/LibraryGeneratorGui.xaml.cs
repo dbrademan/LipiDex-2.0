@@ -147,11 +147,6 @@ namespace LipiDex_2._0
             LoadExistingLibraries();
         }
 
-        private void LoadExistingLibraries()
-        {
-
-        }
-
         private void DeleteLib_Button_Click(object sender, RoutedEventArgs e)
         {
             if (LipidexLibraries_ListBox.SelectedItem != null)
