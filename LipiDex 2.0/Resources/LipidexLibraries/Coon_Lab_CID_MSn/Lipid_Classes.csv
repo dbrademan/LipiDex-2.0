@@ -1,0 +1,9 @@
+Name,Abbreviation,HeadGroup,Adducts,Sterol,Glycerol,Sphingoid,Backbone,numFattyAcids,OptimalPolarity,FA1,FA2,FA3,FA4
+Sphingomyelin-CIDms2,SM-CIDms2,C5H17N2O4P1,[M+H]+,FALSE,FALSE,TRUE,,2,-,Sphingoid,Alkyl,none,none
+Sphingomyelin-CIDms3,SM-CIDms3,C2H6NO3P1,[M+H]+,FALSE,FALSE,TRUE,,2,+,Sphingoid,Alkyl,none,none
+Phosphotidylcholine-CIDms2,PC-CIDms2,C5H13N1O4P1,[M+H]+,FALSE,TRUE,FALSE,,2,+,Alkyl,Alkyl,none,none
+NonCholineGlycerophospholipid-CIDms3,GPL-CIDms3,H-1,[M+H]+,FALSE,TRUE,FALSE,,2,+,Alkyl,Alkyl,none,none
+Plasmenylphosphatidylcholine-CIDms2,Plasmenyl-PC-CIDms2,C5H13N1O4P1,[M+H]+,FALSE,TRUE,FALSE,,2,+,Plasmenyl,Alkyl,none,none
+PlasmanylNonCholineGlycerophospholipid-CIDms3,Plasmanyl-GPL-CIDms3,H-1,[M+H]+,FALSE,TRUE,FALSE,,2,+,Plasmenyl,Alkyl,none,none
+Plasmanylphosphatidycholine-CIDms2,Plasmanyl-PC-CIDms2,C5H13N1O4P1,[M+H]+,FALSE,TRUE,FALSE,,2,+,Plasmanyl,Alkyl,none,none
+PlasmenylPhosphotidylethanolamine-HCDms2,Plasmenyl-PE-HCDms2,C2H7N1O4P1,[M+H]+,FALSE,TRUE,FALSE,,2,+,Plasmenyl,Alkyl,none,none

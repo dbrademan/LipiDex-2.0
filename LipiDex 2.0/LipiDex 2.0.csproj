@@ -164,6 +164,22 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="Resources\LipidexLibraries\Coon_Lab_CID_MSn\Adducts.csv" />
+    <None Include="Resources\LipidexLibraries\Coon_Lab_CID_MSn\FattyAcids.csv" />
+    <None Include="Resources\LipidexLibraries\Coon_Lab_CID_MSn\Lipid_Classes.csv" />
+    <None Include="Resources\LipidexLibraries\Coon_Lab_CID_MSn\MS2_Templates.csv" />
+    <None Include="Resources\LipidexLibraries\Coon_Lab_HCD_Acetate\Adducts.csv" />
+    <None Include="Resources\LipidexLibraries\Coon_Lab_HCD_Acetate\FattyAcids.csv" />
+    <None Include="Resources\LipidexLibraries\Coon_Lab_HCD_Acetate\Lipid_Classes.csv" />
+    <None Include="Resources\LipidexLibraries\Coon_Lab_HCD_Acetate\MS2_Templates.csv" />
+    <None Include="Resources\LipidexLibraries\LipiDex_HCD_Acetate\Adducts.csv" />
+    <None Include="Resources\LipidexLibraries\LipiDex_HCD_Acetate\FattyAcids.csv" />
+    <None Include="Resources\LipidexLibraries\LipiDex_HCD_Acetate\Lipid_Classes.csv" />
+    <None Include="Resources\LipidexLibraries\LipiDex_HCD_Acetate\MS2_Templates.csv" />
+    <None Include="Resources\LipidexLibraries\template\template_Adducts.csv" />
+    <None Include="Resources\LipidexLibraries\template\template_FattyAcids.csv" />
+    <None Include="Resources\LipidexLibraries\template\template_Lipid_Classes.csv" />
+    <None Include="Resources\LipidexLibraries\template\template_MS2_Templates.csv" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -244,19 +260,16 @@
   <ItemGroup>
     <Resource Include="icons_v2\backgroundTile.png" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="..\..\CSMSLx64\CSMSLx64\CSMSL\CSMSL.csproj">
-      <Project>{3c8c9f05-9c19-4251-95fa-05d7edc8cae6}</Project>
-      <Name>CSMSL</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\CSMSLx64\CSMSLx64\CSMSL\IO\Thermo\Thermo.csproj">
-      <Project>{24dc85ff-e97b-4140-9614-77dd8fddd32f}</Project>
-      <Name>Thermo</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="PeakFinder\" />
-    <Folder Include="SpectrumSearcher\" />
+    <ContentWithTargetPath Include="Resources\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>Resources\%(RecursiveDir)\%(Filename)%(Extension)</TargetPath>
+    </ContentWithTargetPath>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
 </Project>

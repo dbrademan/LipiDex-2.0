@@ -1,0 +1,38 @@
+GPL-CIDms3 [M+H]+
+C-2H-9O-4N-1P-1,420.0,1,Alkyl Neutral Loss
+O-1,100.0,1,Alkyl Fragment
+H-2O-2,100.0,1,Alkyl Fragment
+C-9H-22O-11N-1P-1,200.0,1,Neutral Loss
+
+---
+PC-CIDms2 [M+H]+
+C-5H-14N-1O-4P-1,400.0,1,Neutral Loss
+OH,900.0,1,Alkyl Neutral Loss
+H-1,500.0,1,Alkyl Neutral Loss
+
+---
+Plasmanyl-PC-CIDms2 [M+H]+
+C-5H-14N-1O-4P-1,500.0,1,Neutral Loss
+OH,900.0,1,Alkyl Neutral Loss
+H-1,100.0,1,Alkyl Neutral Loss
+H-1,150.0,1,Plasmanyl Neutral Loss
+
+---
+Plasmenyl-PC-CIDms2 [M+H]+
+OH,999.0,1,Alkyl Neutral Loss
+H-1,200.0,1,Alkyl Neutral Loss
+H-2O-1,100.0,1,Neutral Loss
+
+---
+SM-CIDms2 [M+H]+
+H-2O-1,999.0,1,Neutral Loss
+C-3H-11O-1N-1,150.0,1,Neutral Loss
+C-5H-16N-1O-5P-1,75.0,1,Neutral Loss
+C3H5N,50.0,1,Sphingoid Fragment
+
+---
+SM-CIDms3 [M+H]+
+C-2H-5O-4P-1,999.0,1,Neutral Loss
+C3H5N,300.0,1,Sphingoid Fragment
+
+---
