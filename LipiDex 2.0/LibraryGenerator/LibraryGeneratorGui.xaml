@@ -18,8 +18,16 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Label Content="Available Libraries" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-        <ListBox x:Name="LipidexLibraries_ListBox" d:ItemsSource="{d:SampleData ItemCount=5}" Grid.ColumnSpan="4" Margin="10,41,10,10"/>
-        <TextBox x:Name="LibraryName_Textbox" HorizontalAlignment="Center" Margin="10,38,0,20" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Bottom" Width="238" Grid.Row="1"/>
+        <ListBox x:Name="LipidexLibraries_ListBox" d:ItemsSource="{d:SampleData ItemCount=5}" Grid.ColumnSpan="4" Margin="10,41,10,10">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock Text="{Binding Name}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <TextBox x:Name="LibraryName_Textbox" HorizontalAlignment="Center" Margin="10,38,0,20" TextWrapping="Wrap" Text="New Library Name..." VerticalAlignment="Bottom" Width="238" Grid.Row="1" GotFocus="FocusNewLibraryName" LostFocus="LoseFocusNewLibraryName"/>
         <Label Content="New Library Name" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Grid.Row="1"/>
         <Button x:Name="CreateNewLib_Button" Grid.Column="1" Content="Create New Library" HorizontalAlignment="Center" Margin="0,0,0,20" VerticalAlignment="Bottom" RenderTransformOrigin="-0.505,-0.138" Grid.Row="1" Click="CreateNewLib_Button_Click"/>
         <Button x:Name="DeleteLib_Button" Grid.Column="2" Content="Delete Library" HorizontalAlignment="Center" Margin="0,0,0,20" VerticalAlignment="Bottom" Grid.Row="1" Click="DeleteLib_Button_Click"/>
