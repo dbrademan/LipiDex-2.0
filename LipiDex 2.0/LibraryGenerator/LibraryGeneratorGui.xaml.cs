@@ -277,5 +277,21 @@ namespace LipiDex_2._0
         {
             if (true) ;
         }
+
+        private void FocusNewLibraryName(object sender, RoutedEventArgs e)
+        {
+            if (this.LibraryName_Textbox.Text.Equals("New Library Name..."));
+            {
+                this.LibraryName_Textbox.Text = "";
+            }
+        }
+
+        private void LoseFocusNewLibraryName(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(this.LibraryName_Textbox.Text))
+            {
+                this.LibraryName_Textbox.Text = "New Library Name...";
+            }
+        }
     }
 }
