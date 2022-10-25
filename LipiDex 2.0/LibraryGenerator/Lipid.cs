@@ -15,7 +15,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		internal double mass;                        //monoisotopic mass
 		internal string polarity;                    //Polarity of lipid
 		internal string name;                        //canonical name
-		internal MS2 generatedMS2;                   //generated MS2
+		internal MSn generatedMS2;                   //generated MS2
 		internal List<string> uniqueTypes;      //Array of fa types this lipid can identify, used in LF
 
 		//Constructor
@@ -42,7 +42,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		}
 
 		//Return generated MS2
-		public MS2 GetGeneratedMS2()
+		public MSn GetGeneratedMS2()
 		{
 			return this.generatedMS2;
 		}
@@ -89,7 +89,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		}
 
 		//Adds a generator ms2 object
-		public void AddGeneratedMS2(MS2 ms2)
+		public void AddGeneratedMS2(MSn ms2)
 		{
 			this.generatedMS2 = ms2;
 		}

@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.IO;
+using LipiDex_2._0.LibraryGenerator;
 
 namespace LipiDex_2._0
 {
@@ -170,8 +171,8 @@ namespace LipiDex_2._0
             }
             else
             {
-                var messageBoxQuery = "Please Select A Library To Delete";
-                var messageBoxShortPrompt = "Please Select A Library To Delete!";
+                var messageBoxQuery = "No Library Selected!";
+                var messageBoxShortPrompt = "Please Select A Library To Delete (if you really want to)!";
                 var messageBoxButtonOptions = MessageBoxButton.OK;
                 var messageBoxImage = MessageBoxImage.Error;
 
@@ -184,7 +185,97 @@ namespace LipiDex_2._0
 
         private void ChooseLib_Button_Click(object sender, RoutedEventArgs e)
         {
+            var selectedItem = LipidexLibraries_ListBox.SelectedItem;
+            
+            if (LipidexLibraries_ListBox.SelectedItem == null)
+            {
+                var messageBoxQuery = "No Library Selected";
+                var messageBoxShortPrompt = "Please Select A Library To Open!";
+                var messageBoxButtonOptions = MessageBoxButton.OK;
+                var messageBoxImage = MessageBoxImage.Error;
 
+                var messageBoxResult = MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
+
+                return;
+            }
+            else
+            {
+                // procedurally construct library path from current directory
+                var libraryPath = Path.Combine(
+                    Directory.GetCurrentDirectory(), 
+                    "Resources", 
+                    "LipidexLibraries", 
+                    LipidexLibraries_ListBox.SelectedItem.ToString()
+                );
+
+                // check to make sure library exists and it contains all necessary template files to load.
+                // it should always exists, but I've seen weirder things happen before...
+                try
+                {
+                    if (LibraryExists(libraryPath))
+                    {
+                        LibraryEditor libraryEditorInstance = new LibraryEditor(libraryPath);
+
+                        libraryEditorInstance.Show();
+                    }
+                }
+                catch (IOException exception)
+                {
+                    var messageBoxQuery = "Error in loading lipid library...";
+                    var messageBoxShortPrompt = exception.Message;
+                    var messageBoxButtonOptions = MessageBoxButton.OK;
+                    var messageBoxImage = MessageBoxImage.Error;
+
+                    var messageBoxResult = MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
+
+                    return;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Checks to make sure library exists and contains all necessary template files to load.
+        /// </summary>
+        /// <param name="libraryPath"></param>
+        /// <returns>
+        /// True if library directory and all files exist. False if any dependencies are missing
+        /// </returns>
+        private bool LibraryExists(string libraryPath)
+        {
+            // check if the library folder exists
+            if (!Directory.Exists(libraryPath))
+            {
+                throw new DirectoryNotFoundException(string.Format("The folder for the selected library could not be found. Missing file path:\n{0}", libraryPath));
+            }
+
+            // check if each library csv file exists
+            //
+            if (!File.Exists(Path.Combine(libraryPath, "Adducts.csv")))
+            {
+                throw new FileNotFoundException(string.Format("The lipid adduct template file for the selected library could not be found.\nDirectory:{0}\nMissing file: Adducts.csv", libraryPath));
+            }
+            // check if each library csv file exists
+            if (!File.Exists(Path.Combine(libraryPath, "FattyAcids.csv")))
+            {
+                throw new FileNotFoundException(string.Format("The lipid fatty acid template file for the selected library could not be found.\nDirectory:{0}\nMissing file: FattyAcids.csv", libraryPath));
+            }
+            // check if each library csv file exists
+            if (!File.Exists(Path.Combine(libraryPath, "Lipid_Classes.csv")))
+            {
+                throw new FileNotFoundException(string.Format("The lipid class template file for the selected library could not be found.\nDirectory:{0}\nMissing file: Lipid_Classes.csv", libraryPath));
+            }
+            // check if each library csv file exists
+            if (!File.Exists(Path.Combine(libraryPath, "MS2_Templates.csv")))
+            {
+                throw new FileNotFoundException(string.Format("The lipid fragmentation template file for the selected library could not be found.\nDirectory:{0}\nMissing file: MS2_Templates.csv", libraryPath));
+            }
+
+            return true;
+        }
+
+        private void OpenLibrary(string libraryName)
+        {
+            if (true) ;
         }
     }
 }

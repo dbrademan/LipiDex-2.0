@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LipiDex_2._0.LibraryGenerator
 {
-	internal class MS2
+	internal class MSn
 	{
 		double precursor;                   //precursor sampled for ms2
 		string polarity;					//Polarity of ms2
@@ -16,7 +16,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		List<Transition> transitions;  //ArrayList of all transitions
 
 		//Constructor
-		public MS2(double precursor, string polarity, int charge)
+		public MSn(double precursor, string polarity, int charge)
 		{
 			this.precursor = precursor;
 			this.polarity = polarity;

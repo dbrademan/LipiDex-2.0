@@ -38,12 +38,12 @@ namespace LipiDex_2._0
 
         private void LibraryGenerator_MouseEnter(object sender, RoutedEventArgs e)
         {
-            LibraryGeneratorLogo.Source = UpdateImageEvent(@"icons_v2/libraryGeneratorActive.png");
+            LibraryGeneratorLogo.Source = UpdateImageEvent(System.IO.Path.Combine("Resources","Icons","libraryGeneratorActive.png"));
         }
 
         private void LibraryGenerator_MouseLeave(object sender, RoutedEventArgs e)
         {
-            LibraryGeneratorLogo.Source = UpdateImageEvent(@"icons_v2/libraryGenerator.png");
+            LibraryGeneratorLogo.Source = UpdateImageEvent(System.IO.Path.Combine("Resources", "Icons", "libraryGenerator.png"));
         }
 
         private void LibraryGenerator_Click(object sender, RoutedEventArgs e)
@@ -55,12 +55,12 @@ namespace LipiDex_2._0
 
         private void LibraryForge_MouseEnter(object sender, RoutedEventArgs e)
         {
-            LibraryForgeLogo.Source = UpdateImageEvent(@"icons_v2/libraryForgeActive.png");
+            LibraryForgeLogo.Source = UpdateImageEvent(System.IO.Path.Combine("Resources", "Icons", "libraryForgeActive.png"));
         }
 
         private void LibraryForge_MouseLeave(object sender, RoutedEventArgs e)
         {
-            LibraryForgeLogo.Source = UpdateImageEvent(@"icons_v2/libraryForge.png");
+            LibraryForgeLogo.Source = UpdateImageEvent(System.IO.Path.Combine("Resources", "Icons", "libraryForge.png"));
         }
 
         private void LibraryForge_Click(object sender, RoutedEventArgs e)
@@ -72,12 +72,12 @@ namespace LipiDex_2._0
 
         private void SpectrumGenerator_MouseEnter(object sender, RoutedEventArgs e)
         {
-            SpectrumGeneratorLogo.Source = UpdateImageEvent(@"icons_v2/spectrumGeneratorActive.png");
+            SpectrumGeneratorLogo.Source = UpdateImageEvent(System.IO.Path.Combine("Resources", "Icons", "spectrumGeneratorActive.png"));
         }
 
         private void SpectrumGenerator_MouseLeave(object sender, RoutedEventArgs e)
         {
-            SpectrumGeneratorLogo.Source = UpdateImageEvent(@"icons_v2/spectrumGenerator.png");
+            SpectrumGeneratorLogo.Source = UpdateImageEvent(System.IO.Path.Combine("Resources", "Icons", "spectrumGenerator.png"));
         }
 
         private void SpectrumGenerator_Click(object sender, RoutedEventArgs e)
@@ -89,12 +89,12 @@ namespace LipiDex_2._0
 
         private void SpectrumSearcher_MouseEnter(object sender, RoutedEventArgs e)
         {
-            SpectrumSearcherLogo.Source = UpdateImageEvent(@"icons_v2/spectrumSearcherActive.png");
+            SpectrumSearcherLogo.Source = UpdateImageEvent(System.IO.Path.Combine("Resources", "Icons", "spectrumSearcherActive.png"));
         }
 
         private void SpectrumSearcher_MouseLeave(object sender, RoutedEventArgs e)
         {
-            SpectrumSearcherLogo.Source = UpdateImageEvent(@"icons_v2/spectrumSearcher.png");
+            SpectrumSearcherLogo.Source = UpdateImageEvent(System.IO.Path.Combine("Resources", "Icons", "spectrumSearcher.png"));
         }
 
         private void SpectrumSearcher_Click(object sender, RoutedEventArgs e)
@@ -106,12 +106,12 @@ namespace LipiDex_2._0
 
         private void PeakFinder_MouseEnter(object sender, RoutedEventArgs e)
         {
-            PeakFinderLogo.Source = UpdateImageEvent(@"icons_v2/peakFinderActive.png");
+            PeakFinderLogo.Source = UpdateImageEvent(System.IO.Path.Combine("Resources", "Icons", "peakFinderActive.png"));
         }
 
         private void PeakFinder_MouseLeave(object sender, RoutedEventArgs e)
         {
-            PeakFinderLogo.Source = UpdateImageEvent(@"icons_v2/peakFinder.png");
+            PeakFinderLogo.Source = UpdateImageEvent(System.IO.Path.Combine("Resources", "Icons", "peakFinder.png"));
         }
 
         private void PeakFinder_Click(object sender, RoutedEventArgs e)
@@ -123,12 +123,12 @@ namespace LipiDex_2._0
 
         private void DataCleaner_MouseEnter(object sender, RoutedEventArgs e)
         {
-            ResultCleanerLogo.Source = UpdateImageEvent(@"icons_v2/resultCleanerBroomOutlineActive.png");
+            ResultCleanerLogo.Source = UpdateImageEvent(System.IO.Path.Combine("Resources", "Icons", "resultCleanerBroomOutlineActive.png"));
         }
 
         private void DataCleaner_MouseLeave(object sender, RoutedEventArgs e)
         {
-            ResultCleanerLogo.Source = UpdateImageEvent(@"icons_v2/resultCleanerBroomOutline.png");
+            ResultCleanerLogo.Source = UpdateImageEvent(System.IO.Path.Combine("Resources", "Icons", "resultCleanerBroomOutline.png"));
         }
 
         private void DataCleaner_Click(object sender, RoutedEventArgs e)
@@ -140,12 +140,12 @@ namespace LipiDex_2._0
 
         private void CoonLogo_MouseEnter(object sender, RoutedEventArgs e)
         {
-            CoonLogo.Source = UpdateImageEvent(@"icons_v2/coonLogoActive.png");
+            CoonLogo.Source = UpdateImageEvent(System.IO.Path.Combine("Resources", "Icons", "coonLogoActive.png"));
         }
 
         private void CoonLogo_MouseLeave(object sender, RoutedEventArgs e)
         {
-            CoonLogo.Source = UpdateImageEvent(@"icons_v2/coonLogo.png");
+            CoonLogo.Source = UpdateImageEvent(System.IO.Path.Combine("Resources", "Icons", "coonLogo.png"));
         }
 
         private void CoonLogo_Click(object sender, RoutedEventArgs e)
@@ -159,12 +159,12 @@ namespace LipiDex_2._0
 
         private void LipidexLogo_MouseEnter(object sender, RoutedEventArgs e)
         {
-            LipidexLogo.Source = UpdateImageEvent(@"icons_v2/lipidexLogoActive.png");
+            LipidexLogo.Source = UpdateImageEvent(System.IO.Path.Combine("Resources", "Icons", "lipidexLogoActive.png"));
         }
 
         private void LipidexLogo_MouseLeave(object sender, RoutedEventArgs e)
         {
-            LipidexLogo.Source = UpdateImageEvent(@"icons_v2/lipidexLogo.png");
+            LipidexLogo.Source = UpdateImageEvent(System.IO.Path.Combine("Resources", "Icons", "lipidexLogo.png"));
         }
 
         private void LipidexLogo_Click(object sender, RoutedEventArgs e)

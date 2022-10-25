@@ -1,0 +1,40 @@
+﻿<Window x:Class="LipiDex_2._0.LibraryGenerator.LibraryEditor"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LipiDex_2._0.LibraryGenerator"
+        mc:Ignorable="d"
+        Title="Library Generator - Library Editor" Height="526" Width="1263" Icon="../Resources/Icons/libraryGeneratorIcon.png" SizeToContent="WidthAndHeight">
+    <Grid>
+        <TabControl HorizontalAlignment="Center" Height="490" VerticalAlignment="Center" Width="1243">
+            <TabItem Header="Lipid Classes">
+                <Grid Background="#FFE5E5E5">
+                    <Button Content="Add New Row" HorizontalAlignment="Left" Margin="579,356,0,0" VerticalAlignment="Top"/>
+                    <Button Content="Delete Selected Row" HorizontalAlignment="Left" Margin="697,358,0,0" VerticalAlignment="Top"/>
+                    <Button Content="Revert To Last Save" HorizontalAlignment="Left" Margin="835,372,0,0" VerticalAlignment="Top"/>
+                    <Button Content="Save Changes" HorizontalAlignment="Left" Margin="922,371,0,0" VerticalAlignment="Top"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Adducts">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+            <TabItem Header="Fatty Acids">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+            <TabItem Header="Backbones">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+            <TabItem Header="Weird-ass Headgroups">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+            <TabItem Header="Fragmentation Rules">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+            <TabItem Header="Library Generation">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+        </TabControl>
+
+    </Grid>
+</Window>

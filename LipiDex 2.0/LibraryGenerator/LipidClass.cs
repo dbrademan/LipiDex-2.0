@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CSMSL.Chemistry;
 
 namespace LipiDex_2._0.LibraryGenerator
 {
@@ -10,12 +11,12 @@ namespace LipiDex_2._0.LibraryGenerator
     {
 		internal string className;                               //Full Class Name
 		internal string classAbbreviation;                          //Abbreviated class name
-		internal string headGroup;                               //elemental formula of head group
+		internal ChemicalFormula headGroup;                               //elemental formula of head group
 		internal List<Adduct> adducts;                                //Array of adduct objects allowed for each class
 		internal bool sterol;                                 //true iff backbone of lipid is sterol
 		internal bool glycerol;                               //true iff backbone of lipid is glycerol
 		internal bool sphingoid;                              //true iff sphingoid base
-		internal string backboneFormula;                         //Elemental formula of backbone							
+		internal ChemicalFormula backboneFormula;                         //Elemental formula of backbone							
 		internal int numberOfFattyAcids;                              //number of allowed fatty acids
 		internal string optimalPolarity;                         //Fragment informative polarity
 		internal List<List<FattyAcid>> possibleFattyAcids;  //Array of possible fatty acids
@@ -23,8 +24,8 @@ namespace LipiDex_2._0.LibraryGenerator
 		internal List<string> fattyAcidTypes;               //Arraylist of all possible fatty acid classes for class
 
 		//Constructor
-		internal LipidClass(string className, string classAbbreviation, string headGroup,
-				List<Adduct> adducts, bool sterol, bool glycerol, bool sphingoid, string backboneFormula,
+		internal LipidClass(string className, string classAbbreviation, ChemicalFormula headGroup,
+				List<Adduct> adducts, bool sterol, bool glycerol, bool sphingoid, ChemicalFormula backboneFormula,
 				int numberOfFattyAcids, string optimalPolarity, List<string> fattyAcidTypes)
 		{
 			//Instantiate class variables

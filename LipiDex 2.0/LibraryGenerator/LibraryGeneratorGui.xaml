@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LipiDex_2._0"
         mc:Ignorable="d"
-        Title="Library Selector - Library Generator" Height="350" Width="644" MinWidth="644" MinHeight="350">
+        Title="Library Selector - Library Generator" Height="350" Width="644" MinWidth="644" MinHeight="350" Icon="../Resources/Icons/libraryGeneratorIcon.png">
     <Grid MinWidth="3" Background="#FFF1F1F1">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
@@ -18,7 +18,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Label Content="Available Libraries" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-        <ListBox x:Name="LipidexLibraries_ListBox" d:ItemsSource="{d:SampleData ItemCount=5}" Grid.ColumnSpan="4" Margin="10,41,10,10"/>
+        <ListBox x:Name="LipidexLibraries_ListBox" d:ItemsSource="{d:SampleData ItemCount=5}" SelectionMode="Single" Grid.ColumnSpan="4" Margin="10,41,10,10"/>
         <TextBox x:Name="LibraryName_Textbox" HorizontalAlignment="Center" Margin="10,38,0,20" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Bottom" Width="238" Grid.Row="1"/>
         <Label Content="New Library Name" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Grid.Row="1"/>
         <Button x:Name="CreateNewLib_Button" Grid.Column="1" Content="Create New Library" HorizontalAlignment="Center" Margin="0,0,0,20" VerticalAlignment="Bottom" RenderTransformOrigin="-0.505,-0.138" Grid.Row="1" Click="CreateNewLib_Button_Click"/>

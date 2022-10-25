@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace LipiDex_2._0.LibraryGenerator
 {
-    internal class MS2Template
+    internal class MSnTemplate
 	{
-		public static MS2TemplateComparer FattyAcidComparer = new MS2TemplateComparer();
+		public static MSnTemplateComparer FattyAcidComparer = new MSnTemplateComparer();
 		internal ConsensusLipidClass lipidClass;                 //Lipid class
 		internal List<TransitionDefinition> transitions;    //Arraylist for transition definitions
 		internal List<FattyAcid> possibleFattyAcids;        //Array of all theoretically possible fatty acids
 		internal List<Lipid> theoreticalLipids;             //Array of all theoretical lipids
 
 		//Constructor
-		public MS2Template(ConsensusLipidClass lipidClass, List<TransitionDefinition> transitions)
+		public MSnTemplate(ConsensusLipidClass lipidClass, List<TransitionDefinition> transitions)
 		{
 			this.lipidClass = lipidClass;
 			this.transitions = transitions;
@@ -180,7 +180,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		}
 
 		//Add transition to ms2 if mass is unique
-		public void AddIfUnique(MS2 ms2, Transition transition)
+		public void AddIfUnique(MSn ms2, Transition transition)
 		{
 			bool massMatchFound = false;
 
@@ -215,7 +215,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		}
 
 		//Returns ms2 object based on lipid
-		public MS2 GenerateMS2(Lipid lipid, List<TransitionType> transitionTypes)
+		public MSn GenerateMS2(Lipid lipid, List<TransitionType> transitionTypes)
 		{
 			int faCounter = 0;
 			List<FattyAcid> faArray;
@@ -224,7 +224,7 @@ namespace LipiDex_2._0.LibraryGenerator
 			double precursor = AddElectrons(lipid.GetMass(),lipid.adduct.GetCharge(),lipid.polarity);
 
 			//Generate MS2
-			MS2 result = new MS2(precursor, lipid.GetAdduct().GetPolarity(), lipid.GetAdduct().GetCharge());
+			MSn result = new MSn(precursor, lipid.GetAdduct().GetPolarity(), lipid.GetAdduct().GetCharge());
 
 			//For all possible fatty acids
 			for (int j = 0; j < lipid.fattyAcids.Count; j++)
@@ -318,10 +318,10 @@ namespace LipiDex_2._0.LibraryGenerator
 		}
 	}
 
-	internal class MS2TemplateComparer : Comparer<MS2Template>
+	internal class MSnTemplateComparer : Comparer<MSnTemplate>
 	{
 		// Compares by Length, Height, and Width.
-		public override int Compare(MS2Template thisTemplate, MS2Template otherTemplate)
+		public override int Compare(MSnTemplate thisTemplate, MSnTemplate otherTemplate)
 		{
 			if (otherTemplate.lipidClass == null)
 			{
