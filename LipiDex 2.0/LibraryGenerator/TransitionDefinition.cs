@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 
 namespace LipiDex_2._0.LibraryGenerator
 {
-    internal class TransitionDefinition
+    public class TransitionDefinition
     {
-		internal double mass;                    //Mass of fragment if applicable
-		internal double relativeIntensity;       //Relative intensity scaled to 1000
-		internal string formula;                 //Elemental formula
+		public double mass;                    //Mass of fragment if applicable
+		public double relativeIntensity;       //Relative intensity scaled to 1000
+		public string formula;                 //Elemental formula
 		public string displayName;      //Display name for Jtree display
-		internal bool isFormula;              //Boolean if a formula was supplied
-		internal int charge;                 //Charge on transition
-		internal string massFormula;             //String to store supplied mass/formula string
-		internal string type;                    //String to store supplied type
-		internal TransitionType typeObject;      //Transition type object					
+		public bool isFormula;              //Boolean if a formula was supplied
+		public int charge;                 //Charge on transition
+		public string massFormula;             //String to store supplied mass/formula string
+		public string type;                    //String to store supplied type
+		public TransitionType typeObject;      //Transition type object					
 
 		public TransitionDefinition(string massFormula, double relIntensity, string displayName, string type, int charge, TransitionType typeObject)
 		{

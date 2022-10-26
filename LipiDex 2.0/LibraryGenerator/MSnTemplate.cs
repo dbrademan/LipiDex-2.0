@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace LipiDex_2._0.LibraryGenerator
 {
-    internal class MSnTemplate
+	public class MSnTemplate
 	{
 		public static MSnTemplateComparer FattyAcidComparer = new MSnTemplateComparer();
-		internal ConsensusLipidClass lipidClass;                 //Lipid class
-		internal List<TransitionDefinition> transitions;    //Arraylist for transition definitions
-		internal List<FattyAcid> possibleFattyAcids;        //Array of all theoretically possible fatty acids
-		internal List<Lipid> theoreticalLipids;             //Array of all theoretical lipids
+		public ConsensusLipidClass lipidClass;                 //Lipid class
+		public List<TransitionDefinition> transitions;    //Arraylist for transition definitions
+		public List<FattyAcid> possibleFattyAcids;        //Array of all theoretically possible fatty acids
+		public List<Lipid> theoreticalLipids;             //Array of all theoretical lipids
 
 		//Constructor
 		public MSnTemplate(ConsensusLipidClass lipidClass, List<TransitionDefinition> transitions)
@@ -263,7 +264,7 @@ namespace LipiDex_2._0.LibraryGenerator
 							}
 							else
 							{
-								if (transitions[i].typeObject.fattyAcidType.Equals(faArray[0].type))
+								if (transitions[i].typeObject.fattyAcidType.Equals(faArray[0].fattyAcidCategory))
 								{
 									AddIfUnique(result, ParseTransition(transitions[i], lipid, faArray));
 								}
@@ -318,7 +319,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		}
 	}
 
-	internal class MSnTemplateComparer : Comparer<MSnTemplate>
+	public class MSnTemplateComparer : Comparer<MSnTemplate>
 	{
 		// Compares by Length, Height, and Width.
 		public override int Compare(MSnTemplate thisTemplate, MSnTemplate otherTemplate)

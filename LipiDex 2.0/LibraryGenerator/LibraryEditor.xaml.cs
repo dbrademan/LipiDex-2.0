@@ -22,6 +22,11 @@ namespace LipiDex_2._0.LibraryGenerator
     /// </summary>
     public partial class LibraryEditor : Window
     {
+        public List<FattyAcid> DataGridBinding_FattyAcids = new List<FattyAcid>();
+        public List<Adduct> DataGridBinding_Adducts = new List<Adduct>();
+        public List<Backbone> DataGridBinding_Backbones = new List<Backbone>();
+        public List<LipidClass> DataGridBinding_LipidClasses = new List<LipidClass>();
+        
         public LibraryEditor()
         {
             InitializeComponent();
@@ -31,44 +36,76 @@ namespace LipiDex_2._0.LibraryGenerator
         {
             InitializeComponent();
             LoadFattyAcids(libraryPath);
+            LoadLipidAdducts(libraryPath);
             //LoadLipidBackbones
-            //LoadedLipidAdducts(libraryPath);
-            LoadLipidClasses(libraryPath);            
+
+            LoadLipidClasses(libraryPath);
             //LoadFragmentationRules();
             //LoadLibraryGeneration();
+            DataContext = this;
         }
 
         private void LoadFattyAcids(string libraryBasePath)
         {
-            var lipidClassPath = System.IO.Path.Combine(libraryBasePath, "Lipid_Classes.csv");
+            var fattyAcidPath = System.IO.Path.Combine(libraryBasePath, "FattyAcids.csv");
 
             try
             {
-
-            }
-            catch (Exception e)
-            {
-
-            }
-        }
-
-        private void LoadLipidClasses_v2Format(string libraryBasePath)
-        {
-            var lipidClassPath = System.IO.Path.Combine(libraryBasePath, "Lipid_Classes.csv");
-
-            try
-            {
-                var reader = new CsvReader(new StreamReader(lipidClassPath), true);
-                var lipidClasses = new List<LipidClass>();
+                var reader = new CsvReader(new StreamReader(fattyAcidPath), true);
+                this.DataGridBinding_FattyAcids = new List<FattyAcid>();
 
                 while (reader.ReadNextRecord())
                 {
+                    string name = reader["Name"];
+                    string type = reader["Base"];
+                    string chemicalFormulaString = reader["Formula"];
+                    string enabled = reader["Enabled"];
 
+                    this.DataGridBinding_FattyAcids.Add(new FattyAcid(name, type, chemicalFormulaString, enabled)); 
+                }
+
+                // try refreshing data grid bindings. Don't know why this doesn't work...
+                DataGrid_FattyAcids.ItemsSource = this.DataGridBinding_FattyAcids;
+            }
+            catch (Exception e)
+            {
+                var messageBoxQuery = e.Message;
+                var messageBoxShortPrompt = "Fatty Acid Template Loading Error!";
+                var messageBoxButtonOptions = MessageBoxButton.OK;
+                var messageBoxImage = MessageBoxImage.Error;
+
+                var messageBoxResult = MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
+            }
+        }
+
+        private void LoadLipidAdducts(string libraryBasePath)
+        {
+            var adductPath = System.IO.Path.Combine(libraryBasePath, "Adducts.csv");
+
+            try
+            {
+                var reader = new CsvReader(new StreamReader(adductPath), true);
+                this.DataGridBinding_Adducts = new List<Adduct>();
+
+                while (reader.ReadNextRecord())
+                {
+                    string name = reader["Name"];
+                    string chemicalFormulaString = reader["Formula"];
+                    string isNeutralLoss = reader["Loss"];
+                    string polarity = reader["Polarity"];
+                    string charge = reader["Charge"];
+
+                    this.DataGridBinding_Adducts.Add(new Adduct(name, chemicalFormulaString, isNeutralLoss, polarity, charge));
                 }
             }
             catch (Exception e)
             {
+                var messageBoxQuery = e.Message;
+                var messageBoxShortPrompt = "Adduct Template Loading Error!";
+                var messageBoxButtonOptions = MessageBoxButton.OK;
+                var messageBoxImage = MessageBoxImage.Error;
 
+                var messageBoxResult = MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
             }
         }
 
@@ -124,8 +161,6 @@ namespace LipiDex_2._0.LibraryGenerator
                 var messageBoxImage = MessageBoxImage.Error;
 
                 var messageBoxResult = MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
-
-                // unload all 
             }
         }
 

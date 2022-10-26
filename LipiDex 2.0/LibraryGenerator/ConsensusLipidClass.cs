@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace LipiDex_2._0.LibraryGenerator
 {
-    internal class ConsensusLipidClass
+    public class ConsensusLipidClass
     {
-		internal LipidClass lipidClass;                          //Associated lipidclass
-		internal Adduct adduct;                              //Associated adduct class
-		internal string name;                                //composite name
-		internal List<Transition> fattyAcylBasedTransitions;   //Array of all fatty acid transitions
-		internal List<Lipid> possibleLipids;            //Array list of all possible lipids in class
+		public LipidClass lipidClass;                          //Associated lipidclass
+		public Adduct adduct;                              //Associated adduct class
+		public string name;                                //composite name
+		public List<Transition> fattyAcylBasedTransitions;   //Array of all fatty acid transitions
+		public List<Lipid> possibleLipids;            //Array list of all possible lipids in class
 
 		//Constructor
 		public ConsensusLipidClass(LipidClass lipidClass, Adduct adduct)

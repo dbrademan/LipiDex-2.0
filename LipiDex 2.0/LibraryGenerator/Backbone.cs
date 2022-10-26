@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LipiDex_2._0.LibraryGenerator
 {
-    internal class Backbone
+    public class Backbone
     {
     }
 }

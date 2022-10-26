@@ -217,6 +217,10 @@ namespace LipiDex_2._0
                         LibraryEditor libraryEditorInstance = new LibraryEditor(libraryPath);
 
                         libraryEditorInstance.Show();
+
+                        // the library selector window staying open feels a little clunky.
+                        // close it after the library editor window opens.
+                        this.Close();
                     }
                 }
                 catch (IOException exception)
@@ -271,11 +275,6 @@ namespace LipiDex_2._0
             }
 
             return true;
-        }
-
-        private void OpenLibrary(string libraryName)
-        {
-            if (true) ;
         }
 
         private void FocusNewLibraryName(object sender, RoutedEventArgs e)

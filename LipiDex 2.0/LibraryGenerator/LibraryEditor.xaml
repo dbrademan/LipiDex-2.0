@@ -5,36 +5,65 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LipiDex_2._0.LibraryGenerator"
         mc:Ignorable="d"
-        Title="Library Generator - Library Editor" Height="526" Width="1263" Icon="../Resources/Icons/libraryGeneratorIcon.png" SizeToContent="WidthAndHeight">
-    <Grid>
-        <TabControl HorizontalAlignment="Center" Height="490" VerticalAlignment="Center" Width="1243">
-            <TabItem Header="Lipid Classes">
-                <Grid Background="#FFE5E5E5">
-                    <Button Content="Add New Row" HorizontalAlignment="Left" Margin="579,356,0,0" VerticalAlignment="Top"/>
-                    <Button Content="Delete Selected Row" HorizontalAlignment="Left" Margin="697,358,0,0" VerticalAlignment="Top"/>
-                    <Button Content="Revert To Last Save" HorizontalAlignment="Left" Margin="835,372,0,0" VerticalAlignment="Top"/>
-                    <Button Content="Save Changes" HorizontalAlignment="Left" Margin="922,371,0,0" VerticalAlignment="Top"/>
-                </Grid>
-            </TabItem>
-            <TabItem Header="Adducts">
-                <Grid Background="#FFE5E5E5"/>
-            </TabItem>
-            <TabItem Header="Fatty Acids">
-                <Grid Background="#FFE5E5E5"/>
-            </TabItem>
-            <TabItem Header="Backbones">
-                <Grid Background="#FFE5E5E5"/>
-            </TabItem>
-            <TabItem Header="Weird-ass Headgroups">
-                <Grid Background="#FFE5E5E5"/>
-            </TabItem>
-            <TabItem Header="Fragmentation Rules">
-                <Grid Background="#FFE5E5E5"/>
-            </TabItem>
-            <TabItem Header="Library Generation">
-                <Grid Background="#FFE5E5E5"/>
-            </TabItem>
-        </TabControl>
+        Title="Library Generator - Library Editor" Height="560" Width="1265" Icon="../Resources/Icons/libraryGeneratorIcon.png" MinWidth="1265" MinHeight="560">
+    <TabControl x:Name="tabControl" Height="481" VerticalAlignment="Top" Margin="0,15,0,0" >
+        <TabItem Header="Lipid Classes" Margin="-2,-2,-2,0">
+            <Grid Background="#FFE5E5E5">
+                <DataGrid x:Name="DataGrid_LipidClasses" Margin="0,0,0,35" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" AutoGenerateColumns="False"/>
+                <Button Content="Add New Row" HorizontalAlignment="Left" Margin="592,432,0,0" VerticalAlignment="Top"/>
+                <Button Content="Delete Selected Row" HorizontalAlignment="Left" Margin="784,432,0,0" VerticalAlignment="Top"/>
+                <Button Content="Revert To Last Save" HorizontalAlignment="Left" Margin="962,432,0,0" VerticalAlignment="Top"/>
+                <Button Content="Save Changes" HorizontalAlignment="Left" Margin="1150,432,0,0" VerticalAlignment="Top"/>
+            </Grid>
+        </TabItem>
+        <TabItem Header="Adducts">
+            <Grid Background="#FFE5E5E5">
+                <DataGrid x:Name="DataGrid_Adducts" Margin="0,0,0,35" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" AutoGenerateColumns="False"/>
+                <Button Content="Add New Row" HorizontalAlignment="Left" Margin="592,432,0,0" VerticalAlignment="Top"/>
+                <Button Content="Delete Selected Row" HorizontalAlignment="Left" Margin="784,432,0,0" VerticalAlignment="Top"/>
+                <Button Content="Revert To Last Save" HorizontalAlignment="Left" Margin="962,432,0,0" VerticalAlignment="Top"/>
+                <Button Content="Save Changes" HorizontalAlignment="Left" Margin="1150,432,0,0" VerticalAlignment="Top"/>
 
-    </Grid>
+            </Grid>
+        </TabItem>
+        <TabItem Header="Fatty Acids">
+            <Grid Background="#FFE5E5E5">
+                <DataGrid
+                    x:Name="DataGrid_FattyAcids" 
+                    Margin="10,10,0,35" 
+                    ScrollViewer.HorizontalScrollBarVisibility="Auto" 
+                    ScrollViewer.VerticalScrollBarVisibility="Auto" 
+                    AutoGenerateColumns="False" 
+                    CanUserResizeColumns="True" 
+                    CanUserAddRows="True" 
+                    IsReadOnly="False" Width="517" HorizontalAlignment="Left">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Name" Binding="{Binding name}" MinWidth="100" Width=".75*"/>
+                        <DataGridTextColumn Header="Type" Binding="{Binding fattyAcidCategory}" MinWidth="100" Width="*"/>
+                        <DataGridTextColumn Header="Formula" Binding="{Binding formula}" MinWidth="100" Width="*"/>
+                        <DataGridCheckBoxColumn Header="Enabled" Binding="{Binding enabled}" Width="0.75*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <Button Content="Add New Row" HorizontalAlignment="Left" Margin="532,276,0,0" VerticalAlignment="Top"/>
+                <Button Content="Delete Selected Row" HorizontalAlignment="Left" Margin="532,314,0,0" VerticalAlignment="Top"/>
+                <Button Content="Revert To Last Save" HorizontalAlignment="Left" Margin="331,423,0,0" VerticalAlignment="Top"/>
+                <Button Content="Save Changes" HorizontalAlignment="Left" Margin="450,423,0,0" VerticalAlignment="Top"/>
+                <Button Content="Enable All Fatty Acids" HorizontalAlignment="Left" Margin="532,355,0,0" VerticalAlignment="Top"/>
+                <Button Content="Disable All Fatty Acids" HorizontalAlignment="Left" Margin="532,398,0,0" VerticalAlignment="Top"/>
+
+            </Grid>
+        </TabItem>
+        <TabItem Header="Backbones">
+            <Grid Background="#FFE5E5E5"/>
+        </TabItem>
+        <TabItem Header="Weird-ass Headgroups">
+            <Grid Background="#FFE5E5E5"/>
+        </TabItem>
+        <TabItem Header="Fragmentation Rules">
+            <Grid Background="#FFE5E5E5"/>
+        </TabItem>
+        <TabItem Header="Library Generation">
+            <Grid Background="#FFE5E5E5"/>
+        </TabItem>
+    </TabControl>
 </Window>

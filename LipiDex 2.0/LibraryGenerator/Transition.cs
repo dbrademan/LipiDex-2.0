@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace LipiDex_2._0.LibraryGenerator
 {
-	internal class Transition
+	public class Transition
 	{
-		internal double mass;        //Mass of fragment
-		internal double intensity;   //Relative intensity of fragment, scaled to 999
-		internal string type;        //Type of transition
+		public double mass;        //Mass of fragment
+		public double intensity;   //Relative intensity of fragment, scaled to 999
+		public string type;        //Type of transition
 
 		//Constructor
 		public Transition(double mass, double intensity, string type)
@@ -47,7 +47,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		}
 	}
 
-	internal class TransitionComparer : Comparer<Transition>
+	public class TransitionComparer : Comparer<Transition>
 	{
 		public override int Compare(Transition thisTransition, Transition otherTransition)
 		{

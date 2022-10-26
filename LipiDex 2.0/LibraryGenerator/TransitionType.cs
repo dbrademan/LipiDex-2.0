@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LipiDex_2._0.LibraryGenerator
 {
-    internal class TransitionType
+    public class TransitionType
     {
 		public string name;             //Name of transition type
 		public string fattyAcidType;    //Type of fatty acid
@@ -110,7 +110,7 @@ namespace LipiDex_2._0.LibraryGenerator
 			{
 				for (int i = 0; i < faArray.Count; i++)
 				{
-					if (!faArray[i].type.Equals(fattyAcidType))
+					if (!faArray[i].fattyAcidCategory.Equals(fattyAcidType))
 					{
 						return false;
 					}

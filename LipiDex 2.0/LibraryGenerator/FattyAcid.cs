@@ -4,20 +4,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
+using CSMSL.Chemistry;
 
 namespace LipiDex_2._0.LibraryGenerator
 {
-    internal class FattyAcid
+    public class FattyAcid
     {
 		public static FattyAcidComparer FattyAcidComparer = new FattyAcidComparer();
-		public string formula;              //Elemental formula
-		public string name;                 //Abbreviated name
-		public double mass;                 //Mass for sorting purpose
+		public ChemicalFormula formula { get; set; }              //Elemental formula
+		public string name { get; set; }                 //Abbreviated name
+		public double mass;              //Mass for sorting purpose
 		public int carbonNumber;        //Number of carbons in FA chain
 		public int doubleBondNumber;            //Number of double bonds in FA chain
 		public bool polyUnsaturatedFattyAcid = false;        //True iff fatty acids is a polyunsaturated fatty acid
-		public bool enabled = false;     //True iff the fatty acid will be used for library generation
-		public string type;                 //Type of fatty acid
+		public bool enabled { get; set; }     //True iff the fatty acid will be used for library generation
+		public string fattyAcidCategory { get; set; }                 //Type of fatty acid
 
 
 		//Constructor
@@ -25,17 +26,21 @@ namespace LipiDex_2._0.LibraryGenerator
 		{
 			//Initialize class variables
 			this.name = name;
-			this.mass = Utilities.CalculateMassFromFormula(formula);
-			this.formula = formula;
-			this.type = type;
+			this.formula = new ChemicalFormula(formula);
+			this.mass = this.formula.MonoisotopicMass;
+			this.fattyAcidCategory = type;
 
-			if (enabled.Equals("true") || enabled.Equals("True") || enabled.Equals("TRUE"))
+			if (enabled.Equals("true"))
 			{
 				this.enabled = true;
 			}
-			else
+			else if (enabled.Equals("false"))
             {
 				this.enabled = false;
+            }
+			else
+            {
+				throw new ArgumentException(string.Format("Fatty_acids.csv parsing error for fatty acid \"{0}\". Only 'true' or 'false' are accepted values for the `Enabled` column.", name));
             }
 
 			//Decide whether fatty acid is a PUFA
@@ -44,16 +49,16 @@ namespace LipiDex_2._0.LibraryGenerator
 			// I can't imagine a FA with +10 unsaturations, but just in case, build out logic....
 			var doubleBondEquivalents = -1;
 
-			if (IsNumeric(unsaturationString[0]) && IsNumeric(unsaturationString[1])) 
-			{
-				doubleBondEquivalents = Convert.ToInt32(unsaturationString.Substring(0,2));
-			}
-			else
+			try
             {
-				doubleBondEquivalents = Convert.ToInt32(unsaturationString[0]);
+				doubleBondEquivalents = Convert.ToInt32(unsaturationString);
 			}
+			catch (FormatException e)
+            {
+				throw new ArgumentException(string.Format("Fatty_acids.csv parsing error for fatty acid \"{0}\". Cannot parse DBE from fatty acid name. Make sure there are only numbers after the \":\" character.", name));
+            }
 
-			if (Convert.ToInt32(doubleBondEquivalents) > 1)
+			if (doubleBondEquivalents > 1)
             {
 				this.polyUnsaturatedFattyAcid = true;
             }
@@ -61,23 +66,6 @@ namespace LipiDex_2._0.LibraryGenerator
 			//Parse fatty acid name for carbon and db number calculation
 			ParseFattyAcid();
 		}
-
-		/// <summary>
-		/// Checks to see if a character is numeric.
-		/// </summary>
-		/// <returns>
-		/// (bool) true if char is numeric, else false
-		/// </returns>
-		/// <param name="character">
-		/// Character to see if is numeric (0-9) or not
-		/// </param>
-		/// <remarks>
-		/// Should refactor all formulae options to use CSMSL ChemicalFormula Object
-		/// </remarks>
-		private bool IsNumeric(char character)
-        {
-			return char.IsDigit(character);
-        }
 
 		/// <summary>
 		/// Return elemental formula of fatty acid
@@ -126,7 +114,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		/// </returns>
 		public int CompareTo(FattyAcid otherFattyAcid)
 		{
-			if (!otherFattyAcid.type.Equals(this.type))
+			if (!otherFattyAcid.fattyAcidCategory.Equals(this.fattyAcidCategory))
 			{
 				if (char.IsLetter(otherFattyAcid.name[0]) && !char.IsLetter(this.name[0]))
                 {
@@ -182,7 +170,7 @@ namespace LipiDex_2._0.LibraryGenerator
 			string result = "";
 
 			result += this.name + ",";
-			result += this.type + ",";
+			result += this.fattyAcidCategory + ",";
 			result += this.formula + ",";
 
 			if (enabled)
@@ -227,17 +215,30 @@ namespace LipiDex_2._0.LibraryGenerator
 		{
 			return this.name;
 		}
+
+		// format 
+		public List<string> GetTableArray()
+        {
+			List<string> result = new List<string>();
+
+			result.Add(this.name);
+			result.Add(this.fattyAcidCategory);
+			result.Add(this.formula);
+			result.Add(this.enabled.ToString());
+
+			return result;
+		}
 	}
 
 	/// <summary>
 	/// Custom Comparer for Fatty Acids
 	/// </summary>
-	internal class FattyAcidComparer : Comparer<FattyAcid>
+	public class FattyAcidComparer : Comparer<FattyAcid>
 	{
 		// Compares by Length, Height, and Width.
 		public override int Compare(FattyAcid thisFattyAcid, FattyAcid otherFattyAcid)
 		{
-			if (!otherFattyAcid.type.Equals(thisFattyAcid.type))
+			if (!otherFattyAcid.fattyAcidCategory.Equals(thisFattyAcid.fattyAcidCategory))
 			{
 				if (char.IsLetter(otherFattyAcid.name[0]) && !char.IsLetter(thisFattyAcid.name[0]))
 				{

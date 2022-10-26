@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LipiDex_2._0.LibraryGenerator
 {
-	internal class MSn
+	public class MSn
 	{
 		double precursor;                   //precursor sampled for ms2
 		string polarity;					//Polarity of ms2

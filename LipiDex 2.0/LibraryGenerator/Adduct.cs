@@ -3,54 +3,69 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CSMSL.Chemistry;
 
 namespace LipiDex_2._0.LibraryGenerator
 {
-    internal class Adduct
+	public class Adduct
     {
-		internal string formula;     //Elemental Composition
-		internal string name;        //Name of adduct
-		internal bool loss;       //True iff adduct is a NL
-		internal string polarity;    //polarity
-		internal int charge;         //charge state of adduct
+		public ChemicalFormula formula;     //Elemental Composition
+		public string name;        //Name of adduct
+		public bool loss;       //True iff adduct is a NL
+		public string polarity;    //polarity
+		public int charge;         //charge state of adduct
 
 		//Constructor
-		internal Adduct(string name, string formula, bool loss, string polarity, int charge)
+		public Adduct(string name, string formula, string loss, string polarity, string charge)
 		{
 			this.name = name;
-			this.formula = formula;
-			this.loss = loss;
+			this.formula = new ChemicalFormula(formula);
+
+			if (loss.Equals("TRUE") || loss.Equals("True") || loss.Equals("true"))
+            {
+				this.loss = true;
+			}
+			else if (loss.Equals("FALSE") || loss.Equals("False") || loss.Equals("false"))
+			{
+				this.loss = false;
+			}
+			else
+            {
+				this.loss = false;
+				var t = "";
+            }
+
 			this.polarity = polarity;
-			this.charge = charge;
+			this.charge = Convert.ToInt32(charge);
 		}
 
 		//Returns polarity
-		internal string GetPolarity()
+		public string GetPolarity()
 		{
 			return polarity;
 		}
 
 		//Returns charge
-		internal int GetCharge()
+		public int GetCharge()
 		{
 			return this.charge;
 		}
 
 		//Returns name
-		internal string GetName()
+		public string GetName()
 		{
 			return this.name;
 		}
 
 
 		//Returns chemical formula
-		internal string GetFormula()
+		public string GetFormula()
 		{
 			return this.formula;
 		}
 
 		//Returns string array representation of adduct for table
-		internal List<string> GetTableArray()
+		public List<string> GetTableArray()
 		{
 			List<string> result = new List<string>();
 
@@ -70,8 +85,14 @@ namespace LipiDex_2._0.LibraryGenerator
 
 			result += name + ",";
 			result += formula + ",";
-			if (loss) result += "TRUE" + ",";
-			else result += "FALSE" + ",";
+			if (loss)
+			{
+				result += "TRUE" + ",";
+			}
+			else
+			{
+				result += "FALSE" + ",";
+			}
 			result += polarity + ",";
 			result += charge + ",";
 

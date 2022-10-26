@@ -7,24 +7,24 @@ using CSMSL.Chemistry;
 
 namespace LipiDex_2._0.LibraryGenerator
 {
-    internal class LipidClass
+    public class LipidClass
     {
-		internal string className;                               //Full Class Name
-		internal string classAbbreviation;                          //Abbreviated class name
-		internal ChemicalFormula headGroup;                               //elemental formula of head group
-		internal List<Adduct> adducts;                                //Array of adduct objects allowed for each class
-		internal bool sterol;                                 //true iff backbone of lipid is sterol
-		internal bool glycerol;                               //true iff backbone of lipid is glycerol
-		internal bool sphingoid;                              //true iff sphingoid base
-		internal ChemicalFormula backboneFormula;                         //Elemental formula of backbone							
-		internal int numberOfFattyAcids;                              //number of allowed fatty acids
-		internal string optimalPolarity;                         //Fragment informative polarity
-		internal List<List<FattyAcid>> possibleFattyAcids;  //Array of possible fatty acids
-		internal string formula;                                 //Elemental formula of lipid class - fatty acids - adduct
-		internal List<string> fattyAcidTypes;               //Arraylist of all possible fatty acid classes for class
+		public string className;                               //Full Class Name
+		public string classAbbreviation;                          //Abbreviated class name
+		public ChemicalFormula headGroup;                               //elemental formula of head group
+		public List<Adduct> adducts;                                //Array of adduct objects allowed for each class
+		public bool sterol;                                 //true iff backbone of lipid is sterol
+		public bool glycerol;                               //true iff backbone of lipid is glycerol
+		public bool sphingoid;                              //true iff sphingoid base
+		public ChemicalFormula backboneFormula;                         //Elemental formula of backbone							
+		public int numberOfFattyAcids;                              //number of allowed fatty acids
+		public string optimalPolarity;                         //Fragment informative polarity
+		public List<List<FattyAcid>> possibleFattyAcids;  //Array of possible fatty acids
+		public string formula;                                 //Elemental formula of lipid class - fatty acids - adduct
+		public List<string> fattyAcidTypes;               //Arraylist of all possible fatty acid classes for class
 
 		//Constructor
-		internal LipidClass(string className, string classAbbreviation, ChemicalFormula headGroup,
+		public LipidClass(string className, string classAbbreviation, ChemicalFormula headGroup,
 				List<Adduct> adducts, bool sterol, bool glycerol, bool sphingoid, ChemicalFormula backboneFormula,
 				int numberOfFattyAcids, string optimalPolarity, List<string> fattyAcidTypes)
 		{
@@ -47,7 +47,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		}
 
 		//Returns string array representation of class for table display
-		internal List<string> GetTableArray()
+		public List<string> GetTableArray()
 		{
 			string adductString = "";
 
@@ -130,31 +130,31 @@ namespace LipiDex_2._0.LibraryGenerator
 		}
 
 		//Return class abbreviation as string
-		internal string GetAbbreviation()
+		public string GetAbbreviation()
 		{
 			return this.classAbbreviation;
 		}
 
 		//Return array of all fatty acid types
-		internal List<string> GetFattyAcidTypes()
+		public List<string> GetFattyAcidTypes()
 		{
 			return this.fattyAcidTypes;
 		}
 
 		//Returns the number of fatty acids allowed for class
-		internal int GetNumberOfFattyAcids()
+		public int GetNumberOfFattyAcids()
 		{
 			return this.numberOfFattyAcids;
 		}
 
 		//Returns headgroup elemental formula
-		internal string GetHeadGroup()
+		public string GetHeadGroup()
 		{
 			return this.headGroup;
 		}
 
 		//Returns true iff a particular fatty acid is in possible fatty acids
-		internal bool IsValidFattyAcid(string fattyAcid)
+		public bool IsValidFattyAcid(string fattyAcid)
 		{
 			for (int i = 0; i < this.possibleFattyAcids.Count; i++)
 			{
@@ -175,7 +175,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		}
 
 		//Returns true iff a particular fatty acid is in possible fa
-		internal FattyAcid GetMatchingFattyAcid(string fattyAcid)
+		public FattyAcid GetMatchingFattyAcid(string fattyAcid)
 		{
 			for (int i = 0; i < this.possibleFattyAcids.Count; i++)
 			{
@@ -196,7 +196,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		}
 
 		//Returns the number of fatty acids of each type allowed for class
-		internal int GetCountOfFattyAcidType(string type)
+		public int GetCountOfFattyAcidType(string type)
 		{
 			int count = 0;
 
@@ -217,7 +217,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		}
 
 		//Populate 2d FA array with all possible fatty acids
-		internal void PopulateFattyAcids(List<FattyAcid> allFattyAcids)
+		public void PopulateFattyAcids(List<FattyAcid> allFattyAcids)
 		{
 			this.possibleFattyAcids.Clear();
 			List<FattyAcid> fattyAcidArray_Temporary;
@@ -255,7 +255,7 @@ namespace LipiDex_2._0.LibraryGenerator
 				for (int j = 0; j < fattyAcidArray.Count; j++)
 				{
 					//Check if matching fatty acid is found.  If so, add to temp array
-					if (fattyAcidArray[j].type.Equals(fattyAcidTypes[i]) && fattyAcidArray[j].enabled)
+					if (fattyAcidArray[j].fattyAcidCategory.Equals(fattyAcidTypes[i]) && fattyAcidArray[j].enabled)
 					{
 						fattyAcidArray.Add(fattyAcidArray[j]);
 					}

@@ -9,7 +9,7 @@ namespace LipiDex_2._0.LibraryGenerator
 {
     //Class with parameters and utilities used by all classes
 	//All the formula math seems really hacky. Should convert to CSMSL at some point...
-	internal static class Utilities 
+	public static class Utilities 
 	{
 		//User-supplied parameters
 		public static double ANNOTATIONPPMTOL = 5.0;										//Maximum ppm diff for annotation

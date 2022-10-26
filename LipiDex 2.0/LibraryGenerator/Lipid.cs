@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 
 namespace LipiDex_2._0.LibraryGenerator
 {
-	internal class Lipid
+	public class Lipid
 	{
-		internal List<FattyAcid> fattyAcids;    //array of FAs
-		internal LipidClass lipidClass;                  //Class
-		internal Adduct adduct;                      //Adduct
-		internal string formula;                     //Formula
-		internal double mass;                        //monoisotopic mass
-		internal string polarity;                    //Polarity of lipid
-		internal string name;                        //canonical name
-		internal MSn generatedMS2;                   //generated MS2
-		internal List<string> uniqueTypes;      //Array of fa types this lipid can identify, used in LF
+		public List<FattyAcid> fattyAcids;    //array of FAs
+		public LipidClass lipidClass;                  //Class
+		public Adduct adduct;                      //Adduct
+		public string formula;                     //Formula
+		public double mass;                        //monoisotopic mass
+		public string polarity;                    //Polarity of lipid
+		public string name;                        //canonical name
+		public MSn generatedMS2;                   //generated MS2
+		public List<string> uniqueTypes;      //Array of fa types this lipid can identify, used in LF
 
 		//Constructor
 		public Lipid(List<FattyAcid> fattyAcids, LipidClass lipidClass, Adduct adduct)
