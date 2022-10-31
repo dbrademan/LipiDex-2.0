@@ -11,14 +11,14 @@ namespace LipiDex_2._0.LibraryGenerator
     public class FattyAcid
     {
 		public static FattyAcidComparer FattyAcidComparer = new FattyAcidComparer();
-		public ChemicalFormula formula { get; set; }              //Elemental formula
-		public string name { get; set; }                 //Abbreviated name
-		public double mass;              //Mass for sorting purpose
-		public int carbonNumber;        //Number of carbons in FA chain
-		public int doubleBondNumber;            //Number of double bonds in FA chain
-		public bool polyUnsaturatedFattyAcid = false;        //True iff fatty acids is a polyunsaturated fatty acid
-		public bool enabled { get; set; }     //True iff the fatty acid will be used for library generation
-		public string fattyAcidCategory { get; set; }                 //Type of fatty acid
+		public ChemicalFormula formula { get; set; }    //Elemental formula
+		public string name { get; set; }                //Abbreviated name
+		public double mass;								//Mass for sorting purpose
+		public int carbonNumber;						//Number of carbons in FA chain
+		public int doubleBondNumber;					//Number of double bonds in FA chain
+		public bool polyUnsaturatedFattyAcid = false;   //True iff fatty acids is a polyunsaturated fatty acid
+		public bool enabled { get; set; }				//True iff the fatty acid will be used for library generation
+		public string fattyAcidCategory { get; set; }   //Type of fatty acid
 
 
 		//Constructor
@@ -30,11 +30,11 @@ namespace LipiDex_2._0.LibraryGenerator
 			this.mass = this.formula.MonoisotopicMass;
 			this.fattyAcidCategory = type;
 
-			if (enabled.Equals("true"))
+			if (enabled.Equals("true") || enabled.Equals("True") || enabled.Equals("TRUE"))
 			{
 				this.enabled = true;
 			}
-			else if (enabled.Equals("false"))
+			else if (enabled.Equals("false") || enabled.Equals("False") || enabled.Equals("FALSE"))
             {
 				this.enabled = false;
             }

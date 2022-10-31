@@ -208,5 +208,49 @@ namespace LipiDex_2._0.LibraryGenerator
                 throw new ArgumentException("Boolean evaluation of Lipid_Classes.csv library column {0} failed. Check the csv and make sure formatting is correct.");
             }
         }
+
+        private void DataGrid_FattyAcids_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+
+        }
+
+        private void Button_FattyAcids_Add_Click(object sender, RoutedEventArgs e)
+        {
+            var newFattyAcidName = "NewFa-12:3";
+            var newFattyAcidFormula = "C1H2N3O4";
+            var newFattyAcidType = "FA_Type";
+            var newFattyAcidEnabled = "False";
+
+            DataGridBinding_FattyAcids.Add(new FattyAcid(newFattyAcidName, newFattyAcidType, newFattyAcidFormula, newFattyAcidEnabled));
+        }
+
+        private void Button_FattyAcids_Remove_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedRow = DataGrid_FattyAcids.SelectedIndex;
+
+            //DataGridBinding_FattyAcids.RemoveAt(selectedRow);
+            
+            var t = "";
+        }
+
+        private void Button_FattyAcids_EnableAll_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Button_FattyAcids_DisableAll_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Button_FattyAcids_SaveFattyAcids_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Button_FattyAcids_ReloadOldFattyAcids_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

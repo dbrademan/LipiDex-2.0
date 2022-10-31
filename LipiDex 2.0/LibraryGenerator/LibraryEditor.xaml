@@ -44,12 +44,12 @@
                         <DataGridCheckBoxColumn Header="Enabled" Binding="{Binding enabled}" Width="0.75*"/>
                     </DataGrid.Columns>
                 </DataGrid>
-                <Button Content="Add New Row" HorizontalAlignment="Left" Margin="532,276,0,0" VerticalAlignment="Top"/>
-                <Button Content="Delete Selected Row" HorizontalAlignment="Left" Margin="532,314,0,0" VerticalAlignment="Top"/>
-                <Button Content="Revert To Last Save" HorizontalAlignment="Left" Margin="331,423,0,0" VerticalAlignment="Top"/>
-                <Button Content="Save Changes" HorizontalAlignment="Left" Margin="450,423,0,0" VerticalAlignment="Top"/>
-                <Button Content="Enable All Fatty Acids" HorizontalAlignment="Left" Margin="532,355,0,0" VerticalAlignment="Top"/>
-                <Button Content="Disable All Fatty Acids" HorizontalAlignment="Left" Margin="532,398,0,0" VerticalAlignment="Top"/>
+                <Button x:Name="Button_FattyAcids_Add" Content="Add New Row" HorizontalAlignment="Left" Margin="532,276,0,0" VerticalAlignment="Top" Click="Button_FattyAcids_Add_Click"/>
+                <Button x:Name="Button_FattyAcids_Remove" Content="Delete Selected Row" HorizontalAlignment="Left" Margin="532,314,0,0" VerticalAlignment="Top" Click="Button_FattyAcids_Remove_Click"/>
+                <Button x:Name="Button_FattyAcids_ReloadOldFattyAcids" Content="Revert To Last Save" HorizontalAlignment="Left" Margin="331,423,0,0" VerticalAlignment="Top" Click="Button_FattyAcids_ReloadOldFattyAcids_Click"/>
+                <Button x:Name="Button_FattyAcids_SaveFattyAcids" Content="Save Changes" HorizontalAlignment="Left" Margin="450,423,0,0" VerticalAlignment="Top" Click="Button_FattyAcids_SaveFattyAcids_Click"/>
+                <Button x:Name="Button_FattyAcids_EnableAll" Content="Enable All Fatty Acids" HorizontalAlignment="Left" Margin="532,355,0,0" VerticalAlignment="Top" Click="Button_FattyAcids_EnableAll_Click"/>
+                <Button x:Name="Button_FattyAcids_DisableAll" Content="Disable All Fatty Acids" HorizontalAlignment="Left" Margin="532,398,0,0" VerticalAlignment="Top" Click="Button_FattyAcids_DisableAll_Click"/>
 
             </Grid>
         </TabItem>
