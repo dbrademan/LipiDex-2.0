@@ -35,7 +35,7 @@ namespace LipiDex_2._0
             // remove all library entries
             LipidexLibraries_ListBox.Items.Clear();
 
-            var libraryDirectory = System.IO.Path.Combine(AppContext.BaseDirectory, "Resources/LipidexLibraries");
+            var libraryDirectory = System.IO.Path.Combine(AppContext.BaseDirectory, "Resources", "LipidexLibraries");
             var existingLibraries = Directory.GetDirectories(libraryDirectory);
 
             foreach (var library in existingLibraries)
@@ -101,7 +101,7 @@ namespace LipiDex_2._0
                 var messageBoxShortPrompt = "Library-specific directory creation error!";
                 var messageBoxButtonOptions = MessageBoxButton.OK;
                 var messageBoxImage = MessageBoxImage.Error;
-
+                
                 var messageBoxResult = MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
 
                 return;

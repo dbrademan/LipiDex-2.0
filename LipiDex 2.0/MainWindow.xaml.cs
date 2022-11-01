@@ -1,4 +1,6 @@
-﻿using System;
+﻿using LipiDex_2._0.PeakFinder;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,7 +29,12 @@ namespace LipiDex_2._0
     {
         public MainWindow()
         {
+            
+
             InitializeComponent();
+
+            
+            
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -39,6 +46,9 @@ namespace LipiDex_2._0
         private void LibraryGenerator_MouseEnter(object sender, RoutedEventArgs e)
         {
             LibraryGeneratorLogo.Source = UpdateImageEvent(System.IO.Path.Combine("Resources","Icons","libraryGeneratorActive.png"));
+
+            var pf = new PeakFinder.PeakFinder();
+            string x = "asdf";
         }
 
         private void LibraryGenerator_MouseLeave(object sender, RoutedEventArgs e)
