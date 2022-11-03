@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,19 +23,18 @@ namespace LipiDex_2._0.LibraryGenerator
     /// </summary>
     public partial class LibraryEditor : Window
     {
-        public List<FattyAcid> DataGridBinding_FattyAcids = new List<FattyAcid>();
-        public List<Adduct> DataGridBinding_Adducts = new List<Adduct>();
-        public List<Backbone> DataGridBinding_Backbones = new List<Backbone>();
-        public List<LipidClass> DataGridBinding_LipidClasses = new List<LipidClass>();
-        
-        public LibraryEditor()
-        {
-            InitializeComponent();
-        }
+        public ObservableCollection<FattyAcid> DataGridBinding_FattyAcids = new ObservableCollection<FattyAcid>();
+        public ObservableCollection<Adduct> DataGridBinding_Adducts = new ObservableCollection<Adduct>();
+        public ObservableCollection<Backbone> DataGridBinding_Backbones = new ObservableCollection<Backbone>();
+        public ObservableCollection<LipidClass> DataGridBinding_LipidClasses = new ObservableCollection<LipidClass>();
+
+        //lock object for synchronization
+        private static object _syncLock = new object();
 
         public LibraryEditor(string libraryPath)
         {
             InitializeComponent();
+
             LoadFattyAcids(libraryPath);
             LoadLipidAdducts(libraryPath);
             //LoadLipidBackbones
@@ -42,6 +42,11 @@ namespace LipiDex_2._0.LibraryGenerator
             LoadLipidClasses(libraryPath);
             //LoadFragmentationRules();
             //LoadLibraryGeneration();
+
+            // Enable cross-thread access to all datagrids.
+            // Needed to modulate entries during execution with current implementation
+            BindingOperations.EnableCollectionSynchronization(DataGridBinding_FattyAcids, _syncLock);
+
             DataContext = this;
         }
 
@@ -52,7 +57,7 @@ namespace LipiDex_2._0.LibraryGenerator
             try
             {
                 var reader = new CsvReader(new StreamReader(fattyAcidPath), true);
-                this.DataGridBinding_FattyAcids = new List<FattyAcid>();
+                this.DataGridBinding_FattyAcids = new ObservableCollection<FattyAcid>();
 
                 while (reader.ReadNextRecord())
                 {
@@ -64,7 +69,6 @@ namespace LipiDex_2._0.LibraryGenerator
                     this.DataGridBinding_FattyAcids.Add(new FattyAcid(name, type, chemicalFormulaString, enabled)); 
                 }
 
-                // try refreshing data grid bindings. Don't know why this doesn't work...
                 DataGrid_FattyAcids.ItemsSource = this.DataGridBinding_FattyAcids;
             }
             catch (Exception e)
@@ -85,7 +89,7 @@ namespace LipiDex_2._0.LibraryGenerator
             try
             {
                 var reader = new CsvReader(new StreamReader(adductPath), true);
-                this.DataGridBinding_Adducts = new List<Adduct>();
+                this.DataGridBinding_Adducts = new ObservableCollection<Adduct>();
 
                 while (reader.ReadNextRecord())
                 {
@@ -216,36 +220,55 @@ namespace LipiDex_2._0.LibraryGenerator
 
         private void Button_FattyAcids_Add_Click(object sender, RoutedEventArgs e)
         {
-            var newFattyAcidName = "NewFa-12:3";
+            var newFattyAcidName = "NewFa-0:0";
             var newFattyAcidFormula = "C1H2N3O4";
             var newFattyAcidType = "FA_Type";
             var newFattyAcidEnabled = "False";
 
-            DataGridBinding_FattyAcids.Add(new FattyAcid(newFattyAcidName, newFattyAcidType, newFattyAcidFormula, newFattyAcidEnabled));
+            var newFattyAcidObject = new FattyAcid(newFattyAcidName, newFattyAcidType, newFattyAcidFormula, newFattyAcidEnabled);
+            DataGridBinding_FattyAcids.Add(newFattyAcidObject);
+            DataGrid_FattyAcids.SelectedItem = newFattyAcidEnabled;
         }
 
         private void Button_FattyAcids_Remove_Click(object sender, RoutedEventArgs e)
         {
             var selectedRow = DataGrid_FattyAcids.SelectedIndex;
 
-            //DataGridBinding_FattyAcids.RemoveAt(selectedRow);
-            
-            var t = "";
+            DataGridBinding_FattyAcids.RemoveAt(selectedRow);
         }
 
         private void Button_FattyAcids_EnableAll_Click(object sender, RoutedEventArgs e)
         {
+            foreach (var fattyAcid in DataGridBinding_FattyAcids)
+            {
+                fattyAcid.enabled = true;
+            }
 
+            DataGrid_FattyAcids.ItemsSource = new List<FattyAcid>();
+            DataGrid_FattyAcids.ItemsSource = DataGridBinding_FattyAcids;
         }
 
         private void Button_FattyAcids_DisableAll_Click(object sender, RoutedEventArgs e)
         {
-
+            foreach (FattyAcid fattyAcid in DataGrid_FattyAcids.Items)
+            {
+                fattyAcid.enabled = false;
+                
+            }
+            DataGrid_FattyAcids.ItemsSource = new List<FattyAcid>();
+            DataGrid_FattyAcids.ItemsSource = DataGridBinding_FattyAcids;
         }
 
         private void Button_FattyAcids_SaveFattyAcids_Click(object sender, RoutedEventArgs e)
         {
+            // first, if any table entries are considered dirty, they should be validated and committed to objects
+            CleanDataGrid();
+        }
 
+        private void CleanDataGrid()
+        {
+
+            //ObservableCollection.
         }
 
         private void Button_FattyAcids_ReloadOldFattyAcids_Click(object sender, RoutedEventArgs e)

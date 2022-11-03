@@ -216,7 +216,9 @@ namespace LipiDex_2._0.LibraryGenerator
 			return this.name;
 		}
 
-		// format 
+		/// <summary>
+		/// Formats the fatty acid for display in a DataGrid
+		/// </summary>
 		public List<string> GetTableArray()
         {
 			List<string> result = new List<string>();
@@ -227,6 +229,49 @@ namespace LipiDex_2._0.LibraryGenerator
 			result.Add(this.enabled.ToString());
 
 			return result;
+		}
+
+		public static bool ValidateFattyAcidName(string potentialFattyAcidName)
+        {
+			//Decide whether fatty acid is a PUFA
+			var unsaturationString = potentialFattyAcidName.Split(':')[1];
+
+			// I can't imagine a FA with +10 unsaturations, but just in case, build out logic....
+			var doubleBondEquivalents = -1;
+
+			try
+			{
+				doubleBondEquivalents = Convert.ToInt32(unsaturationString);
+			}
+			catch (FormatException e)
+			{
+				throw new ArgumentException(string.Format("Fatty_acids.csv parsing error for fatty acid \"{0}\". Cannot parse DBE from fatty acid name. Make sure there are only numbers after the \":\" character.", potentialFattyAcidName));
+			}
+
+			//Parse fatty acid name for carbon and db number calculation
+			try
+            {
+				List<string> splitName = potentialFattyAcidName.Split(':').ToList();
+
+				// Remove all letter characters
+				for (int i = 0; i < splitName.Count; i++)
+				{
+					splitName[i] = Regex.Replace(splitName[i], "[^\\d.]", "");
+					splitName[i] = splitName[i].Replace("-", "");
+				}
+
+				// Find carbon number
+				var carbonNumber = Convert.ToInt32(splitName[0]);
+
+				// Find double bond number
+				var doubleBondNumber = Convert.ToInt32(splitName[1]);
+			}
+			catch (Exception e)
+            {
+				throw new ArgumentException(string.Format("Fatty_acids.csv parsing error for fatty acid \"{0}\". Fatty acid name should take the format \"FattyAcidName 1234:1234\".", potentialFattyAcidName));
+			}
+
+			return true;
 		}
 	}
 
