@@ -85,6 +85,7 @@
       <DependentUpon>LibraryForgeGui.xaml</DependentUpon>
     </Compile>
     <Compile Include="LibraryGenerator\Backbone.cs" />
+    <Compile Include="LibraryGenerator\FattyAcidComparer.cs" />
     <Compile Include="LibraryGenerator\LibraryEditor.xaml.cs">
       <DependentUpon>LibraryEditor.xaml</DependentUpon>
     </Compile>
@@ -276,11 +277,11 @@
     <Resource Include="Resources\Icons\spectrumSearcherIcon.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CSMSLx64\CSMSLx64\CSMSL\CSMSL.csproj">
+    <ProjectReference Include="..\..\..\..\..\..\Software\CSMSLx64\CSMSL\CSMSL.csproj">
       <Project>{3c8c9f05-9c19-4251-95fa-05d7edc8cae6}</Project>
       <Name>CSMSL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\CSMSLx64\CSMSLx64\CSMSL\IO\Thermo\Thermo.csproj">
+    <ProjectReference Include="..\..\..\..\..\..\Software\CSMSLx64\CSMSL\IO\Thermo\Thermo.csproj">
       <Project>{24dc85ff-e97b-4140-9614-77dd8fddd32f}</Project>
       <Name>Thermo</Name>
     </ProjectReference>

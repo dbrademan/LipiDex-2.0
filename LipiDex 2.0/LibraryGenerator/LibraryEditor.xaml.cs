@@ -265,13 +265,25 @@ namespace LipiDex_2._0.LibraryGenerator
         private void Button_FattyAcids_SaveFattyAcids_Click(object sender, RoutedEventArgs e)
         {
             // first, if any table entries are considered dirty, they should be validated and committed to objects
-            foreach (var fattyAcid in DataGridBinding_FattyAcids)
+            for (var i = 0; i < DataGridBinding_FattyAcids.Count; i++)
             {
+                var fattyAcid = DataGridBinding_FattyAcids[i];
                 if (fattyAcid.isDirty)
                 {
-                    if (FattyAcid.ValidateFattyAcid())
+                    Exception thrownErrorCatcher = null;
+                    if (FattyAcid.ValidateFattyAcid(fattyAcid, out thrownErrorCatcher))
                     {
+                        DataGridBinding_FattyAcids[i] = new FattyAcid(fattyAcid);
+                    }
+                    else
+                    {
+                        var messageBoxQuery = "Fatty Acid Parsing Error in table row " + i;
+                        var messageBoxShortPrompt = string.Format("Fatty acid in row {0} could not be parsed. Exact error message follows:\n{1}", i, thrownErrorCatcher.Message);
+                        var messageBoxButtonOptions = MessageBoxButton.OK;
+                        var messageBoxImage = MessageBoxImage.Exclamation;
 
+                        MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
+                        return;
                     }
                 }
             }
@@ -284,18 +296,33 @@ namespace LipiDex_2._0.LibraryGenerator
 
         private void DataGrid_FattyAcid_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
         {
-            var messageBoxQuery = "Editing Event Fired";
-            var messageBoxShortPrompt = "We've begun editing!";
-            var messageBoxButtonOptions = MessageBoxButton.OK;
-            var messageBoxImage = MessageBoxImage.Exclamation;
-
-            var messageBoxResult = MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
+            DataGridBinding_FattyAcids[DataGrid_FattyAcids.SelectedIndex].isDirty = true;
         }
 
         private void DataGrid_FattyAcids_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
             var t = "";
-            //TryParseFattyAcid);
+            /*
+            if (sender is DataGrid localSender)
+            {
+                Exception thrownErrorCatcher = null;
+                if (FattyAcid.ValidateFattyAcid(DataGridBinding_FattyAcids[DataGrid_FattyAcids.SelectedIndex], out thrownErrorCatcher))
+                {
+                    DataGridBinding_FattyAcids[DataGrid_FattyAcids.SelectedIndex] = new FattyAcid(DataGridBinding_FattyAcids[DataGrid_FattyAcids.SelectedIndex]);
+                }
+                else
+                {
+                    var messageBoxQuery = "Fatty Acid Parsing Error in table row " + DataGrid_FattyAcids.SelectedIndex;
+                    var messageBoxShortPrompt = string.Format("Fatty acid in row {0} could not be parsed. Exact error message follows:\n{1}", DataGrid_FattyAcids.SelectedIndex, thrownErrorCatcher.Message);
+                    var messageBoxButtonOptions = MessageBoxButton.OK;
+                    var messageBoxImage = MessageBoxImage.Exclamation;
+
+                    MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
+                    return;
+                }
+
+            }
+            */
         }
     }
 }

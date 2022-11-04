@@ -36,7 +36,7 @@
                     AutoGenerateColumns="False" 
                     CanUserResizeColumns="True" 
                     CanUserAddRows="True" 
-                    IsReadOnly="False" Width="517" HorizontalAlignment="Left" CellEditEnding="DataGrid_FattyAcids_CellEditEnding">
+                    IsReadOnly="False" Width="517" HorizontalAlignment="Left" CellEditEnding="DataGrid_FattyAcids_CellEditEnding" BeginningEdit="DataGrid_FattyAcid_BeginningEdit">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Name" Binding="{Binding name}" MinWidth="100" Width=".75*"/>
                         <DataGridTextColumn Header="Type" Binding="{Binding type}" MinWidth="100" Width="*"/>

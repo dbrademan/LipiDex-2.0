@@ -15,10 +15,10 @@ namespace LipiDex_2._0.LibraryGenerator
 
 		// This set of properties are used as intermediate placeholders during editing of the data grid.
 		public bool isDirty;
-		public string name;
-		public string formula;
-		public string type;
-		public bool enabled;
+		public string name { get; set; }
+		public string formula { get; set; }
+		public string type { get; set; }
+		public bool enabled { get; set; }
 
 		// these variables are the used store final verisons of the Fatty Acid Object
 		public string _name { get; private set; }                // Abbreviated name
@@ -38,9 +38,17 @@ namespace LipiDex_2._0.LibraryGenerator
 			//Initialize class variables
 			this.isDirty = true;
 			this._name = name;
-			this._formula = new ChemicalFormula(formula);
 			this._fattyAcidCategory = type;
 
+			try
+			{
+				this._formula = new ChemicalFormula(formula);
+			}
+			catch (Exception e)
+			{
+				throw new ArgumentException(string.Format("Parsing error for chemical formula \"{0}\". The exact error follows:\n{1}", name, e.Message));
+			}
+			
 			if (enabled.Equals("true") || enabled.Equals("True") || enabled.Equals("TRUE"))
 			{
 				this._enabled = true;
@@ -51,7 +59,7 @@ namespace LipiDex_2._0.LibraryGenerator
             }
 			else
             {
-				throw new ArgumentException(string.Format("Fatty_acids.csv parsing error for fatty acid \"{0}\". Only 'true' or 'false' are accepted values for the `Enabled` column.", name));
+				throw new ArgumentException(string.Format("Parsing error for fatty acid \"{0}\". Only 'true' or 'false' are accepted values for the `Enabled` column.", name));
             }
 
 			//Parse fatty acid name for carbon and db number calculation
@@ -62,7 +70,6 @@ namespace LipiDex_2._0.LibraryGenerator
 			this.formula = _formula.ToString();
 			this.type = _fattyAcidCategory;
 			this.enabled = _enabled;
-			this.isDirty = false;
 			this.mass = this._formula.MonoisotopicMass;
 
 			//Decide whether fatty acid is a PUFA
@@ -84,6 +91,51 @@ namespace LipiDex_2._0.LibraryGenerator
 			{
 				this.polyUnsaturatedFattyAcid = true;
 			}
+
+			this.isDirty = false;
+		}
+
+		// Constructor to create a fatty acid from the intermediate variables of another fatty acid
+		public FattyAcid(FattyAcid otherFattyAcid)
+        {
+			//Initialize class variables
+			this.isDirty = true;
+			this._name = otherFattyAcid.name;
+			this._formula = new ChemicalFormula(otherFattyAcid.formula);
+			this._fattyAcidCategory = otherFattyAcid.type;
+			this._enabled = otherFattyAcid.enabled;
+
+			//Parse fatty acid name for carbon and db number calculation
+			ParseFattyAcid();
+
+			// finally, set the temporary variables (which are actually displayed in the data grid
+			this.name = _name;
+			this.formula = _formula.ToString();
+			this.type = _fattyAcidCategory;
+			this.enabled = _enabled;
+			this.mass = this._formula.MonoisotopicMass;
+
+			//Decide whether fatty acid is a PUFA
+			var unsaturationString = name.Split(':')[1];
+
+			// I can't imagine a FA with +10 unsaturations, but just in case, build out logic....
+			var doubleBondEquivalents = -1;
+
+			try
+			{
+				doubleBondEquivalents = Convert.ToInt32(unsaturationString);
+			}
+			catch (FormatException e)
+			{
+				throw new ArgumentException(string.Format("Fatty_acids.csv parsing error for fatty acid \"{0}\". Cannot parse DBE from fatty acid name. Make sure there are only numbers after the \":\" character.", name));
+			}
+
+			if (doubleBondEquivalents > 1)
+			{
+				this.polyUnsaturatedFattyAcid = true;
+			}
+
+			this.isDirty = false;
 		}
 
 		/// <summary>
@@ -208,7 +260,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		/// Parses carbon number and double bond number from the name of a fatty acid.
 		/// Saves the carbon and double bond numbers to object properties.
 		/// </summary>
-		public void ParseFattyAcid()
+		private void ParseFattyAcid()
 		{
 			List<string> splitName = this._name.Split(':').ToList();
 
@@ -232,73 +284,54 @@ namespace LipiDex_2._0.LibraryGenerator
 		/// </summary>
 		public override string ToString()
 		{
-			return this.name;
+			return this._name;
 		}
 
-		public static bool ValidateFattyAcidName(FattyAcid dirtyFattyAcid)
+		// in short:
+		// take the intermediate variables from the FattyAcid object
+		// try to create
+		/// <summary>
+		/// Takes the intermediate variables from the supplied FattyAcid object and tries to parse them into a new fattyAcid object. If parsing fails, this method returns false.
+		/// </summary>
+		public static bool ValidateFattyAcid(FattyAcid dirtyFattyAcid, out Exception thrownError)
         {
-			string testFattyAcidName = dirtyFattyAcid.name;
-			string testFattyAcidType = dirtyFattyAcid.type;
-			string testFattyAcidFormula = dirtyFattyAcid.formula;
-			bool testFattyAcidEnabled = dirtyFattyAcid.enabled;
-
+			thrownError = null;
 			try
             {
-
+				new FattyAcid(dirtyFattyAcid);
             }
-		}
-	}
+			catch (Exception e)
+            {
+				thrownError = e;
+				return false;
+            }
 
-	/// <summary>
-	/// Custom Comparer for Fatty Acids
-	/// </summary>
-	public class FattyAcidComparer : Comparer<FattyAcid>
-	{
-		// Compares by Length, Height, and Width.
-		public override int Compare(FattyAcid thisFattyAcid, FattyAcid otherFattyAcid)
-		{
-			if (!otherFattyAcid._fattyAcidCategory.Equals(thisFattyAcid._fattyAcidCategory))
-			{
-				if (char.IsLetter(otherFattyAcid.name[0]) && !char.IsLetter(thisFattyAcid.name[0]))
-				{
-					return 1;
-				}
-				else if (!char.IsLetter(otherFattyAcid.name[0]) && char.IsLetter(thisFattyAcid.name[0]))
-				{
-					return -1;
-				}
-				else
-				{
-					if (thisFattyAcid.mass > otherFattyAcid.GetMass())
-					{
-						return 1;
-					}
-
-					else if (thisFattyAcid.mass < otherFattyAcid.GetMass())
-					{
-						return -1;
-					}
-					else
-					{
-						return 0;
-					}
-				}
-			}
-			else
-			{
-				if (thisFattyAcid.mass > otherFattyAcid.GetMass())
-				{
-					return 1;
-				}
-				else if (thisFattyAcid.mass < otherFattyAcid.GetMass())
-				{
-					return -1;
-				}
-				else
-				{
-					return 0;
-				}
-			}
+			return true;
 		}
+
+		public static bool ValidateFattyAcidField(FattyAcid dirtyFattyAcid, int editedColumnIndex, out Exception thrownError)
+        {
+			switch (editedColumnIndex)
+            {
+				case 0:
+					break;
+
+				case 1:
+					break;
+
+				case 2:
+					break;
+				
+				case 3:
+					break;
+
+				default:
+					break;
+            }
+
+			thrownError = null;
+
+			return false;
+        }
 	}
 }
