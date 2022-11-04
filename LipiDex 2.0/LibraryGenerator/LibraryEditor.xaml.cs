@@ -234,7 +234,10 @@ namespace LipiDex_2._0.LibraryGenerator
         {
             var selectedRow = DataGrid_FattyAcids.SelectedIndex;
 
-            DataGridBinding_FattyAcids.RemoveAt(selectedRow);
+            if (selectedRow != -1)
+            {
+                DataGridBinding_FattyAcids.RemoveAt(selectedRow);
+            }
         }
 
         private void Button_FattyAcids_EnableAll_Click(object sender, RoutedEventArgs e)
@@ -262,18 +265,37 @@ namespace LipiDex_2._0.LibraryGenerator
         private void Button_FattyAcids_SaveFattyAcids_Click(object sender, RoutedEventArgs e)
         {
             // first, if any table entries are considered dirty, they should be validated and committed to objects
-            CleanDataGrid();
-        }
+            foreach (var fattyAcid in DataGridBinding_FattyAcids)
+            {
+                if (fattyAcid.isDirty)
+                {
+                    if (FattyAcid.ValidateFattyAcid())
+                    {
 
-        private void CleanDataGrid()
-        {
-
-            //ObservableCollection.
+                    }
+                }
+            }
         }
 
         private void Button_FattyAcids_ReloadOldFattyAcids_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void DataGrid_FattyAcid_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
+        {
+            var messageBoxQuery = "Editing Event Fired";
+            var messageBoxShortPrompt = "We've begun editing!";
+            var messageBoxButtonOptions = MessageBoxButton.OK;
+            var messageBoxImage = MessageBoxImage.Exclamation;
+
+            var messageBoxResult = MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
+        }
+
+        private void DataGrid_FattyAcids_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        {
+            var t = "";
+            //TryParseFattyAcid);
         }
     }
 }

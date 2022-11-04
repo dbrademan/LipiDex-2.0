@@ -110,7 +110,7 @@ namespace LipiDex_2._0.LibraryGenerator
 			{
 				for (int i = 0; i < faArray.Count; i++)
 				{
-					if (!faArray[i].fattyAcidCategory.Equals(fattyAcidType))
+					if (!faArray[i]._fattyAcidCategory.Equals(fattyAcidType))
 					{
 						return false;
 					}

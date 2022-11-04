@@ -264,7 +264,7 @@ namespace LipiDex_2._0.LibraryGenerator
 							}
 							else
 							{
-								if (transitions[i].typeObject.fattyAcidType.Equals(faArray[0].fattyAcidCategory))
+								if (transitions[i].typeObject.fattyAcidType.Equals(faArray[0]._fattyAcidCategory))
 								{
 									AddIfUnique(result, ParseTransition(transitions[i], lipid, faArray));
 								}

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,37 +12,58 @@ namespace LipiDex_2._0.LibraryGenerator
     public class FattyAcid
     {
 		public static FattyAcidComparer FattyAcidComparer = new FattyAcidComparer();
-		public ChemicalFormula formula { get; set; }    //Elemental formula
-		public string name { get; set; }                //Abbreviated name
-		public double mass;								//Mass for sorting purpose
-		public int carbonNumber;						//Number of carbons in FA chain
-		public int doubleBondNumber;					//Number of double bonds in FA chain
-		public bool polyUnsaturatedFattyAcid = false;   //True iff fatty acids is a polyunsaturated fatty acid
-		public bool enabled { get; set; }				//True iff the fatty acid will be used for library generation
-		public string fattyAcidCategory { get; set; }   //Type of fatty acid
 
+		// This set of properties are used as intermediate placeholders during editing of the data grid.
+		public bool isDirty;
+		public string name;
+		public string formula;
+		public string type;
+		public bool enabled;
 
-		//Constructor
+		// these variables are the used store final verisons of the Fatty Acid Object
+		public string _name { get; private set; }                // Abbreviated name
+		public ChemicalFormula _formula { get; private set; }    // Elemental formula
+		public string _fattyAcidCategory { get; private set; }   // Type of fatty acid
+		public bool _enabled { get; private set; }               // True iff the fatty acid will be used for library generation
+
+		// these variables are algorthimically calculated when public object properties are set
+		public double mass { get; set; }							//Mass for sorting purpose
+		public int carbonNumber { get; set; }                    //Number of carbons in FA chain
+		public int doubleBondNumber { get; set; }                //Number of double bonds in FA chain
+		public bool polyUnsaturatedFattyAcid { get; set; }       //True iff fatty acids is a polyunsaturated fatty acid
+
+		// Constructor will set final versions of fatty acids directly.
 		public FattyAcid(string name, string type, string formula, string enabled)
 		{
 			//Initialize class variables
-			this.name = name;
-			this.formula = new ChemicalFormula(formula);
-			this.mass = this.formula.MonoisotopicMass;
-			this.fattyAcidCategory = type;
+			this.isDirty = true;
+			this._name = name;
+			this._formula = new ChemicalFormula(formula);
+			this._fattyAcidCategory = type;
 
 			if (enabled.Equals("true") || enabled.Equals("True") || enabled.Equals("TRUE"))
 			{
-				this.enabled = true;
+				this._enabled = true;
 			}
 			else if (enabled.Equals("false") || enabled.Equals("False") || enabled.Equals("FALSE"))
             {
-				this.enabled = false;
+				this._enabled = false;
             }
 			else
             {
 				throw new ArgumentException(string.Format("Fatty_acids.csv parsing error for fatty acid \"{0}\". Only 'true' or 'false' are accepted values for the `Enabled` column.", name));
             }
+
+			//Parse fatty acid name for carbon and db number calculation
+			ParseFattyAcid();
+
+			// finally, set the temporary variables (which are actually displayed in the data grid
+			this.name = _name;
+			this.formula = _formula.ToString();
+			this.type = _fattyAcidCategory;
+			this.enabled = _enabled;
+			this.isDirty = false;
+			this.mass = this._formula.MonoisotopicMass;
 
 			//Decide whether fatty acid is a PUFA
 			var unsaturationString = name.Split(':')[1];
@@ -50,21 +72,18 @@ namespace LipiDex_2._0.LibraryGenerator
 			var doubleBondEquivalents = -1;
 
 			try
-            {
+			{
 				doubleBondEquivalents = Convert.ToInt32(unsaturationString);
 			}
 			catch (FormatException e)
-            {
+			{
 				throw new ArgumentException(string.Format("Fatty_acids.csv parsing error for fatty acid \"{0}\". Cannot parse DBE from fatty acid name. Make sure there are only numbers after the \":\" character.", name));
-            }
+			}
 
 			if (doubleBondEquivalents > 1)
-            {
+			{
 				this.polyUnsaturatedFattyAcid = true;
-            }
-
-			//Parse fatty acid name for carbon and db number calculation
-			ParseFattyAcid();
+			}
 		}
 
 		/// <summary>
@@ -78,7 +97,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		/// </remarks>
 		public string GetFormula()
 		{
-			return this.formula;
+			return this._formula;
 		}
 
 		/// <summary>
@@ -89,7 +108,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		/// </returns>
 		public string GetName()
 		{
-			return this.name;
+			return this._name;
 		}
 
 		/// <summary>
@@ -100,7 +119,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		/// </returns>
 		public double GetMass()
 		{
-			return mass;
+			return this._formula.MonoisotopicMass;
 		}
 
 		/// <summary>
@@ -114,7 +133,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		/// </returns>
 		public int CompareTo(FattyAcid otherFattyAcid)
 		{
-			if (!otherFattyAcid.fattyAcidCategory.Equals(this.fattyAcidCategory))
+			if (!otherFattyAcid._fattyAcidCategory.Equals(this._fattyAcidCategory))
 			{
 				if (char.IsLetter(otherFattyAcid.name[0]) && !char.IsLetter(this.name[0]))
                 {
@@ -169,11 +188,11 @@ namespace LipiDex_2._0.LibraryGenerator
 		{
 			string result = "";
 
-			result += this.name + ",";
-			result += this.fattyAcidCategory + ",";
-			result += this.formula + ",";
+			result += this._name + ",";
+			result += this._fattyAcidCategory + ",";
+			result += this._formula.ToString() + ",";
 
-			if (enabled)
+			if (this._enabled)
 			{
 				result += true;
 			}
@@ -191,7 +210,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		/// </summary>
 		public void ParseFattyAcid()
 		{
-			List<string> splitName = this.name.Split(':').ToList();
+			List<string> splitName = this._name.Split(':').ToList();
 
 			// Remove all letter characters
 			for (int i = 0; i < splitName.Count; i++)
@@ -216,62 +235,17 @@ namespace LipiDex_2._0.LibraryGenerator
 			return this.name;
 		}
 
-		/// <summary>
-		/// Formats the fatty acid for display in a DataGrid
-		/// </summary>
-		public List<string> GetTableArray()
+		public static bool ValidateFattyAcidName(FattyAcid dirtyFattyAcid)
         {
-			List<string> result = new List<string>();
-
-			result.Add(this.name);
-			result.Add(this.fattyAcidCategory);
-			result.Add(this.formula);
-			result.Add(this.enabled.ToString());
-
-			return result;
-		}
-
-		public static bool ValidateFattyAcidName(string potentialFattyAcidName)
-        {
-			//Decide whether fatty acid is a PUFA
-			var unsaturationString = potentialFattyAcidName.Split(':')[1];
-
-			// I can't imagine a FA with +10 unsaturations, but just in case, build out logic....
-			var doubleBondEquivalents = -1;
+			string testFattyAcidName = dirtyFattyAcid.name;
+			string testFattyAcidType = dirtyFattyAcid.type;
+			string testFattyAcidFormula = dirtyFattyAcid.formula;
+			bool testFattyAcidEnabled = dirtyFattyAcid.enabled;
 
 			try
-			{
-				doubleBondEquivalents = Convert.ToInt32(unsaturationString);
-			}
-			catch (FormatException e)
-			{
-				throw new ArgumentException(string.Format("Fatty_acids.csv parsing error for fatty acid \"{0}\". Cannot parse DBE from fatty acid name. Make sure there are only numbers after the \":\" character.", potentialFattyAcidName));
-			}
-
-			//Parse fatty acid name for carbon and db number calculation
-			try
             {
-				List<string> splitName = potentialFattyAcidName.Split(':').ToList();
 
-				// Remove all letter characters
-				for (int i = 0; i < splitName.Count; i++)
-				{
-					splitName[i] = Regex.Replace(splitName[i], "[^\\d.]", "");
-					splitName[i] = splitName[i].Replace("-", "");
-				}
-
-				// Find carbon number
-				var carbonNumber = Convert.ToInt32(splitName[0]);
-
-				// Find double bond number
-				var doubleBondNumber = Convert.ToInt32(splitName[1]);
-			}
-			catch (Exception e)
-            {
-				throw new ArgumentException(string.Format("Fatty_acids.csv parsing error for fatty acid \"{0}\". Fatty acid name should take the format \"FattyAcidName 1234:1234\".", potentialFattyAcidName));
-			}
-
-			return true;
+            }
 		}
 	}
 
@@ -283,7 +257,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		// Compares by Length, Height, and Width.
 		public override int Compare(FattyAcid thisFattyAcid, FattyAcid otherFattyAcid)
 		{
-			if (!otherFattyAcid.fattyAcidCategory.Equals(thisFattyAcid.fattyAcidCategory))
+			if (!otherFattyAcid._fattyAcidCategory.Equals(thisFattyAcid._fattyAcidCategory))
 			{
 				if (char.IsLetter(otherFattyAcid.name[0]) && !char.IsLetter(thisFattyAcid.name[0]))
 				{

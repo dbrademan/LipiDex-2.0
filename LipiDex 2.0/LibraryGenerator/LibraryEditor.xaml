@@ -36,10 +36,10 @@
                     AutoGenerateColumns="False" 
                     CanUserResizeColumns="True" 
                     CanUserAddRows="True" 
-                    IsReadOnly="False" Width="517" HorizontalAlignment="Left">
+                    IsReadOnly="False" Width="517" HorizontalAlignment="Left" CellEditEnding="DataGrid_FattyAcids_CellEditEnding">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Name" Binding="{Binding name}" MinWidth="100" Width=".75*"/>
-                        <DataGridTextColumn Header="Type" Binding="{Binding fattyAcidCategory}" MinWidth="100" Width="*"/>
+                        <DataGridTextColumn Header="Type" Binding="{Binding type}" MinWidth="100" Width="*"/>
                         <DataGridTextColumn Header="Formula" Binding="{Binding formula}" MinWidth="100" Width="*"/>
                         <DataGridCheckBoxColumn Header="Enabled" Binding="{Binding enabled}" Width="0.75*"/>
                     </DataGrid.Columns>

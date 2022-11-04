@@ -255,7 +255,7 @@ namespace LipiDex_2._0.LibraryGenerator
 				for (int j = 0; j < fattyAcidArray.Count; j++)
 				{
 					//Check if matching fatty acid is found.  If so, add to temp array
-					if (fattyAcidArray[j].fattyAcidCategory.Equals(fattyAcidTypes[i]) && fattyAcidArray[j].enabled)
+					if (fattyAcidArray[j]._fattyAcidCategory.Equals(fattyAcidTypes[i]) && fattyAcidArray[j].enabled)
 					{
 						fattyAcidArray.Add(fattyAcidArray[j]);
 					}
