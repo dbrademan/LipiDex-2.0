@@ -5,16 +5,45 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Navigation;
 using CSMSL.Chemistry;
 
 namespace LipiDex_2._0.LibraryGenerator
 {
 	public class Adduct : LipidMoiety
     {
+        // Inherited properties from LipidMoiety
+        #region Inherited LipidMoiety Properties & Methods
+
+            #region Properties
+
+            // public string name { get; set; }                                  // Abbreviated moiety name for data grid
+            // public string formula { get; set; }                               // Moiety elemental formula for data grid
+            // protected string _name;                                           // Abbreviated name
+            // protected ChemicalFormula _formula;                               // Elemental formula
+
+            #endregion
+
+            #region Methods
+
+		    // protected string GetFormulaString()
+
+            // protected ChemicalFormula GetChemicalFormula()
+
+            // protected bool ValidateMoietyName(string textToValidate, int rowNumber)
+
+            // protected bool ValidateMoietyFormula(string textToValidate, int rowNumber)
+
+            // protected bool IsInteger(string textToValidate)
+
+            #endregion
+
+        #endregion
+
         // This set of properties are used as intermediate placeholders during editing of the data grid.
         #region Adduct Properties - Data Grid Display
 
-		public bool loss { get; set; }                    //True iff adduct is a neutral loss from an intact parent
+        public bool loss { get; set; }                    //True iff adduct is a neutral loss from an intact parent
 		public string polarity { get; set; }                //polarity
 		public string charge { get; set; }                  //charge state of adduct
 
@@ -35,23 +64,10 @@ namespace LipiDex_2._0.LibraryGenerator
         public Adduct(string name, string formula, string loss, string polarity, string charge)
 		{
             ValidateAdductName(name, -1);
-            ValidateAdductFormula(name, -1);
-
-			if (loss.Equals("TRUE") || loss.Equals("True") || loss.Equals("true"))
-            {
-				this._loss = true;
-			}
-			else if (loss.Equals("FALSE") || loss.Equals("False") || loss.Equals("false"))
-			{
-				this._loss = false;
-			}
-			else
-            {
-				throw new ArgumentException(string.Format("Neutral loss value \"{0}\" could not be evaluated to boolean. Please make sure to use \"true\" or \"false\" only.", loss));
-			}
-
-			this._polarity = polarity;
-			this._charge = Convert.ToInt32(charge);
+            ValidateAdductFormula(formula, -1);
+            ValidateAdductCharge(loss, -1);
+            ValidateAdductPolarity(polarity, -1);
+            ValidateAdductCharge(charge, -1);
 
 			// if we made it this far, the library entry parsed correctly.
 			// set DataGrid-facing properties
@@ -154,6 +170,24 @@ namespace LipiDex_2._0.LibraryGenerator
         public bool ValidateAdductFormula(string textToValidate, int rowNumber)
         {
             return ValidateMoietyFormula(textToValidate, rowNumber);
+        }
+
+        private bool ValidateAdductLoss(string textToValidate, int rowNumber)
+        {
+            if (textToValidate.Equals("TRUE") || textToValidate.Equals("True") || textToValidate.Equals("true"))
+            {
+                this._loss = true;
+                return true;
+            }
+            else if (textToValidate.Equals("FALSE") || textToValidate.Equals("False") || textToValidate.Equals("false"))
+            {
+                this._loss = false;
+                return true;
+            }
+            else
+            {
+                throw new ArgumentException(string.Format("Neutral loss value \"{0}\" could not be evaluated to boolean. Please make sure to use \"true\" or \"false\" only.", loss));
+            }
         }
 
         /// <summary>

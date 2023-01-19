@@ -30,7 +30,7 @@ namespace LipiDex_2._0.LibraryGenerator
 
         // these variables are the used store final verisons of the Lipid Backbone Object
         #region  Lipid Moiety Properties - Private
-
+        
         protected string _name;                                           // Abbreviated name
         protected ChemicalFormula _formula;                               // Elemental formula
 

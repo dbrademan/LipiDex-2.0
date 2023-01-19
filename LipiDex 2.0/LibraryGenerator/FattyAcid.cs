@@ -14,10 +14,38 @@ namespace LipiDex_2._0.LibraryGenerator
     {
 		public static FattyAcidComparer FattyAcidComparer = new FattyAcidComparer();
 
-		// This set of properties are used as intermediate placeholders during editing of the data grid.
-		#region Fatty Acid Properties - Data Grid Display
+        // Inherited properties from LipidMoiety
+        #region Inherited LipidMoiety Properties & Methods
 
-		public string type { get; set; }								// Type of fatty acid
+			#region Properties
+
+			// public string name { get; set; }                                  // Abbreviated moiety name for data grid
+			// public string formula { get; set; }                               // Moiety elemental formula for data grid
+			// protected string _name;                                           // Abbreviated name
+			// protected ChemicalFormula _formula;                               // Elemental formula
+
+			#endregion
+
+			#region Methods
+
+			// protected string GetFormulaString()
+
+			// protected ChemicalFormula GetChemicalFormula()
+
+			// protected bool ValidateMoietyName(string textToValidate, int rowNumber)
+
+			// protected bool ValidateMoietyFormula(string textToValidate, int rowNumber)
+
+			// protected bool IsInteger(string textToValidate)
+
+			#endregion
+
+        #endregion
+
+        // This set of properties are used as intermediate placeholders during editing of the data grid.
+        #region Fatty Acid Properties - Data Grid Display
+
+        public string type { get; set; }								// Type of fatty acid
 		public bool enabled { get; set; }								// True iff the fatty acid will be used for library generation
 
 		#endregion

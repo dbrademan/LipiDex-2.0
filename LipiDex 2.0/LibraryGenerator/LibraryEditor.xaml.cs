@@ -39,8 +39,9 @@ namespace LipiDex_2._0.LibraryGenerator
 
             LoadFattyAcids(libraryPath);
             LoadLipidAdducts(libraryPath);
+            //LoadLipidBackbones
             //LoadLipidClasses(libraryPath);
-            //LoadLipidBackbones();
+            //
             //LoadFragmentationRules();
             //LoadLibraryGeneration();
 
