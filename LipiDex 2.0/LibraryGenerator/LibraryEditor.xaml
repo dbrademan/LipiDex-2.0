@@ -9,7 +9,19 @@
     <TabControl x:Name="tabControl" Height="481" VerticalAlignment="Top" Margin="0,15,0,0" >
         <TabItem Header="Lipid Classes" Margin="-2,-2,-2,0">
             <Grid Background="#FFE5E5E5">
-                <DataGrid x:Name="DataGrid_LipidClasses" Margin="0,0,0,35" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" AutoGenerateColumns="False">
+                <DataGrid 
+                    x:Name="DataGrid_LipidClasses" 
+                    
+                    LoadingRow="DataGrid_LipidClasses_LoadingRow"
+                    CellEditEnding="DataGrid_LipidClasses_CellEditEnding"
+                    BeginningEdit="DataGrid_LipidClasses_BeginningEdit"
+                    
+                    Margin="0,0,0,35" 
+                    ScrollViewer.HorizontalScrollBarVisibility="Auto" 
+                    ScrollViewer.VerticalScrollBarVisibility="Auto" 
+                    HorizontalContentAlignment="Stretch" 
+                    VerticalContentAlignment="Stretch" 
+                    AutoGenerateColumns="False">
 
                 </DataGrid>
                 <Button Content="Add New Row" HorizontalAlignment="Left" Margin="592,432,0,0" VerticalAlignment="Top"/>
@@ -40,7 +52,7 @@
 
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Name" Binding="{Binding name}" MinWidth="100" Width=".75*"/>
-                        <DataGridTextColumn Header="Formula" Binding="{Binding formula}" MinWidth="100" Width="*"/>
+                        <DataGridTextColumn Header="Chemical Formula" Binding="{Binding formula}" MinWidth="100" Width="*"/>
                         <DataGridCheckBoxColumn Header="Is Loss" Binding="{Binding loss}" MinWidth="100" Width="*"/>
                         <DataGridTextColumn Header="Polarity" Binding="{Binding polarity}" Width="0.75*"/>
                         <DataGridTextColumn Header="Charge" Binding="{Binding charge}" Width="0.75*"/>
@@ -73,7 +85,7 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Name" Binding="{Binding name}" MinWidth="100" Width=".75*"/>
                         <DataGridTextColumn Header="Type" Binding="{Binding type}" MinWidth="100" Width="*"/>
-                        <DataGridTextColumn Header="Formula" Binding="{Binding formula}" MinWidth="100" Width="*"/>
+                        <DataGridTextColumn Header="Chemical Formula" Binding="{Binding formula}" MinWidth="100" Width="*"/>
                         <DataGridCheckBoxColumn Header="Enabled" Binding="{Binding enabled}" Width="0.75*"/>
                     </DataGrid.Columns>
                 </DataGrid>
@@ -87,10 +99,36 @@
             </Grid>
         </TabItem>
         <TabItem Header="Backbones">
-            <Grid Background="#FFE5E5E5"/>
-        </TabItem>
-        <TabItem Header="Weird-ass Headgroups">
-            <Grid Background="#FFE5E5E5"/>
+            <Grid Background="#FFE5E5E5">
+                <DataGrid
+                    x:Name="DataGrid_Backbones"
+                    
+                    LoadingRow="DataGrid_Backbones_LoadingRow"
+                    CellEditEnding="DataGrid_Backbones_CellEditEnding"
+                    BeginningEdit="DataGrid_Backbones_BeginningEdit"
+                    
+                    Margin="10,10,0,35" 
+                    ScrollViewer.HorizontalScrollBarVisibility="Auto" 
+                    ScrollViewer.VerticalScrollBarVisibility="Auto" 
+                    Width="517" 
+                    HorizontalAlignment="Left"
+                    
+                    AutoGenerateColumns="False" 
+                    CanUserResizeColumns="True" 
+                    CanUserAddRows="True" 
+                    IsReadOnly="False">
+
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Name" Binding="{Binding name}" MinWidth="100" Width=".75*"/>
+                        <DataGridTextColumn Header="Chemical Formula" Binding="{Binding formula}" MinWidth="100" Width="*"/>
+                        <DataGridTextColumn Header="Number of Attached Moieties" Binding="{Binding numberMoieties}" MinWidth="100" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <Button x:Name="Button_Backbones_Add" Content="Add New Row" HorizontalAlignment="Left" Margin="532,356,0,0" VerticalAlignment="Top" Click="Button_Backbones_Add_Click" Width="112"/>
+                <Button x:Name="Button_Backbones_Remove" Content="Delete Selected Row" HorizontalAlignment="Left" Margin="532,398,0,0" VerticalAlignment="Top" Click="Button_Backbones_Remove_Click"/>
+                <Button x:Name="Button_Backbones_ReloadOldBackbones" Content="Revert To Last Save" HorizontalAlignment="Left" Margin="289,423,0,0" VerticalAlignment="Top" Click="Button_Backbones_ReloadOldBackbones_Click" Width="127"/>
+                <Button x:Name="Button_Backbones_SaveBackbones" Content="Save Changes" HorizontalAlignment="Left" Margin="436,423,0,0" VerticalAlignment="Top" Click="Button_Backbones_SaveBackbones_Click" Width="91"/>
+            </Grid>
         </TabItem>
         <TabItem Header="Fragmentation Rules">
             <Grid Background="#FFE5E5E5"/>

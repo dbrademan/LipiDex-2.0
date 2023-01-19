@@ -42,7 +42,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		/// <returns>
 		/// Return the moiety's chemical formula as a string ('+'/'-')
 		/// </returns>
-		protected string GetFormulaString()
+		public string GetFormulaString()
         {
             return this._formula.ToString();
         }
@@ -53,9 +53,20 @@ namespace LipiDex_2._0.LibraryGenerator
         /// <returns>
         /// Return the moiety's chemical formula as a ChemicalFormula.
         /// </returns>
-        protected ChemicalFormula GetChemicalFormula()
+        public ChemicalFormula GetChemicalFormula()
         {
             return this._formula;
+        }
+
+        /// <summary>
+        /// Retrieves the moiety's private name property
+        /// </summary>
+        /// <returns>
+        /// Return the moiety's name as a string ('+'/'-')
+        /// </returns>
+        public string GetName()
+        {
+            return this._name;
         }
 
         /// <summary>

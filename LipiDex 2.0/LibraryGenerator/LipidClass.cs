@@ -9,19 +9,69 @@ namespace LipiDex_2._0.LibraryGenerator
 {
     public class LipidClass : LipidMoiety
     {
-		public string className;                               //Full Class Name
-		public string classAbbreviation;                          //Abbreviated class name
-		public ChemicalFormula headGroup;                               //elemental formula of head group
-		public List<Adduct> adducts;                                //Array of adduct objects allowed for each class
-		public bool sterol;                                 //true iff backbone of lipid is sterol
-		public bool glycerol;                               //true iff backbone of lipid is glycerol
-		public bool sphingoid;                              //true iff sphingoid base
-		public ChemicalFormula backboneFormula;                         //Elemental formula of backbone							
-		public int numberOfFattyAcids;                              //number of allowed fatty acids
-		public string optimalPolarity;                         //Fragment informative polarity
-		public List<List<FattyAcid>> possibleFattyAcids;  //Array of possible fatty acids
-		public ChemicalFormula formula;                                 //Elemental formula of lipid class - fatty acids - adduct
-		public List<string> fattyAcidTypes;               //Arraylist of all possible fatty acid classes for class
+        // Inherited properties from LipidMoiety
+        #region Inherited LipidMoiety Properties & Methods
+
+        #region Properties
+
+        // public string name { get; set; }                                  // Abbreviated moiety name for data grid
+        // public string formula { get; set; }                               // Moiety elemental formula for data grid
+        // protected string _name;                                           // Abbreviated name
+        // protected ChemicalFormula _formula;                               // Elemental formula
+
+        #endregion
+
+        #region Methods
+
+        // protected string GetName()
+
+        // protected string GetFormulaString()
+
+        // protected ChemicalFormula GetChemicalFormula()
+
+        // protected bool ValidateMoietyName(string textToValidate, int rowNumber)
+
+        // protected bool ValidateMoietyFormula(string textToValidate, int rowNumber)
+
+        // protected bool IsInteger(string textToValidate)
+
+        #endregion
+
+        #endregion
+
+        // This set of properties are used as intermediate placeholders during editing of the data grid.
+        #region Lipid Class Properties - Data Grid Display
+
+        private string classAbbreviation { get; set; }                              //Abbreviated class name
+        private string headGroupFormula { get; set; }   						//Elemental formula of head group
+        private string adducts { get; set; }                                    //Array of adduct objects allowed for each class
+        private string classBackbone { get; set; }                           //Lipid backbone.	
+        private string optimalPolarity { get; set; }                              //Polarities that generate structural information
+
+        #endregion
+
+        #region Lipid Class Properties - Private Properties
+        private string _classAbbreviation;                              //Abbreviated class name
+        private ChemicalFormula _headGroupFormula;						//Elemental formula of head group
+        private List<Adduct> _adducts;                                  //Array of adduct objects allowed for each class
+        private LipidBackbone _classBackbone;                           //Lipid backbone.	
+        private string _optimalPolarity;                                //Polarities that generate structural information
+        private List<List<LipidMoiety>> _possibleLipidMoieties;			//Array of possible bound moieties
+        private ChemicalFormula _neutralFormula;                        //Elemental formula of entire lipid class without adduct
+
+        #endregion
+
+        public string _classAbbreviation;								//Abbreviated class name
+		public ChemicalFormula headGroupFormula;                        //Elemental formula of head group
+		public List<Adduct> adducts;									//Array of adduct objects allowed for each class
+		public bool sterol;												//true iff backbone of lipid is sterol
+		public bool glycerol;											//true iff backbone of lipid is glycerol
+		public bool sphingoid;											//true iff sphingoid base
+		public ChemicalFormula backboneFormula;							//Elemental formula of backbone							
+		public int numberOfFattyAcids;									//number of allowed fatty acids
+		public string optimalPolarity;									//Fragment informative polarity
+		public List<List<FattyAcid>> possibleFattyAcids;				//Array of possible fatty acids
+		public ChemicalFormula formula;                                 //Elemental formula of entire lipid class without adduct
 
 		//Constructor
 		public LipidClass(string className, string classAbbreviation, ChemicalFormula headGroup,

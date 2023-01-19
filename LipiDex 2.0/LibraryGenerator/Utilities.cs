@@ -648,7 +648,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		//Decides if mass could come from a fatty acid fragment or neutral loss
 		public static string FindFattyAcidFragment(double mass, FattyAcid fattyAcid)
 		{
-			string fattyAcidFormula = fattyAcid.GetFormula();
+			string fattyAcidFormula = fattyAcid.GetFormulaString();
 			string annotatedFormula = "";
 
 			//if mass is at least 0.75 mass of total fatty acid

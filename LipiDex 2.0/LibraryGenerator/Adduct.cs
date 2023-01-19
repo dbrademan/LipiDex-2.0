@@ -25,7 +25,9 @@ namespace LipiDex_2._0.LibraryGenerator
             #endregion
 
             #region Methods
-
+            
+            // protected string GetName()
+            
 		    // protected string GetFormulaString()
 
             // protected ChemicalFormula GetChemicalFormula()
@@ -65,7 +67,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		{
             ValidateAdductName(name, -1);
             ValidateAdductFormula(formula, -1);
-            ValidateAdductCharge(loss, -1);
+            ValidateAdductLoss(loss, -1);
             ValidateAdductPolarity(polarity, -1);
             ValidateAdductCharge(charge, -1);
 
@@ -98,17 +100,6 @@ namespace LipiDex_2._0.LibraryGenerator
 		public int GetCharge()
 		{
 			return this._charge;
-		}
-
-		/// <summary>
-		/// Retrieves the adduct's private name property
-		/// </summary>
-		/// <returns>
-		/// Return the adduct's name as a string ('+'/'-')
-		/// </returns>
-		public string GetName()
-		{
-			return this._name;
 		}
 
 		/// <summary>

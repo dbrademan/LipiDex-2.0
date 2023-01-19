@@ -24,6 +24,8 @@ namespace LipiDex_2._0.LibraryGenerator
 
             #region Methods
 
+            // protected string GetName()
+
             // protected string GetFormulaString()
 
             // protected ChemicalFormula GetChemicalFormula()
@@ -125,6 +127,19 @@ namespace LipiDex_2._0.LibraryGenerator
                 MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Takes the intermediate variables from the supplied LipidBackbone object and double checks that all values are valid. If parsing fails, this method returns false.
+        /// </summary>
+        public bool IsValid(int rowNumber)
+        {
+            if (this.ValidateBackboneName(this.name, rowNumber) && this.ValidateBackboneFormula(this.formula, rowNumber)
+                && this.ValidateNumberOfMoieties(this.numberMoieties, rowNumber))
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

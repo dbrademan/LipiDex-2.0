@@ -28,6 +28,8 @@ namespace LipiDex_2._0.LibraryGenerator
 
 			#region Methods
 
+			// protected string GetName()
+
 			// protected string GetFormulaString()
 
 			// protected ChemicalFormula GetChemicalFormula()
@@ -130,8 +132,10 @@ namespace LipiDex_2._0.LibraryGenerator
 			}
 		}
 
-		// Constructor to create a fatty acid from the intermediate variables of another fatty acid
-		public FattyAcid(FattyAcid otherFattyAcid)
+        /// <summary>
+        /// Constructor to create a fatty acid from the intermediate variables of another fatty acid
+        /// </summary>
+        public FattyAcid(FattyAcid otherFattyAcid)
         {
 			//Initialize class variables
 			this._name = otherFattyAcid.name;
@@ -168,17 +172,6 @@ namespace LipiDex_2._0.LibraryGenerator
 			{
 				this.polyUnsaturatedFattyAcid = true;
 			}
-		}
-
-		/// <summary>
-		/// Get name of a fatty acid
-		/// </summary>
-		/// <returns>
-		/// (string) Fatty acid name (as defined in the library)
-		/// </returns>
-		public string GetName()
-		{
-			return this._name;
 		}
 
 		/// <summary>
