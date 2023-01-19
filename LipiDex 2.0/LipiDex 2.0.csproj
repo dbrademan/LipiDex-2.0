@@ -95,6 +95,8 @@
     <Compile Include="LibraryGenerator\Adduct.cs" />
     <Compile Include="LibraryGenerator\CustomException.cs" />
     <Compile Include="LibraryGenerator\Lipid.cs" />
+    <Compile Include="LibraryGenerator\LipidBackbone.cs" />
+    <Compile Include="LibraryGenerator\LipidMoiety.cs" />
     <Compile Include="LibraryGenerator\MSn.cs" />
     <Compile Include="LibraryGenerator\MSnTemplate.cs" />
     <Compile Include="LibraryGenerator\Transition.cs" />

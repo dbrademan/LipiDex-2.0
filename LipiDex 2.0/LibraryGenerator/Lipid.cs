@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CSMSL.Chemistry;
 
 namespace LipiDex_2._0.LibraryGenerator
 {
@@ -104,7 +105,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		//Calculate Elemental Composition
 		public void CalculateFormula()
 		{
-			string tempFormula = "";
+			ChemicalFormula tempFormula = new ChemicalFormula();
 
 			//add in backbone + headgroup
 			tempFormula = this.lipidClass.GetFormula();
@@ -112,11 +113,11 @@ namespace LipiDex_2._0.LibraryGenerator
 			//add in FAs
 			for (int i = 0; i < this.fattyAcids.Count; i++)
 			{
-				tempFormula = Utilities.MergeFormulas(tempFormula, this.fattyAcids[i].GetFormula());
+				tempFormula = Utilities.MergeFormulas(tempFormula, this.fattyAcids[i].GetChemicalFormula());
 			}
 
 			//add in adduct
-			tempFormula = Utilities.MergeFormulas(tempFormula, this.adduct.GetFormula());
+			tempFormula = Utilities.MergeFormulas(tempFormula, this.adduct.GetChemicalFormula());
 
 			this.formula = tempFormula;
 
@@ -131,7 +132,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		//Calculate Monoisotopic mass
 		public void CalculateMass()
 		{
-			this.mass = Utilities.CalculateMassFromFormula(this.formula) / this.adduct.charge;
+			this.mass = Utilities.CalculateMassFromFormula(this.formula) / this.adduct.GetCharge();
 		}
 
 		//Generate canonical name

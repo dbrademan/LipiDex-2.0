@@ -10,14 +10,7 @@
         <TabItem Header="Lipid Classes" Margin="-2,-2,-2,0">
             <Grid Background="#FFE5E5E5">
                 <DataGrid x:Name="DataGrid_LipidClasses" Margin="0,0,0,35" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" AutoGenerateColumns="False">
-                    <DataGrid.RowStyle>
-                        <Style TargetType="DataGridRow">
-                            <Style.Resources>
-                                <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}"
-                                         Color="{x:Static SystemColors.HighlightColor}"/>
-                            </Style.Resources>
-                        </Style>
-                    </DataGrid.RowStyle>
+
                 </DataGrid>
                 <Button Content="Add New Row" HorizontalAlignment="Left" Margin="592,432,0,0" VerticalAlignment="Top"/>
                 <Button Content="Delete Selected Row" HorizontalAlignment="Left" Margin="784,432,0,0" VerticalAlignment="Top"/>
@@ -27,12 +20,36 @@
         </TabItem>
         <TabItem Header="Adducts">
             <Grid Background="#FFE5E5E5">
-                <DataGrid x:Name="DataGrid_Adducts" Margin="0,0,0,35" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" AutoGenerateColumns="False"/>
-                <Button Content="Add New Row" HorizontalAlignment="Left" Margin="592,432,0,0" VerticalAlignment="Top"/>
-                <Button Content="Delete Selected Row" HorizontalAlignment="Left" Margin="784,432,0,0" VerticalAlignment="Top"/>
-                <Button Content="Revert To Last Save" HorizontalAlignment="Left" Margin="962,432,0,0" VerticalAlignment="Top"/>
-                <Button Content="Save Changes" HorizontalAlignment="Left" Margin="1150,432,0,0" VerticalAlignment="Top"/>
+                <DataGrid
+                    x:Name="DataGrid_Adducts"
+                    
+                    LoadingRow="DataGrid_Adducts_LoadingRow"
+                    CellEditEnding="DataGrid_Adducts_CellEditEnding"
+                    BeginningEdit="DataGrid_Adducts_BeginningEdit"
+                    
+                    Margin="10,10,0,35" 
+                    ScrollViewer.HorizontalScrollBarVisibility="Auto" 
+                    ScrollViewer.VerticalScrollBarVisibility="Auto" 
+                    Width="517" 
+                    HorizontalAlignment="Left"
+                    
+                    AutoGenerateColumns="False" 
+                    CanUserResizeColumns="True" 
+                    CanUserAddRows="True" 
+                    IsReadOnly="False">
 
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Name" Binding="{Binding name}" MinWidth="100" Width=".75*"/>
+                        <DataGridTextColumn Header="Formula" Binding="{Binding formula}" MinWidth="100" Width="*"/>
+                        <DataGridCheckBoxColumn Header="Is Loss" Binding="{Binding loss}" MinWidth="100" Width="*"/>
+                        <DataGridTextColumn Header="Polarity" Binding="{Binding polarity}" Width="0.75*"/>
+                        <DataGridTextColumn Header="Charge" Binding="{Binding charge}" Width="0.75*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <Button x:Name="Button_Adducts_Add" Content="Add New Row" HorizontalAlignment="Left" Margin="532,356,0,0" VerticalAlignment="Top" Click="Button_Adducts_Add_Click" Width="112"/>
+                <Button x:Name="Button_Adducts_Remove" Content="Delete Selected Row" HorizontalAlignment="Left" Margin="532,398,0,0" VerticalAlignment="Top" Click="Button_Adducts_Remove_Click"/>
+                <Button x:Name="Button_Adducts_ReloadOldAdducts" Content="Revert To Last Save" HorizontalAlignment="Left" Margin="289,423,0,0" VerticalAlignment="Top" Click="Button_Adducts_ReloadOldAdducts_Click" Width="127"/>
+                <Button x:Name="Button_Adducts_SaveAdducts" Content="Save Changes" HorizontalAlignment="Left" Margin="436,423,0,0" VerticalAlignment="Top" Click="Button_Adducts_SaveAdducts_Click" Width="91"/>
             </Grid>
         </TabItem>
         <TabItem Header="Fatty Acids">
@@ -42,7 +59,6 @@
                     
                     LoadingRow="DataGrid_FattyAcids_LoadingRow"
                     CellEditEnding="DataGrid_FattyAcids_CellEditEnding"
-                    BeginningEdit="DataGrid_FattyAcid_BeginningEdit"
                     
                     Margin="10,10,0,35" 
                     ScrollViewer.HorizontalScrollBarVisibility="Auto" 

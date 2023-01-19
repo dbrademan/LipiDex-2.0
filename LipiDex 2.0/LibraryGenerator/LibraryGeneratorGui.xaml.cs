@@ -279,7 +279,7 @@ namespace LipiDex_2._0
 
         private void FocusNewLibraryName(object sender, RoutedEventArgs e)
         {
-            if (this.LibraryName_Textbox.Text.Equals("New Library Name..."));
+            if (this.LibraryName_Textbox.Text.Equals("New Library Name..."))
             {
                 this.LibraryName_Textbox.Text = "";
             }

@@ -264,7 +264,7 @@ namespace LipiDex_2._0.LibraryGenerator
 							}
 							else
 							{
-								if (transitions[i].typeObject.fattyAcidType.Equals(faArray[0]._fattyAcidCategory))
+								if (transitions[i].typeObject.fattyAcidType.Equals(faArray[0].type))
 								{
 									AddIfUnique(result, ParseTransition(transitions[i], lipid, faArray));
 								}
@@ -290,12 +290,12 @@ namespace LipiDex_2._0.LibraryGenerator
 
 			if (td.isFormula)
             {
-				mass = td.typeObject.CalculateMass(faArray, lipid, Utilities.CalculateMassFromFormula(td.formula), lipid.adduct.charge, lipid.adduct.polarity);
+				mass = td.typeObject.CalculateMass(faArray, lipid, Utilities.CalculateMassFromFormula(td.formula), lipid.adduct.GetCharge(), lipid.adduct.polarity);
 			}	
 			else
 			{
 				Console.WriteLine(lipidClass.name);
-				mass = td.typeObject.CalculateMass(faArray, lipid, td.mass, lipid.adduct.charge, lipid.adduct.polarity);
+				mass = td.typeObject.CalculateMass(faArray, lipid, td.mass, lipid.adduct.GetCharge(), lipid.adduct.polarity);
 			}
 
 			return new Transition(mass, td.relativeIntensity, td.massFormula + "_" + td.typeObject.name + "_" + faArray);

@@ -7,7 +7,7 @@ using CSMSL.Chemistry;
 
 namespace LipiDex_2._0.LibraryGenerator
 {
-    public class LipidClass
+    public class LipidClass : LipidMoiety
     {
 		public string className;                               //Full Class Name
 		public string classAbbreviation;                          //Abbreviated class name
@@ -20,7 +20,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		public int numberOfFattyAcids;                              //number of allowed fatty acids
 		public string optimalPolarity;                         //Fragment informative polarity
 		public List<List<FattyAcid>> possibleFattyAcids;  //Array of possible fatty acids
-		public string formula;                                 //Elemental formula of lipid class - fatty acids - adduct
+		public ChemicalFormula formula;                                 //Elemental formula of lipid class - fatty acids - adduct
 		public List<string> fattyAcidTypes;               //Arraylist of all possible fatty acid classes for class
 
 		//Constructor
@@ -255,7 +255,7 @@ namespace LipiDex_2._0.LibraryGenerator
 				for (int j = 0; j < fattyAcidArray.Count; j++)
 				{
 					//Check if matching fatty acid is found.  If so, add to temp array
-					if (fattyAcidArray[j]._fattyAcidCategory.Equals(fattyAcidTypes[i]) && fattyAcidArray[j].enabled)
+					if (fattyAcidArray[j].type.Equals(fattyAcidTypes[i]) && fattyAcidArray[j].enabled)
 					{
 						fattyAcidArray.Add(fattyAcidArray[j]);
 					}
@@ -274,15 +274,18 @@ namespace LipiDex_2._0.LibraryGenerator
 			// again, need to update the backbone logic to make it more flexible
 			if (glycerol)
             {
-				formula = Utilities.MergeFormulas(formula, "C3H5");
+				var backboneFormula = new ChemicalFormula("C3H5");
+				formula = Utilities.MergeFormulas(formula, backboneFormula);
 			}
 			else if (sphingoid)
             {
-				formula = Utilities.MergeFormulas(formula, "C3H2");
+				var backboneFormula = new ChemicalFormula("C3H2");
+				formula = Utilities.MergeFormulas(formula, backboneFormula);
 			}
 			else if (sterol)
             {
-				formula = Utilities.MergeFormulas(formula, "C27H45");
+				var backboneFormula = new ChemicalFormula("C27H45");
+				formula = Utilities.MergeFormulas(formula, backboneFormula);
 			}
 			else
             {

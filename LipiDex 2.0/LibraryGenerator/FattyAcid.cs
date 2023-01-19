@@ -10,30 +10,40 @@ using CSMSL.Chemistry;
 
 namespace LipiDex_2._0.LibraryGenerator
 {
-    public class FattyAcid
+    public class FattyAcid : LipidMoiety
     {
 		public static FattyAcidComparer FattyAcidComparer = new FattyAcidComparer();
 
 		// This set of properties are used as intermediate placeholders during editing of the data grid.
-		public string name { get; set; }
-		public string formula { get; set; }
-		public string type { get; set; }
-		public bool enabled { get; set; }
+		#region Fatty Acid Properties - Data Grid Display
+
+		public string type { get; set; }								// Type of fatty acid
+		public bool enabled { get; set; }								// True iff the fatty acid will be used for library generation
+
+		#endregion
 
 		// these variables are the used store final verisons of the Fatty Acid Object
-		public string _name { get; private set; }                // Abbreviated name
-		public ChemicalFormula _formula { get; private set; }    // Elemental formula
-		public string _fattyAcidCategory { get; private set; }   // Type of fatty acid
-		public bool _enabled { get; private set; }               // True iff the fatty acid will be used for library generation
+		#region Fatty Acid Properties - Private
+
+		private string _fattyAcidCategory;								// Type of fatty acid
+		private bool _enabled;											// True iff the fatty acid will be used for library generation
+
+		#endregion
 
 		// these variables are algorthimically calculated when public object properties are set
-		public double mass { get; set; }							//Mass for sorting purpose
-		public int carbonNumber { get; set; }                    //Number of carbons in FA chain
-		public int doubleBondNumber { get; set; }                //Number of double bonds in FA chain
-		public bool polyUnsaturatedFattyAcid { get; set; }       //True iff fatty acids is a polyunsaturated fatty acid
+		#region Fatty Acid Properties - Dependant on private variables
 
-		// Constructor will set final versions of fatty acids directly.
-		public FattyAcid(string name, string type, string formula, string enabled)
+		public double mass { get; private set; }						//Mass for sorting purpose
+		public int carbonNumber { get; private set; }                   //Number of carbons in FA chain
+		public int doubleBondNumber { get; private set; }               //Number of double bonds in FA chain
+		public bool polyUnsaturatedFattyAcid { get; private set; }      //True iff fatty acids is a polyunsaturated fatty acid
+
+        #endregion
+
+        /// <summary>
+        /// Takes in string versions of an adduct's name, fatty acid type (categorical), chemical formula, and if it's enabled ("true"/"false")
+        /// </summary>
+        public FattyAcid(string name, string type, string formula, string enabled)
 		{
 			//Initialize class variables
 			this._name = name;
@@ -64,7 +74,7 @@ namespace LipiDex_2._0.LibraryGenerator
 			//Parse fatty acid name for carbon and db number calculation
 			ParseFattyAcid();
 
-			// finally, set the temporary variables (which are actually displayed in the data grid
+			// finally, set the temporary variables (which are actually displayed in the data grid)
 			this.name = _name;
 			this.formula = _formula.ToString();
 			this.type = _fattyAcidCategory;
@@ -130,20 +140,6 @@ namespace LipiDex_2._0.LibraryGenerator
 			{
 				this.polyUnsaturatedFattyAcid = true;
 			}
-		}
-
-		/// <summary>
-		/// Return elemental formula of fatty acid
-		/// </summary>
-		/// <returns>
-		/// Fatty acid chemical formula as a string
-		/// </returns>
-		/// <remarks>
-		/// Should refactor all formulae options to use CSMSL ChemicalFormula Object
-		/// </remarks>
-		public string GetFormula()
-		{
-			return this._formula;
 		}
 
 		/// <summary>
@@ -353,7 +349,7 @@ namespace LipiDex_2._0.LibraryGenerator
 			}
 			catch (Exception e)
             {
-				var messageBoxQuery = string.Format("Fatty acid parsing error in table row {0}.\n\n " +
+				var messageBoxQuery = string.Format("Fatty acid parsing error in table column 1, row {0}.\n\n " +
 					"The exact error message is as follows:\n{1}\n\n" +
 					"Fatty acid name should take the format:\n" +
                     "\"[TEXT][CarbonNumber][TEXT]:[TEXT][Unsaturation][TEXT]\"\n" +
@@ -380,7 +376,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		{
 			if (string.IsNullOrEmpty(textToValidate))
             {
-				var messageBoxQuery = string.Format("Fatty acid parsing error in table row {0}. Fatty acid type cannot be blank.", rowNumber);
+				var messageBoxQuery = string.Format("Fatty acid parsing error in table column 2, row {0}. Fatty acid type cannot be blank.", rowNumber + 1);
 				var messageBoxShortPrompt = string.Format("Fatty Acid Parsing Error!");
 				var messageBoxButtonOptions = MessageBoxButton.OK;
 				var messageBoxImage = MessageBoxImage.Error;
@@ -404,24 +400,42 @@ namespace LipiDex_2._0.LibraryGenerator
 		/// </returns>
 		public bool ValidateFattyAcidFormula(string textToValidate, int rowNumber)
 		{
-			if (ChemicalFormula.IsValidChemicalFormula(textToValidate))
+            try
             {
-				this._formula = new ChemicalFormula(textToValidate);
-				this.formula = this._formula.ToString();
-				return true;
+                // if chemical formula is just whitespace or empty, return the default empty ChemicalFormula object
+                if (string.IsNullOrWhiteSpace(textToValidate))
+                {
+                    this._formula = ChemicalFormula.Empty;
+                    this.formula = this._formula.ToString();
+                    return true;
+                }
+                else if (ChemicalFormula.IsValidChemicalFormula(textToValidate))
+				{
+					this._formula = new ChemicalFormula(textToValidate);
+					this.formula = this._formula.ToString();
+					return true;
+				}
+				else
+				{
+					var messageBoxQuery = string.Format("Fatty acid parsing error in table column 3, row {0}. Chemical formula \"{1}\" is not valid.", rowNumber + 1, textToValidate);
+					var messageBoxShortPrompt = string.Format("Fatty Acid Parsing Error!");
+					var messageBoxButtonOptions = MessageBoxButton.OK;
+					var messageBoxImage = MessageBoxImage.Error;
+
+					MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
+					return false;
+				}
             }
-			else
+            catch (ArgumentException e)
             {
-				var messageBoxQuery = string.Format("Fatty acid parsing error in table column 3, row {0}. Chemical formula \"{1}\" is not valid.", rowNumber, textToValidate);
-				var messageBoxShortPrompt = string.Format("Fatty Acid Parsing Error!");
-				var messageBoxButtonOptions = MessageBoxButton.OK;
-				var messageBoxImage = MessageBoxImage.Error;
+                var messageBoxQuery = string.Format("Fatty acid parsing error in table column 2, row {0}. Chemical formula \"{1}\" is not valid.\n\nSpecific error:\n\n{2}", rowNumber + 1, textToValidate, e.Message);
+                var messageBoxShortPrompt = string.Format("Fatty Acid Parsing Error!");
+                var messageBoxButtonOptions = MessageBoxButton.OK;
+                var messageBoxImage = MessageBoxImage.Error;
 
-				MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
-				return false;
+                MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
+                return false;
             }
-
-			
-		}
+        }
 	}
 }
