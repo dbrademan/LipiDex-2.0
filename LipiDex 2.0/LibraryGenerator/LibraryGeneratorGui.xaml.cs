@@ -56,7 +56,7 @@ namespace LipiDex_2._0
                 var messageBoxButtonOptions = MessageBoxButton.OK;
                 var messageBoxImage = MessageBoxImage.Error;
 
-                var messageBoxResult = MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
+                MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
 
                 return;
             }
@@ -69,7 +69,7 @@ namespace LipiDex_2._0
                 var messageBoxButtonOptions = MessageBoxButton.OK;
                 var messageBoxImage = MessageBoxImage.Error;
 
-                var messageBoxResult = MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
+                MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
 
                 return;
             }
@@ -84,7 +84,7 @@ namespace LipiDex_2._0
                 var messageBoxButtonOptions = MessageBoxButton.OK;
                 var messageBoxImage = MessageBoxImage.Error;
 
-                var messageBoxResult = MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
+                MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
 
                 return;
             }
@@ -102,7 +102,7 @@ namespace LipiDex_2._0
                 var messageBoxButtonOptions = MessageBoxButton.OK;
                 var messageBoxImage = MessageBoxImage.Error;
                 
-                var messageBoxResult = MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
+                MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
 
                 return;
             }
@@ -122,6 +122,11 @@ namespace LipiDex_2._0
                 targetFile = Path.Combine(libraryDirectory.FullName, "FattyAcids.csv");
                 File.Copy(templateFile, targetFile);
 
+                // copy backbones table
+                templateFile = Path.Combine(templateDirectory, "template_Backbones.csv");
+                targetFile = Path.Combine(libraryDirectory.FullName, "Backbones.csv");
+                File.Copy(templateFile, targetFile);
+
                 // copy lipid classes table
                 templateFile = Path.Combine(templateDirectory, "template_Lipid_Classes.csv");
                 targetFile = Path.Combine(libraryDirectory.FullName, "Lipid_Classes.csv");
@@ -139,7 +144,7 @@ namespace LipiDex_2._0
                 var messageBoxButtonOptions = MessageBoxButton.OK;
                 var messageBoxImage = MessageBoxImage.Error;
 
-                var messageBoxResult = MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
+                MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
 
                 return;
             }
@@ -171,12 +176,12 @@ namespace LipiDex_2._0
             }
             else
             {
-                var messageBoxQuery = "No Library Selected!";
-                var messageBoxShortPrompt = "Please Select A Library To Delete (if you really want to)!";
+                var messageBoxQuery = "Please Select A Library To Delete (if you really want to)!";
+                var messageBoxShortPrompt = "No Library Selected!";
                 var messageBoxButtonOptions = MessageBoxButton.OK;
                 var messageBoxImage = MessageBoxImage.Error;
 
-                var messageBoxResult = MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
+                MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
 
                 return;
                 
@@ -187,14 +192,14 @@ namespace LipiDex_2._0
         {
             var selectedItem = LipidexLibraries_ListBox.SelectedItem;
             
-            if (LipidexLibraries_ListBox.SelectedItem == null)
+            if (selectedItem == null)
             {
-                var messageBoxQuery = "No Library Selected";
-                var messageBoxShortPrompt = "Please Select A Library To Open!";
+                var messageBoxQuery = "Please Select A Library To Open!";
+                var messageBoxShortPrompt = "No Library Selected";
                 var messageBoxButtonOptions = MessageBoxButton.OK;
                 var messageBoxImage = MessageBoxImage.Error;
 
-                var messageBoxResult = MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
+                MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
 
                 return;
             }
@@ -230,7 +235,7 @@ namespace LipiDex_2._0
                     var messageBoxButtonOptions = MessageBoxButton.OK;
                     var messageBoxImage = MessageBoxImage.Error;
 
-                    var messageBoxResult = MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
+                    MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
 
                     return;
                 }
@@ -256,22 +261,27 @@ namespace LipiDex_2._0
             //
             if (!File.Exists(Path.Combine(libraryPath, "Adducts.csv")))
             {
-                throw new FileNotFoundException(string.Format("The lipid adduct template file for the selected library could not be found.\nDirectory:{0}\nMissing file: Adducts.csv", libraryPath));
+                throw new FileNotFoundException(string.Format("The lipid adduct template file for the selected library could not be found.\n\nDirectory:{0}\n\nMissing file:\nAdducts.csv", libraryPath));
             }
             // check if each library csv file exists
             if (!File.Exists(Path.Combine(libraryPath, "FattyAcids.csv")))
             {
-                throw new FileNotFoundException(string.Format("The lipid fatty acid template file for the selected library could not be found.\nDirectory:{0}\nMissing file: FattyAcids.csv", libraryPath));
+                throw new FileNotFoundException(string.Format("The lipid fatty acid template file for the selected library could not be found.\n\nDirectory:{0}\n\nMissing file:\nFattyAcids.csv", libraryPath));
+            }
+            // check if each library csv file exists
+            if (!File.Exists(Path.Combine(libraryPath, "Backbones.csv")))
+            {
+                throw new FileNotFoundException(string.Format("The lipid backbone template file for the selected library could not be found.\n\nDirectory:\n{0}\n\nMissing file:\nBackbones.csv", libraryPath));
             }
             // check if each library csv file exists
             if (!File.Exists(Path.Combine(libraryPath, "Lipid_Classes.csv")))
             {
-                throw new FileNotFoundException(string.Format("The lipid class template file for the selected library could not be found.\nDirectory:{0}\nMissing file: Lipid_Classes.csv", libraryPath));
+                throw new FileNotFoundException(string.Format("The lipid class template file for the selected library could not be found.\n\nDirectory:{0}\n\nMissing file:\nLipid_Classes.csv", libraryPath));
             }
             // check if each library csv file exists
             if (!File.Exists(Path.Combine(libraryPath, "MS2_Templates.csv")))
             {
-                throw new FileNotFoundException(string.Format("The lipid fragmentation template file for the selected library could not be found.\nDirectory:{0}\nMissing file: MS2_Templates.csv", libraryPath));
+                throw new FileNotFoundException(string.Format("The lipid fragmentation template file for the selected library could not be found.\n\nDirectory:{0}\n\nMissing file:\nMS2_Templates.csv", libraryPath));
             }
 
             return true;

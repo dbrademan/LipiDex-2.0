@@ -46,65 +46,6 @@ namespace LipiDex_2._0.LibraryGenerator
             //DataContext = this;
         }
 
-        #region Lipid Class Tab Controls
-
-        private void LoadLipidClasses(string libraryBasePath)
-        {
-            var lipidClassPath = System.IO.Path.Combine(libraryBasePath, "Lipid_Classes.csv");
-
-            try
-            {
-                var reader = new CsvReader(new StreamReader(lipidClassPath), true);
-                var lipidClasses = new List<LipidClass>();
-
-                while (reader.ReadNextRecord())
-                {
-                    string className = reader["Name"];
-                    string classAbbreviation = reader["Abbreviation"];
-                    ChemicalFormula headGroup = new ChemicalFormula(reader["HeadGroup"]);
-                    List<string> Adducts = reader["Adducts"].Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries).ToList();
-                    bool isSterol = BackboneBooleanConverter(reader["Sterol"]);
-                    bool isGlycerol = BackboneBooleanConverter(reader["Glycerol"]);
-                    bool isSphingoid = BackboneBooleanConverter(reader["Sphingoid"]);
-                    string parsedBackboneString = reader["Backbone"];
-
-                    ChemicalFormula backboneFormula = null;
-
-                    if (string.IsNullOrWhiteSpace(parsedBackboneString))
-                    {
-                        backboneFormula = GetBackboneFormula(isSterol, isGlycerol, isSphingoid);
-                    }
-                    else
-                    {
-                        backboneFormula = GetBackboneFormula(isSterol, isGlycerol, isSphingoid, parsedBackboneString);
-                    }
-
-                    int numFattyAcids = Convert.ToInt32(reader["numFattyAcids"]);
-                    string optimalPolarity = reader["OptimalPolarity"];
-                    List<string> fattyAcids = new List<string>(numFattyAcids);
-
-                    for (var i = 1; i < numFattyAcids + 1; i++)
-                    {
-                        var fattyAcidColumnHeader = "FA" + i;
-                        fattyAcids.Add(reader[fattyAcidColumnHeader]);
-                    }
-
-                    //lipidClasses.Add(new LipidClass(className, classAbbreviation, headGroup, ))
-                }
-            }
-            catch (Exception e)
-            {
-                var messageBoxQuery = e.Message;
-                var messageBoxShortPrompt = "Lipid Class Loading Error!";
-                var messageBoxButtonOptions = MessageBoxButton.OK;
-                var messageBoxImage = MessageBoxImage.Error;
-
-                var messageBoxResult = MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
-            }
-        }
-
-        #endregion
-
         // Completed 2022-01-19 DRB
         #region Adduct Tab Controls
 
@@ -1018,6 +959,65 @@ namespace LipiDex_2._0.LibraryGenerator
             else
             {
                 throw new ArgumentException("Boolean evaluation of Lipid_Classes.csv library column {0} failed. Check the csv and make sure formatting is correct.");
+            }
+        }
+
+        #endregion
+
+        #region Lipid Class Tab Controls
+
+        private void LoadLipidClasses(string libraryBasePath)
+        {
+            var lipidClassPath = System.IO.Path.Combine(libraryBasePath, "Lipid_Classes.csv");
+
+            try
+            {
+                var reader = new CsvReader(new StreamReader(lipidClassPath), true);
+                var lipidClasses = new List<LipidClass>();
+
+                while (reader.ReadNextRecord())
+                {
+                    string className = reader["Name"];
+                    string classAbbreviation = reader["Abbreviation"];
+                    ChemicalFormula headGroup = new ChemicalFormula(reader["HeadGroup"]);
+                    List<string> Adducts = reader["Adducts"].Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                    bool isSterol = BackboneBooleanConverter(reader["Sterol"]);
+                    bool isGlycerol = BackboneBooleanConverter(reader["Glycerol"]);
+                    bool isSphingoid = BackboneBooleanConverter(reader["Sphingoid"]);
+                    string parsedBackboneString = reader["Backbone"];
+
+                    ChemicalFormula backboneFormula = null;
+
+                    if (string.IsNullOrWhiteSpace(parsedBackboneString))
+                    {
+                        backboneFormula = GetBackboneFormula(isSterol, isGlycerol, isSphingoid);
+                    }
+                    else
+                    {
+                        backboneFormula = GetBackboneFormula(isSterol, isGlycerol, isSphingoid, parsedBackboneString);
+                    }
+
+                    int numFattyAcids = Convert.ToInt32(reader["numFattyAcids"]);
+                    string optimalPolarity = reader["OptimalPolarity"];
+                    List<string> fattyAcids = new List<string>(numFattyAcids);
+
+                    for (var i = 1; i < numFattyAcids + 1; i++)
+                    {
+                        var fattyAcidColumnHeader = "FA" + i;
+                        fattyAcids.Add(reader[fattyAcidColumnHeader]);
+                    }
+
+                    //lipidClasses.Add(new LipidClass(className, classAbbreviation, headGroup, ))
+                }
+            }
+            catch (Exception e)
+            {
+                var messageBoxQuery = e.Message;
+                var messageBoxShortPrompt = "Lipid Class Loading Error!";
+                var messageBoxButtonOptions = MessageBoxButton.OK;
+                var messageBoxImage = MessageBoxImage.Error;
+
+                var messageBoxResult = MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
             }
         }
 

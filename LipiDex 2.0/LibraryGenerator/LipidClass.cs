@@ -42,11 +42,11 @@ namespace LipiDex_2._0.LibraryGenerator
         // This set of properties are used as intermediate placeholders during editing of the data grid.
         #region Lipid Class Properties - Data Grid Display
 
-        private string classAbbreviation { get; set; }                              //Abbreviated class name
-        private string headGroupFormula { get; set; }   						//Elemental formula of head group
-        private string adducts { get; set; }                                    //Array of adduct objects allowed for each class
-        private string classBackbone { get; set; }                           //Lipid backbone.	
-        private string optimalPolarity { get; set; }                              //Polarities that generate structural information
+        public string classAbbreviation { get; set; }                              //Abbreviated class name
+        public string headGroupFormula { get; set; }   						//Elemental formula of head group
+        public string adducts { get; set; }                                    //Array of adduct objects allowed for each class
+        public string classBackbone { get; set; }                           //Lipid backbone.	
+        public string optimalPolarity { get; set; }                              //Polarities that generate structural information
 
         #endregion
 
@@ -61,7 +61,9 @@ namespace LipiDex_2._0.LibraryGenerator
 
         #endregion
 
-        public string _classAbbreviation;								//Abbreviated class name
+
+        #region TODO - Lipid Class Properties - Fragmentation Template-Specific Properties
+        /*
 		public ChemicalFormula headGroupFormula;                        //Elemental formula of head group
 		public List<Adduct> adducts;									//Array of adduct objects allowed for each class
 		public bool sterol;												//true iff backbone of lipid is sterol
@@ -72,21 +74,30 @@ namespace LipiDex_2._0.LibraryGenerator
 		public string optimalPolarity;									//Fragment informative polarity
 		public List<List<FattyAcid>> possibleFattyAcids;				//Array of possible fatty acids
 		public ChemicalFormula formula;                                 //Elemental formula of entire lipid class without adduct
+		*/
+        #endregion
 
-		//Constructor
-		public LipidClass(string className, string classAbbreviation, ChemicalFormula headGroup,
-				List<Adduct> adducts, bool sterol, bool glycerol, bool sphingoid, ChemicalFormula backboneFormula,
-				int numberOfFattyAcids, string optimalPolarity, List<string> fattyAcidTypes)
+        /// <summary>
+        /// Constructor - Takes in string variables scraped from the LipidClass.csv template file and forms and intermediate LipidClass object for organizing lipid classes in the GUI grid.
+		/// <br/>
+		/// <br/>
+		/// Some validation methods in this class behave differently than the other lipid moieties. If the linker variables don't validate, report errors in a log box.
+		/// Does not immediately populate the following fields:
+		/// - _neutralFormula
+		/// ...
+        /// </summary>
+        public LipidClass(string className, string classAbbreviation, string headgroupString,
+				string delimitedAdducts, string backboneClassifier, string optimalPolarity, string moiety1 = "", string moiety2 = "", string moiety3 = "", string moiety4 = "")
 		{
 			//Instantiate class variables
-			this.className = className;
-			this.classAbbreviation = classAbbreviation;
-			this.headGroup = headGroup;
-			this.backboneFormula = backboneFormula;
-			this.adducts = adducts;
-			this.sterol = sterol;
-			this.glycerol = glycerol;
-			this.sphingoid = sphingoid;
+			ValidateLipidClassName(className, -1);
+			ValidateLipidClassAbbreviation(classAbbreviation, -1);
+			ValidateHeadGroup(headgroupString, -1);
+			ValidateBackboneClassifier(backboneClassifier, -1);
+            ValidateLipidClassAdducts(delimitedAdducts, -1);
+            ValidateBackboneFormula(backboneClassifier, -1);
+			
+			ValidateOptimal
 			this.numberOfFattyAcids = numberOfFattyAcids;
 			this.optimalPolarity = optimalPolarity;
 			this.fattyAcidTypes = fattyAcidTypes;
