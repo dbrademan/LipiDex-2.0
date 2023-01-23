@@ -11,7 +11,6 @@ namespace LipiDex_2._0.LibraryGenerator
 	/// </summary>
 	public class FattyAcidComparer : Comparer<FattyAcid>
 	{
-		// Compares by Length, Height, and Width.
 		public override int Compare(FattyAcid thisFattyAcid, FattyAcid otherFattyAcid)
 		{
 			if (!otherFattyAcid.type.Equals(thisFattyAcid.type))

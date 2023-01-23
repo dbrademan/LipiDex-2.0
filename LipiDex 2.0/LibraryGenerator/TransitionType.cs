@@ -25,7 +25,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		}
 
 		//Method to return mass based on rule
-		public double CalculateMass(List<FattyAcid> fattyAcidArray, Lipid lipid, double mass, int charge, string polarity)
+		public double CalculateMass(List<LipidMoiety> fattyAcidArray, Lipid lipid, double mass, int charge, string polarity)
 		{
 			double result = 0.0;
 
@@ -43,7 +43,7 @@ namespace LipiDex_2._0.LibraryGenerator
 				//Sum moiety masses
 				for (int i=0; i< fattyAcidArray.Count; i++)
 				{
-					fragSum += fattyAcidArray[i].mass;
+					fragSum += ((FattyAcid)fattyAcidArray[i]).mass;
 				}
 
 				//(Electrons + moiety mass + formula mass) / charge
@@ -57,7 +57,7 @@ namespace LipiDex_2._0.LibraryGenerator
 				//Sum moiety masses
 				for (int i = 0; i < fattyAcidArray.Count; i++)
 				{
-					fragSum += fattyAcidArray[i].mass;
+					fragSum += ((FattyAcid)fattyAcidArray[i]).mass;
 				}
 
 				//(Electrons + moiety mass + formula mass) / charge
@@ -73,7 +73,7 @@ namespace LipiDex_2._0.LibraryGenerator
 			else if (this.isNeutralLoss && this.isFattyAcid)
 			{
 				//(Electrons + (precursor - moiety + formula mass)) / charge
-				result = AddElectrons((lipid.mass - fattyAcidArray[0].mass + mass), charge, polarity) / charge;
+				result = AddElectrons((lipid.mass - ((FattyAcid)fattyAcidArray[0]).mass + mass), charge, polarity) / charge;
 			}
 			//If static neutral loss
 			else if (this.isNeutralLoss && !this.isFattyAcid)
@@ -86,7 +86,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		}
 
 		//Returns true iff the fatty acid types and numbers are valid
-		private bool IsValid(List<FattyAcid> faArray)
+		private bool IsValid(List<LipidMoiety> faArray)
 		{
 			//Validate number
 			if (faArray.Count != this.numberOfFattyAcids)
@@ -99,7 +99,7 @@ namespace LipiDex_2._0.LibraryGenerator
 			{
 				for (int i = 0; i < faArray.Count; i++)
 				{
-					if (!faArray[i].polyUnsaturatedFattyAcid)
+					if (!((FattyAcid)faArray[i]).polyUnsaturatedFattyAcid)
 					{
 						return false;
 					}
@@ -110,7 +110,7 @@ namespace LipiDex_2._0.LibraryGenerator
 			{
 				for (int i = 0; i < faArray.Count; i++)
 				{
-					if (!faArray[i].type.Equals(fattyAcidType))
+					if (!((FattyAcid)faArray[i]).type.Equals(fattyAcidType))
 					{
 						return false;
 					}

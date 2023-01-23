@@ -25,8 +25,6 @@ namespace LipiDex_2._0.LibraryGenerator
     /// </summary>
     public partial class LibraryEditor : Window
     {
-        public ObservableCollection<LipidClass> DataGridBinding_LipidClasses = new ObservableCollection<LipidClass>();
-
         private string libraryPath;
         private static Color addedRowColor = (Color)ColorConverter.ConvertFromString("#9debdf");
 
@@ -651,7 +649,7 @@ namespace LipiDex_2._0.LibraryGenerator
         #region Backbone Tab Controls
 
         /// <summary>
-        /// Stores two-way bound Adduct objects to the Library Generator DataGrid - Adduct tab.
+        /// Stores two-way bound LipidBackbone objects to the Library Generator DataGrid - Backbone tab.
         /// </summary>
         public ObservableCollection<LipidBackbone> DataGridBinding_Backbones = new ObservableCollection<LipidBackbone>();
 
@@ -966,6 +964,11 @@ namespace LipiDex_2._0.LibraryGenerator
 
         #region Lipid Class Tab Controls
 
+        /// <summary>
+        /// Stores two-way bound LipidBackbone objects to the Library Generator DataGrid - Backbone tab.
+        /// </summary>
+        public ObservableCollection<LipidBackbone> DataGridBinding_LipidClasses = new ObservableCollection<LipidBackbone>();
+
         private void LoadLipidClasses(string libraryBasePath)
         {
             var lipidClassPath = System.IO.Path.Combine(libraryBasePath, "Lipid_Classes.csv");
@@ -1021,6 +1024,71 @@ namespace LipiDex_2._0.LibraryGenerator
             }
         }
 
+
+        /// <summary>
+        /// Event which generates row numbers in data grid using an object's index in the ObservableCollection&lt;Adduct&gt;.
+        /// </summary>
+        private void DataGrid_LipidClasses_LoadingRow(object sender, DataGridRowEventArgs e)
+        {
+            var row = e.Row;
+
+            // show row number
+            row.Header = (e.Row.GetIndex() + 1).ToString();
+        }
+
+        /// <summary>
+        /// Validates a cell which just finished editing.
+        /// </summary>
+        private void DataGrid_LipidClasses_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        {
+            // validate the individual edited cell
+            switch (e.Column.DisplayIndex)
+            {
+                // adduct name
+                case 0:
+                    var index = e.Row.GetIndex();
+                    var editedTextBox = (TextBox)e.EditingElement;
+                    DataGridBinding_Adducts[index].ValidateAdductName(editedTextBox.Text, index);
+                    break;
+
+                // adduct formula
+                case 1:
+                    index = e.Row.GetIndex();
+                    editedTextBox = (TextBox)e.EditingElement;
+                    DataGridBinding_Adducts[index].ValidateAdductFormula(editedTextBox.Text, e.Row.GetIndex());
+                    break;
+
+                // adduct loss
+                case 2:
+                    break;
+                // don't need a check for enabled/disabled since it's boolean. It will always be valid.
+
+                // adduct polarity
+                case 3:
+                    index = e.Row.GetIndex();
+                    editedTextBox = (TextBox)e.EditingElement;
+                    DataGridBinding_Adducts[index].ValidateAdductPolarity(editedTextBox.Text, e.Row.GetIndex());
+                    break;
+                // don't need a check for enabled/disabled since it's boolean. It will always be valid.
+
+                // adduct charge
+                case 4:
+                    index = e.Row.GetIndex();
+                    editedTextBox = (TextBox)e.EditingElement;
+
+                    if (DataGridBinding_Adducts[index].ValidateAdductCharge(editedTextBox.Text, e.Row.GetIndex()))
+                    {
+                        editedTextBox.Text = DataGridBinding_Adducts[index].charge;
+                    }
+
+                    break;
+            }
+        }
+
+        private void DataGrid_LipidClasses_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
+        {
+
+        }
         #endregion
     }
 }

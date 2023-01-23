@@ -20,6 +20,9 @@ namespace LipiDex_2._0.LibraryGenerator
     /// </summary>
     public abstract class LipidMoiety
     {
+
+        public static LipidMoietyComparer LipidMoietyComparer = new LipidMoietyComparer();
+
         // This set of properties are used as intermediate placeholders during editing of the data grid.
         #region Lipid Moiety Properties - Data Grid Display
 

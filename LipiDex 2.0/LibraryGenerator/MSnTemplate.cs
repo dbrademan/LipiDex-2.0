@@ -61,11 +61,11 @@ namespace LipiDex_2._0.LibraryGenerator
 		//Generate all possible lipids for lipid class based on active fatty acids
 		public void GenerateLipids()
 		{
-			List<List<FattyAcid>> faArray = this.lipidClass.lipidClass.possibleFattyAcids;
+			List<List<LipidMoiety>> faArray = this.lipidClass.lipidClass.GetPossibleMoieties();
 			List<Lipid> result = new List<Lipid>();
-			List<FattyAcid> faTemp = new List<FattyAcid>();
-			List<FattyAcid> cLTemp1 = new List<FattyAcid>();
-			List<FattyAcid> cLTemp2 = new List<FattyAcid>();
+			List<LipidMoiety> faTemp = new List<LipidMoiety>();
+			List<LipidMoiety> cLTemp1 = new List<LipidMoiety>();
+			List<LipidMoiety> cLTemp2 = new List<LipidMoiety>();
 			List<string> shadowArray = new List<string>();
 			string fattyAcidString;
 			Lipid lipidTemp;
@@ -81,9 +81,9 @@ namespace LipiDex_2._0.LibraryGenerator
 
 			while (true)
 			{
-				faTemp = new List<FattyAcid>();
-				cLTemp1 = new List<FattyAcid>();
-				cLTemp2 = new List<FattyAcid>(); ;
+				faTemp = new List<LipidMoiety>();
+				cLTemp1 = new List<LipidMoiety>();
+				cLTemp2 = new List<LipidMoiety>(); ;
 				fattyAcidString = "";
 
 				//Populate faTemp array
@@ -93,7 +93,7 @@ namespace LipiDex_2._0.LibraryGenerator
 				}
 
 				//Parse cardiolipins 
-				if (lipidClass.lipidClass.classAbbreviation.Equals("CL"))
+				if (lipidClass.lipidClass.GetAbbreviation().Equals("CL"))
 				{
 					//Create 2x2 fatty acid array for CL
 					cLTemp1.Add(faTemp[0]);
@@ -102,8 +102,8 @@ namespace LipiDex_2._0.LibraryGenerator
 					cLTemp2.Add(faTemp[3]);
 
 					//Sort arrays
-					cLTemp1.Sort(FattyAcid.FattyAcidComparer);
-					cLTemp2.Sort(FattyAcid.FattyAcidComparer);
+					cLTemp1.Sort(LipidMoiety.LipidMoietyComparer);
+					cLTemp2.Sort(LipidMoiety.LipidMoietyComparer);
 
 					//Create string representing faArray
 					fattyAcidString += cLTemp1[0] + "_";
@@ -112,7 +112,7 @@ namespace LipiDex_2._0.LibraryGenerator
 					fattyAcidString += cLTemp2[1] + "_";
 
 					//Load into faTemp
-					faTemp = new List<FattyAcid>();
+					faTemp = new List<LipidMoiety>();
 					faTemp.Add(cLTemp1[0]);
 					faTemp.Add(cLTemp1[1]);
 					faTemp.Add(cLTemp2[0]);
@@ -135,7 +135,7 @@ namespace LipiDex_2._0.LibraryGenerator
 				else
 				{
 					//Sort fatty acid array
-					faTemp.Sort(FattyAcid.FattyAcidComparer);
+					faTemp.Sort(LipidMoiety.LipidMoietyComparer);
 
 					//Create string representing FAArray
 					for (int i = 0; i < faTemp.Count; i++)
@@ -219,7 +219,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		public MSn GenerateMS2(Lipid lipid, List<TransitionType> transitionTypes)
 		{
 			int faCounter = 0;
-			List<FattyAcid> faArray;
+			List<LipidMoiety> faArray;
 
 			//Find theoretical precursor mass (mass/charge)
 			double precursor = AddElectrons(lipid.GetMass(),lipid.adduct.GetCharge(),lipid.polarity);
@@ -233,7 +233,7 @@ namespace LipiDex_2._0.LibraryGenerator
 				//Add in all fragments to MS2 array
 				for (int i = 0; i < transitions.Count; i++)
 				{
-					faArray = new List<FattyAcid>();
+					faArray = new List<LipidMoiety>();
 
 					String type = transitions[i].type;
 
@@ -257,14 +257,14 @@ namespace LipiDex_2._0.LibraryGenerator
 							//For PUFA transitions
 							if (transitions[i].typeObject.name.Contains("PUFA"))
 							{
-								if (faArray[0].polyUnsaturatedFattyAcid)
+								if (((FattyAcid)faArray[0]).polyUnsaturatedFattyAcid)
 								{
 									AddIfUnique(result, ParseTransition(transitions[i], lipid, faArray));
 								}
 							}
 							else
 							{
-								if (transitions[i].typeObject.fattyAcidType.Equals(faArray[0].type))
+								if (transitions[i].typeObject.fattyAcidType.Equals(((FattyAcid)faArray[0]).type))
 								{
 									AddIfUnique(result, ParseTransition(transitions[i], lipid, faArray));
 								}
@@ -283,7 +283,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		}
 
 		//Returns transition object based on definition and lipid
-		public Transition ParseTransition(TransitionDefinition td, Lipid lipid, List<FattyAcid> faArray)
+		public Transition ParseTransition(TransitionDefinition td, Lipid lipid, List<LipidMoiety> faArray)
 		{
 			Console.WriteLine(td);
 			double mass;

@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Automation.Peers;
 using CSMSL.Chemistry;
 
 namespace LipiDex_2._0.LibraryGenerator
@@ -42,16 +45,17 @@ namespace LipiDex_2._0.LibraryGenerator
         // This set of properties are used as intermediate placeholders during editing of the data grid.
         #region Lipid Class Properties - Data Grid Display
 
-        public string classAbbreviation { get; set; }                              //Abbreviated class name
-        public string headGroupFormula { get; set; }   						//Elemental formula of head group
-        public string adducts { get; set; }                                    //Array of adduct objects allowed for each class
-        public string classBackbone { get; set; }                           //Lipid backbone.	
-        public string optimalPolarity { get; set; }                              //Polarities that generate structural information
+        public string fullClassName { get; set; }                       //Abbreviated class name
+        public string headGroupFormula { get; set; }   					//Elemental formula of head group
+        public string adducts { get; set; }                             //Array of adduct objects allowed for each class
+        public string classBackbone { get; set; }                       //Lipid backbone.
+		public string numberOfMoieties { get; set; }					//Number of bound moieties to the listed backbone
+        public string optimalPolarity { get; set; }                     //Polarities that generate structural information
 
         #endregion
 
         #region Lipid Class Properties - Private Properties
-        private string _classAbbreviation;                              //Abbreviated class name
+        private string _fullClassName;									//Abbreviated class name
         private ChemicalFormula _headGroupFormula;						//Elemental formula of head group
         private List<Adduct> _adducts;                                  //Array of adduct objects allowed for each class
         private LipidBackbone _classBackbone;                           //Lipid backbone.	
@@ -60,7 +64,6 @@ namespace LipiDex_2._0.LibraryGenerator
         private ChemicalFormula _neutralFormula;                        //Elemental formula of entire lipid class without adduct
 
         #endregion
-
 
         #region TODO - Lipid Class Properties - Fragmentation Template-Specific Properties
         /*
@@ -78,7 +81,8 @@ namespace LipiDex_2._0.LibraryGenerator
         #endregion
 
         /// <summary>
-        /// Constructor - Takes in string variables scraped from the LipidClass.csv template file and forms and intermediate LipidClass object for organizing lipid classes in the GUI grid.
+        /// Constructor - Takes in string variables scraped from the LipidClass.csv template file and forms and intermediate LipidClass object for
+		/// organizing lipid classes in the GUI grid.
 		/// <br/>
 		/// <br/>
 		/// Some validation methods in this class behave differently than the other lipid moieties. If the linker variables don't validate, report errors in a log box.
@@ -86,16 +90,16 @@ namespace LipiDex_2._0.LibraryGenerator
 		/// - _neutralFormula
 		/// ...
         /// </summary>
-        public LipidClass(string className, string classAbbreviation, string headgroupString,
-				string delimitedAdducts, string backboneClassifier, string optimalPolarity, string moiety1 = "", string moiety2 = "", string moiety3 = "", string moiety4 = "")
+        public LipidClass(string fullClassName, string classAbbreviation, string headgroupString,
+				string delimitedAdducts, string backboneClassifier, string optimalPolarity, LibraryEditor libraryEditorInstance, string moiety1 = "", string moiety2 = "", string moiety3 = "", string moiety4 = "")
 		{
-			//Instantiate class variables
-			ValidateLipidClassName(className, -1);
+            //Instantiate class variables
+            ValidateFullLipidClassName(fullClassName, -1);
 			ValidateLipidClassAbbreviation(classAbbreviation, -1);
-			ValidateHeadGroup(headgroupString, -1);
-			ValidateBackboneClassifier(backboneClassifier, -1);
-            ValidateLipidClassAdducts(delimitedAdducts, -1);
-            ValidateBackboneFormula(backboneClassifier, -1);
+            ValidateLipidHeadgroup(headgroupString, -1);
+            ValidateLipidAdductsClassifier(delimitedAdducts, -1, libraryEditorInstance);
+            ValidateLipidBackboneClassifier(backboneClassifier, -1, libraryEditorInstance);
+            /*
 			
 			ValidateOptimal
 			this.numberOfFattyAcids = numberOfFattyAcids;
@@ -105,10 +109,320 @@ namespace LipiDex_2._0.LibraryGenerator
 
 			//Calculate elemental formula
 			CalculateFormula();
+			*/
+        }
+
+        /// <summary>
+        /// Takes in a edited full lipid class name and makes sure it's not null or empty. Saves result to internal variable if valid. 
+        /// </summary>
+        /// <returns>
+        /// true if the full lipid class name is valid and parsable. Returns false otherwise.
+        /// </returns>
+        private bool ValidateFullLipidClassName(string textToValidate, int rowNumber)
+		{
+            try
+            {
+                if (string.IsNullOrWhiteSpace(textToValidate))
+                {
+                    throw new FormatException("Full lipid class name cannot be whitespace or empty. Please provide a full lipid class name.");
+                }
+
+                this._fullClassName = textToValidate;
+                this.fullClassName = this._fullClassName;
+                return true;
+            }
+            catch (Exception e)
+            {
+                var messageBoxQuery = string.Format("Full lipid class name parsing error in table column 1, row {0}.\n\n " +
+                    "The exact error message is as follows:\n{1}\n\n", rowNumber + 1, e.Message);
+                var messageBoxShortPrompt = string.Format("Full Lipid Class Name Parsing Error!");
+                var messageBoxButtonOptions = MessageBoxButton.OK;
+                var messageBoxImage = MessageBoxImage.Error;
+
+                MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
+
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Takes in a edited lipid class abbreviation and makes sure it's not null or empty. Saves result to internal variable if valid. 
+        /// </summary>
+        /// <returns>
+        /// true if the lipid class abbreviation is valid and parsable. Returns false otherwise.
+        /// </returns>
+        private bool ValidateLipidClassAbbreviation(string textToValidate, int rowNumber)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(textToValidate))
+                {
+                    throw new FormatException("Lipid class abbreviation cannot be whitespace or empty. Please provide a lipid class abbreviation.");
+                }
+
+                this._name = textToValidate;
+                this.name = this._name;
+                return true;
+            }
+            catch (Exception e)
+            {
+                var messageBoxQuery = string.Format("Lipid class abbreviation parsing error in table column 2, row {0}.\n\n " +
+                    "The exact error message is as follows:\n{1}\n\n", rowNumber + 1, e.Message);
+                var messageBoxShortPrompt = string.Format("Lipid Class Abbreviation Parsing Error!");
+                var messageBoxButtonOptions = MessageBoxButton.OK;
+                var messageBoxImage = MessageBoxImage.Error;
+
+                MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
+
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Takes in an edited string representation of the lipid headgroup's chemical formula. Saves result to '_headgroup' and 'headgroup' internal variable if it's a valid ChemicalFormula. 
+        /// </summary>
+        /// <returns>
+        /// true if the moiety formula is valid. Returns false otherwise.
+        /// </returns>
+        private bool ValidateLipidHeadgroup(string textToValidate, int rowNumber)
+        {
+            try
+            {
+                // if chemical formula is just whitespace or empty, return the default empty ChemicalFormula object
+                if (string.IsNullOrWhiteSpace(textToValidate))
+                {
+                    this._headGroupFormula = ChemicalFormula.Empty;
+                    this.headGroupFormula = this._headGroupFormula.ToString();
+                    return true;
+                }
+                else if (ChemicalFormula.IsValidChemicalFormula(textToValidate))
+                {
+                    this._headGroupFormula = new ChemicalFormula(textToValidate);
+                    this.headGroupFormula = this._headGroupFormula.ToString();
+                    return true;
+                }
+                else
+                {
+                    var messageBoxQuery = string.Format("Lipid headgroup parsing error in table column 3, row {0}. Chemical formula \"{1}\" is not valid.", rowNumber + 1, textToValidate);
+                    var messageBoxShortPrompt = string.Format("Lipid Headgroup Parsing Error!");
+                    var messageBoxButtonOptions = MessageBoxButton.OK;
+                    var messageBoxImage = MessageBoxImage.Error;
+
+                    MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
+                    return false;
+                }
+            }
+            catch (ArgumentException e)
+            {
+                var messageBoxQuery = string.Format("Lipid headgroup parsing error in table column 3, row {0}. Chemical formula \"{1}\" is not valid.\n\nSpecific error:\n{2}", rowNumber + 1, textToValidate, e.Message);
+                var messageBoxShortPrompt = string.Format("Lipid Headgroup Parsing Error!");
+                var messageBoxButtonOptions = MessageBoxButton.OK;
+                var messageBoxImage = MessageBoxImage.Error;
+
+                MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Takes in a semicolon-delimited set of adducts. Cross-reference existing adducts in the adduct table and throw errors if these adducts don't exist yet. 
+        /// </summary>
+        /// <returns>
+        /// true if the all provided adducts are valid. Returns false otherwise and throws a popup.
+        /// </returns>
+        private bool ValidateLipidAdductsClassifier(string textToValidate, int rowNumber, LibraryEditor libraryEditorInstance)
+        {
+            try
+            {
+                // if chemical formula is just whitespace or empty, return the default empty ChemicalFormula object
+                if (string.IsNullOrWhiteSpace(textToValidate))
+                {
+                    var messageBoxQuery = string.Format("Lipid adduct parsing error in table column 4, row {0}. Adduct string cannot be empty and must relate to previously defined adducts.", rowNumber + 1, textToValidate);
+                    var messageBoxShortPrompt = string.Format("Lipid Adduct(s) Parsing Error!");
+                    var messageBoxButtonOptions = MessageBoxButton.OK;
+                    var messageBoxImage = MessageBoxImage.Error;
+
+                    MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
+                    return false;
+                }
+                else
+                {
+					// there's some sort of text in the adduct table.
+					// try to parse it
+					var splitAdducts = textToValidate.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+					foreach (var potentialAdductString in splitAdducts)
+					{
+						CrossLinkAdductString(potentialAdductString, libraryEditorInstance);
+					}
+
+					// made it this far, all adducts have been linked to the lipid class.
+					return true;
+                }
+
+                /*
+				var messageBoxQuery = string.Format("Lipid adduct parsing error in table column 3, row {0}. Adduct string \"{1}\" has not been parsed correctly.", rowNumber + 1, textToValidate);
+                var messageBoxShortPrompt = string.Format("Lipid Adduct(s) Parsing Error!");
+                var messageBoxButtonOptions = MessageBoxButton.OK;
+                var messageBoxImage = MessageBoxImage.Error;
+				*/
+
+            }
+            catch (ArgumentException e)
+            {
+                var messageBoxQuery = string.Format("Lipid adduct parsing error in table column 4, row {0}. Adduct string \"{1}\" has not been parsed correctly.\n\nSpecific error:\n{2}", rowNumber + 1, textToValidate, e.Message);
+                var messageBoxShortPrompt = string.Format("Lipid Adduct Parsing Error!");
+                var messageBoxButtonOptions = MessageBoxButton.OK;
+                var messageBoxImage = MessageBoxImage.Error;
+
+                MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Takes in a string representation of a single lipid adduct. Cross-links adducts from the ObservableCollection&lt;Adduct&gt;
+        /// </summary>
+        /// <exception cref="ArgumentException">Thrown when a provided adduct string fails to cross-map to a lipid adduct.</exception>
+        /// 
+        private void CrossLinkAdductString(string potentialAdductString, LibraryEditor libraryEditorInstance)
+		{
+			List<Adduct> matchingAdducts = libraryEditorInstance.DataGridBinding_Adducts.Where(adduct => adduct.GetName().Equals(potentialAdductString)).ToList();
+
+			if (matchingAdducts.Count == 0)
+			{
+				throw new ArgumentException(string.Format("No adducts found which match to the provided adduct \"{0}\"." +
+					"\n\nPlease define and save this adduct in the adduct tab before adding it to this class", potentialAdductString));
+			}
+			else if (matchingAdducts.Count == 1)
+			{
+				this._adducts.Add(matchingAdducts[0]);
+			}
+			else
+			{
+                throw new ArgumentException(string.Format("Duplicate adducts found matching to the name \"{0}\"." +
+                    "\n\nPlease resolve this discrepency in the adduct tab by removing or renaming duplicates.", potentialAdductString));
+            }
+        }
+
+        /// <summary>
+        /// Takes in an edited backbone classifier. Cross-reference existing lipid backbones in the backbone table and throw errors if this backbone doesn't exist yet. 
+        /// </summary>
+        /// <returns>
+        /// true if the provided backbone is valid. Returns false otherwise and throws a popup.
+        /// </returns>
+        private bool ValidateLipidBackboneClassifier(string textToValidate, int rowNumber, LibraryEditor libraryEditorInstance)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(textToValidate))
+                {
+                    var messageBoxQuery = string.Format("Lipid backbone parsing error in table column 5, row {0}. Backbone classifier string cannot be empty and must relate to previously defined backbone.", rowNumber + 1, textToValidate);
+                    var messageBoxShortPrompt = string.Format("Lipid Backbone Parsing Error!");
+                    var messageBoxButtonOptions = MessageBoxButton.OK;
+                    var messageBoxImage = MessageBoxImage.Error;
+
+                    MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
+                    return false;
+                }
+                else
+                {
+                    // there's some sort of text in the backbone table.
+					// cross-link it
+                    CrossLinkBackboneString(textToValidate, libraryEditorInstance);
+
+                    // made it this far, the backbone has successfully been linked to the lipid class.
+                    return true;
+                }
+            }
+            catch (ArgumentException e)
+            {
+                var messageBoxQuery = string.Format("Lipid backbone parsing error in table column 5, row {0}. Backbone string \"{1}\" has not been parsed correctly.\n\nSpecific error:\n{2}", rowNumber + 1, textToValidate, e.Message);
+                var messageBoxShortPrompt = string.Format("Lipid Backbone Parsing Error!");
+                var messageBoxButtonOptions = MessageBoxButton.OK;
+                var messageBoxImage = MessageBoxImage.Error;
+
+                MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Takes in a string representation of a single lipid backbone. Cross-links the backbone from the ObservableCollection&lt;LipidBackbone&gt;
+        /// </summary>
+        /// <exception cref="ArgumentException">Thrown when a provided backbone string fails to cross-map to a lipid backbone.</exception>
+        /// 
+        private void CrossLinkBackboneString(string potentialBackboneString, LibraryEditor libraryEditorInstance)
+        {
+            List<LipidBackbone> matchingBackbones = libraryEditorInstance.DataGridBinding_Backbones.Where(backbone => backbone.GetName().Equals(potentialBackboneString)).ToList();
+
+            if (matchingBackbones.Count == 0)
+            {
+                throw new ArgumentException(string.Format("No backbones found which match to the provided backbone \"{0}\"." +
+                    "\n\nPlease define and save this backbone in the backbone tab before adding it to this class", potentialBackboneString));
+            }
+            else if (matchingBackbones.Count == 1)
+            {
+                this._classBackbone = matchingBackbones[0];
+            }
+            else
+            {
+                throw new ArgumentException(string.Format("Duplicate backbones found matching to the name \"{0}\"." +
+                    "\n\nPlease resolve this discrepency in the backbone tab by removing or renaming duplicates.", potentialBackboneString));
+            }
+        }
+
+        /// <summary>
+        /// Retrives the abbreviation for this lipid class. 
+        /// </summary>
+        /// <returns>
+        /// The shorthand representation of this lipid class as a string.
+        /// </returns>
+        public string GetAbbreviation()
+        {
+            return this.GetName();
+        }
+
+		public new ChemicalFormula GetChemicalFormula()
+		{
+			var returnFormula = new ChemicalFormula();
+
+			// add backbone ChemicalFormula
+			returnFormula.Add(this._classBackbone.GetChemicalFormula());
+
+			// add headgroup formula
+			returnFormula.Add(this._headGroupFormula);
+
+            // don't add adduct formulas here.
+			// This needs to be done on the `lipid` side
+            /*
+			foreach (var adduct in this._adducts)
+			{
+
+			}
+			*/
+
+            // don't add the moity formula's here. Apparently that needs to be done on the `lipid` side
+            /*
+			foreach (var moiety in this._possibleLipidMoieties)
+			{
+
+			}
+			*/
+
+            // add adduct formula
+            return returnFormula;
+
 		}
 
-		//Returns string array representation of class for table display
-		public List<string> GetTableArray()
+		public List<List<LipidMoiety>> GetPossibleMoieties()
+		{
+			return this._possibleLipidMoieties;
+		}
+
+        //Returns string array representation of class for table display
+        /*
+        public List<string> GetTableArray()
 		{
 			string adductString = "";
 
@@ -190,11 +504,7 @@ namespace LipiDex_2._0.LibraryGenerator
 			return result;
 		}
 
-		//Return class abbreviation as string
-		public string GetAbbreviation()
-		{
-			return this.classAbbreviation;
-		}
+		
 
 		//Return array of all fatty acid types
 		public List<string> GetFattyAcidTypes()
@@ -269,12 +579,6 @@ namespace LipiDex_2._0.LibraryGenerator
 				}
 			}
 			return count;
-		}
-
-		//Returns elemental formula
-		public string GetFormula()
-		{
-			return this.formula;
 		}
 
 		//Populate 2d FA array with all possible fatty acids
@@ -418,5 +722,6 @@ namespace LipiDex_2._0.LibraryGenerator
 
 			return result;
 		}
-	}
+		*/
+    }
 }

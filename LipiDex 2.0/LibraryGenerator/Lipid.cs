@@ -9,7 +9,7 @@ namespace LipiDex_2._0.LibraryGenerator
 {
 	public class Lipid
 	{
-		public List<FattyAcid> fattyAcids;    //array of FAs
+		public List<LipidMoiety> fattyAcids;    //array of FAs
 		public LipidClass lipidClass;                  //Class
 		public Adduct adduct;                      //Adduct
 		public string formula;                     //Formula
@@ -20,7 +20,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		public List<string> uniqueTypes;      //Array of fa types this lipid can identify, used in LF
 
 		//Constructor
-		public Lipid(List<FattyAcid> fattyAcids, LipidClass lipidClass, Adduct adduct)
+		public Lipid(List<LipidMoiety> fattyAcids, LipidClass lipidClass, Adduct adduct)
 		{
 			this.fattyAcids = fattyAcids;
 			this.lipidClass = lipidClass;
@@ -55,7 +55,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		}
 
 		//Return arrayList of fatty acids in lipid
-		public List<FattyAcid> GetFattyAcids()
+		public List<LipidMoiety> GetFattyAcids()
 		{
 			return this.fattyAcids;
 		}
@@ -98,7 +98,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		//Sort FA Array
 		public void SortFattyAcids()
 		{
-			var fattyAcidComparer = new FattyAcidComparer();
+			var fattyAcidComparer = new LipidMoietyComparer();
 			this.fattyAcids.Sort(fattyAcidComparer);
 		}
 
@@ -108,7 +108,7 @@ namespace LipiDex_2._0.LibraryGenerator
 			ChemicalFormula tempFormula = new ChemicalFormula();
 
 			//add in backbone + headgroup
-			tempFormula = this.lipidClass.GetFormula();
+			tempFormula = this.lipidClass.GetChemicalFormula();
 
 			//add in FAs
 			for (int i = 0; i < this.fattyAcids.Count; i++)

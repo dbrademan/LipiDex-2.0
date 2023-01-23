@@ -23,6 +23,19 @@
                     VerticalContentAlignment="Stretch" 
                     AutoGenerateColumns="False">
 
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Full Class Name" Binding="{Binding fullClassName}" MinWidth="100" Width=".75*"/>
+                        <DataGridTextColumn Header="Class Abbreviation" Binding="{Binding name}" MinWidth="100" Width="*"/>
+                        <DataGridTextColumn Header="Head Group Formula" Binding="{Binding headGroupFormula}" MinWidth="100" Width="*"/>
+                        <DataGridTextColumn Header="Adducts" Binding="{Binding adducts}" Width="0.75*"/>
+                        <DataGridTextColumn Header="Lipid Backbone" Binding="{Binding classBackbone}" Width="0.75*"/>
+                        <DataGridTextColumn Header="Number of Moieties" Binding="{Binding numberOfMoieties}" Width="0.75*"/>
+                        <DataGridTextColumn Header="Optimal Polarity" Binding="{Binding optimalPolarity}" Width="0.75*"/>
+                        <DataGridTextColumn Header="Moiety Position - sn1" Width="0.75*"/>
+                        <DataGridTextColumn Header="Moiety Position - sn2" Width="0.75*"/>
+                        <DataGridTextColumn Header="Moiety Position - sn3" Width="0.75*"/>
+                        <DataGridTextColumn Header="Moiety Position - sn4" Width="0.75*"/>
+                    </DataGrid.Columns>
                 </DataGrid>
                 <Button Content="Add New Row" HorizontalAlignment="Left" Margin="592,432,0,0" VerticalAlignment="Top"/>
                 <Button Content="Delete Selected Row" HorizontalAlignment="Left" Margin="784,432,0,0" VerticalAlignment="Top"/>
