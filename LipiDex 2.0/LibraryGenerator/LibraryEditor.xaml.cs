@@ -33,10 +33,13 @@ namespace LipiDex_2._0.LibraryGenerator
             this.libraryPath = libraryPath;
             InitializeComponent();
 
+            // check to see if library is old format.
+            // convert it if it is
+            // TODO - CONVERT LIBRARY TEMPLATE FILES TO NEW FORMAT IF NECESSARY
             LoadFattyAcids(libraryPath);
             LoadLipidAdducts(libraryPath);
             LoadLipidBackbones(libraryPath);
-            //LoadLipidClasses(libraryPath);
+            LoadLipidClasses(libraryPath);
             //
             //LoadFragmentationRules();
             //LoadLibraryGeneration();
@@ -965,10 +968,13 @@ namespace LipiDex_2._0.LibraryGenerator
         #region Lipid Class Tab Controls
 
         /// <summary>
-        /// Stores two-way bound LipidBackbone objects to the Library Generator DataGrid - Backbone tab.
+        /// Stores two-way bound LipidClass objects to the Library Generator DataGrid - Lipid Class tab.
         /// </summary>
-        public ObservableCollection<LipidBackbone> DataGridBinding_LipidClasses = new ObservableCollection<LipidBackbone>();
+        public ObservableCollection<LipidClass> DataGridBinding_LipidClasses = new ObservableCollection<LipidClass>();
 
+        /// <summary>
+        /// Loads all lipid classes from the lipid class template file.
+        /// </summary>
         private void LoadLipidClasses(string libraryBasePath)
         {
             var lipidClassPath = System.IO.Path.Combine(libraryBasePath, "Lipid_Classes.csv");
@@ -980,14 +986,18 @@ namespace LipiDex_2._0.LibraryGenerator
 
                 while (reader.ReadNextRecord())
                 {
-                    string className = reader["Name"];
                     string classAbbreviation = reader["Abbreviation"];
-                    ChemicalFormula headGroup = new ChemicalFormula(reader["HeadGroup"]);
-                    List<string> Adducts = reader["Adducts"].Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries).ToList();
-                    bool isSterol = BackboneBooleanConverter(reader["Sterol"]);
-                    bool isGlycerol = BackboneBooleanConverter(reader["Glycerol"]);
-                    bool isSphingoid = BackboneBooleanConverter(reader["Sphingoid"]);
-                    string parsedBackboneString = reader["Backbone"];
+                    string className = reader["Full Name"];
+                    string headGroup = reader["Head Group"];
+                    string delimitedAdducts = reader["Adducts"];
+                    string backboneString = reader["Backbone"];
+                    string optimalPolarityString = reader["Optimal Polarity"];
+                    string numberOfMotifs = reader["Number of Moieties"];
+
+                    var lipidClass = new LipidClass(className, classAbbreviation, headGroup, delimitedAdducts, backboneString, optimalPolarityString, this);
+                    lipidClass.AttachLipidMoieties(reader);
+
+                    lipidClasses.Add();
 
                     ChemicalFormula backboneFormula = null;
 
@@ -1010,7 +1020,7 @@ namespace LipiDex_2._0.LibraryGenerator
                         fattyAcids.Add(reader[fattyAcidColumnHeader]);
                     }
 
-                    //lipidClasses.Add(new LipidClass(className, classAbbreviation, headGroup, ))
+                    //
                 }
             }
             catch (Exception e)
@@ -1023,6 +1033,188 @@ namespace LipiDex_2._0.LibraryGenerator
                 var messageBoxResult = MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
             }
         }
+
+        /// <summary>
+        /// Add a new lipid adduct to the lipid adduct grid and bind a matching object to the adduct ObservableCollection&lt;Adduct&gt;<br/>Adds brief color highlight when row is added
+        /// </summary>
+        private void Button_Adducts_Add_Click(object sender, RoutedEventArgs e)
+        {
+            var newAdductName = "NewLipidAdduct";
+            var newAdductFormula = "C1H2N3O4";
+            var newAdductIsLoss = "false";
+            var newAdductPolarity = "+";
+            var newAdductCharge = "1";
+
+            var newAdductObject = new Adduct(newAdductName, newAdductFormula, newAdductIsLoss, newAdductPolarity, newAdductCharge);
+            DataGridBinding_Adducts.Add(newAdductObject);
+
+            // force update of data grid? 
+            DataGrid_Adducts.UpdateLayout();
+
+            // programatically select newly added adduct row
+            DataGrid_Adducts.SelectedItems.Clear();
+
+            var newRowIndex = DataGridBinding_Adducts.Count - 1;
+            var newSelectedRow = DataGrid_Adducts.Items[newRowIndex];
+            DataGrid_Adducts.ScrollIntoView(newSelectedRow);
+
+            // mark a color animation transition for added row
+            DataGridRow row = (DataGridRow)DataGrid_Adducts.ItemContainerGenerator.ContainerFromIndex(newRowIndex);
+            Color startColor = LibraryEditor.addedRowColor;
+            Color endColor = Colors.White;
+
+            ColorAnimation ca = new ColorAnimation(endColor, new Duration(TimeSpan.FromSeconds(0.5)));
+            row.Background = new SolidColorBrush(startColor);
+            row.Background.BeginAnimation(SolidColorBrush.ColorProperty, ca);
+        }
+
+        /// <summary>
+        /// Remove an adduct from the adduct data grid and the corresponding object from the ObservableCollection&lt;adduct&gt;
+        /// </summary>
+        private void Button_Adducts_Remove_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedRow = DataGrid_Adducts.SelectedIndex;
+
+            if (selectedRow != -1)
+            {
+                DataGridBinding_Adducts.RemoveAt(selectedRow);
+            }
+        }
+
+        /// <summary>
+        /// Saves all adducts in the adduct data grid to the text-based LipiDex library .csv file.
+        /// </summary>
+        private void Button_Adducts_SaveAdducts_Click(object sender, RoutedEventArgs e)
+        {
+            // default to false so we don't try writing out an empty library
+            var validLibrary = false;
+
+            for (var i = 0; i < DataGridBinding_Adducts.Count; i++)
+            {
+                var adduct = DataGridBinding_Adducts[i];
+
+                // if there is an invalid adduct, let validation message box be thrown and set all valid to false.
+                // this will break on 
+                if (adduct.IsValid(i))
+                {
+                    validLibrary = true;
+                }
+                else
+                {
+                    // bad adduct
+                    // break iteration and send popup alert
+                    validLibrary = false;
+                    break;
+                }
+            }
+
+            if (validLibrary)
+            {
+                try
+                {
+                    SaveAdductLibrary(libraryPath);
+
+                    var messageBoxQuery = string.Format("Library \"{0}\" has been successfully saved.\n\nOther open windows referencing \"{0}\" will not reflect these changes and should be reloaded!", System.IO.Path.GetFileNameWithoutExtension(libraryPath));
+                    var messageBoxShortPrompt = "Library Saved Successfully!";
+                    var messageBoxButtonOptions = MessageBoxButton.OK;
+                    var messageBoxImage = MessageBoxImage.Asterisk;
+
+                    MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
+
+                    // just in case there's weird shenanigans in my code, reload the lipid adducts from the file to make sure there are no
+                    // weird artifacts left over from the data grid
+                    LoadLipidAdducts(libraryPath);
+                }
+                catch (InvalidOperationException exception)
+                {
+                    var messageBoxQuery = string.Format("Unexpected error while saving changes to library \"{0}\".All edits have been rolled back!\n\nError Message:\n{1}", System.IO.Path.GetFileNameWithoutExtension(libraryPath), exception.Message);
+                    var messageBoxShortPrompt = "Error - Changes Not Saved!";
+                    var messageBoxButtonOptions = MessageBoxButton.OK;
+                    var messageBoxImage = MessageBoxImage.Error;
+
+                    MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
+                }
+            }
+            else
+            {
+                var messageBoxQuery = string.Format("Formatting error(s) detected with adduct entries in library \"{0}\". They must be corrected before this library can be saved.", System.IO.Path.GetFileNameWithoutExtension(libraryPath));
+                var messageBoxShortPrompt = "Library Formatting Error!";
+                var messageBoxButtonOptions = MessageBoxButton.OK;
+                var messageBoxImage = MessageBoxImage.Error;
+
+                var results = MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
+            }
+        }
+
+        /// <summary>
+        /// - Saves all changes made to the lipid adduct library stored in the [base]/Resources/LipidexLibraries directory if all changes are valid.
+        /// <br/>
+        /// - If an error occurs during save, rolls back library changes to original
+        /// <br/>
+        /// - Clears the ObservableCollection&lt;Adduct&gt; and repopulates it from the text-based LipiDex libraries.
+        /// </summary>
+        private void SaveAdductLibrary(string libraryBasePath)
+        {
+            var adductLibraryPath = System.IO.Path.Combine(libraryBasePath, "Adducts.csv");
+            var backupAdductLibraryPath = System.IO.Path.Combine(libraryBasePath, "Adducts_tmpBackup.csv");
+
+            try
+            {
+                // first, back up old version of the adduct library
+                File.Copy(adductLibraryPath, backupAdductLibraryPath);
+
+                // overwrite old library version
+                var writer = new StreamWriter(adductLibraryPath);
+
+                // write txt file headers
+                writer.WriteLine(string.Format("{0},{1},{2},{3},{4}", "Name", "Formula", "Loss", "Polarity", "Charge"));
+
+                // write out each adduct
+                foreach (var adduct in DataGridBinding_Adducts)
+                {
+                    writer.WriteLine(adduct.SaveString());
+                }
+
+                writer.Close();
+                writer.Dispose();
+
+                // successfully wrote library
+                // delete backup copy of old library.
+                File.Delete(backupAdductLibraryPath);
+            }
+            catch (Exception e)
+            {
+                // something about updating the new library failed.
+                // restore old library
+                File.Copy(backupAdductLibraryPath, adductLibraryPath, true);
+
+                // delete backup copy
+                File.Delete(backupAdductLibraryPath);
+
+                // throw exception back to upper level
+                throw new InvalidOperationException(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Effectively discards all changes since the library was last saved. Clears the ObservableCollection&lt;Adduct&gt; and repopulates it from the text-based LipiDex Libraries
+        /// </summary>
+        private void Button_Adducts_ReloadOldAdducts_Click(object sender, RoutedEventArgs e)
+        {
+            var messageBoxQuery = string.Format("Reload library \"{0}\" from last-saved version? Any unsaved edits will be lost.", System.IO.Path.GetFileNameWithoutExtension(libraryPath));
+            var messageBoxShortPrompt = "Reloading last saved version of library!";
+            var messageBoxButtonOptions = MessageBoxButton.YesNoCancel;
+            var messageBoxImage = MessageBoxImage.Question;
+
+            var results = MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
+
+            if (results.Equals(MessageBoxResult.Yes))
+            {
+                LoadLipidAdducts(this.libraryPath);
+            }
+
+        }
+
 
 
         /// <summary>
@@ -1048,7 +1240,7 @@ namespace LipiDex_2._0.LibraryGenerator
                 case 0:
                     var index = e.Row.GetIndex();
                     var editedTextBox = (TextBox)e.EditingElement;
-                    DataGridBinding_Adducts[index].ValidateAdductName(editedTextBox.Text, index);
+                    DataGridBinding_LipidClasses[index].valid(editedTextBox.Text, index);
                     break;
 
                 // adduct formula

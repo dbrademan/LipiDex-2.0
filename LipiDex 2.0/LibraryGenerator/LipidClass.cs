@@ -91,7 +91,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		/// ...
         /// </summary>
         public LipidClass(string fullClassName, string classAbbreviation, string headgroupString,
-				string delimitedAdducts, string backboneClassifier, string optimalPolarity, LibraryEditor libraryEditorInstance, string moiety1 = "", string moiety2 = "", string moiety3 = "", string moiety4 = "")
+				string delimitedAdducts, string backboneClassifier, string optimalPolarity, LibraryEditor libraryEditorInstance)
 		{
             //Instantiate class variables
             ValidateFullLipidClassName(fullClassName, -1);
@@ -99,6 +99,7 @@ namespace LipiDex_2._0.LibraryGenerator
             ValidateLipidHeadgroup(headgroupString, -1);
             ValidateLipidAdductsClassifier(delimitedAdducts, -1, libraryEditorInstance);
             ValidateLipidBackboneClassifier(backboneClassifier, -1, libraryEditorInstance);
+			ValidateOptimalPolarity(optimalPolarity, -1);
             /*
 			
 			ValidateOptimal
@@ -118,7 +119,7 @@ namespace LipiDex_2._0.LibraryGenerator
         /// <returns>
         /// true if the full lipid class name is valid and parsable. Returns false otherwise.
         /// </returns>
-        private bool ValidateFullLipidClassName(string textToValidate, int rowNumber)
+        public bool ValidateFullLipidClassName(string textToValidate, int rowNumber)
 		{
             try
             {
@@ -151,7 +152,7 @@ namespace LipiDex_2._0.LibraryGenerator
         /// <returns>
         /// true if the lipid class abbreviation is valid and parsable. Returns false otherwise.
         /// </returns>
-        private bool ValidateLipidClassAbbreviation(string textToValidate, int rowNumber)
+        public bool ValidateLipidClassAbbreviation(string textToValidate, int rowNumber)
         {
             try
             {
@@ -182,9 +183,9 @@ namespace LipiDex_2._0.LibraryGenerator
         /// Takes in an edited string representation of the lipid headgroup's chemical formula. Saves result to '_headgroup' and 'headgroup' internal variable if it's a valid ChemicalFormula. 
         /// </summary>
         /// <returns>
-        /// true if the moiety formula is valid. Returns false otherwise.
+        /// true if the headgroup formula is valid. Returns false otherwise.
         /// </returns>
-        private bool ValidateLipidHeadgroup(string textToValidate, int rowNumber)
+        public bool ValidateLipidHeadgroup(string textToValidate, int rowNumber)
         {
             try
             {
@@ -230,7 +231,7 @@ namespace LipiDex_2._0.LibraryGenerator
         /// <returns>
         /// true if the all provided adducts are valid. Returns false otherwise and throws a popup.
         /// </returns>
-        private bool ValidateLipidAdductsClassifier(string textToValidate, int rowNumber, LibraryEditor libraryEditorInstance)
+        public bool ValidateLipidAdductsClassifier(string textToValidate, int rowNumber, LibraryEditor libraryEditorInstance)
         {
             try
             {
@@ -281,37 +282,12 @@ namespace LipiDex_2._0.LibraryGenerator
         }
 
         /// <summary>
-        /// Takes in a string representation of a single lipid adduct. Cross-links adducts from the ObservableCollection&lt;Adduct&gt;
-        /// </summary>
-        /// <exception cref="ArgumentException">Thrown when a provided adduct string fails to cross-map to a lipid adduct.</exception>
-        /// 
-        private void CrossLinkAdductString(string potentialAdductString, LibraryEditor libraryEditorInstance)
-		{
-			List<Adduct> matchingAdducts = libraryEditorInstance.DataGridBinding_Adducts.Where(adduct => adduct.GetName().Equals(potentialAdductString)).ToList();
-
-			if (matchingAdducts.Count == 0)
-			{
-				throw new ArgumentException(string.Format("No adducts found which match to the provided adduct \"{0}\"." +
-					"\n\nPlease define and save this adduct in the adduct tab before adding it to this class", potentialAdductString));
-			}
-			else if (matchingAdducts.Count == 1)
-			{
-				this._adducts.Add(matchingAdducts[0]);
-			}
-			else
-			{
-                throw new ArgumentException(string.Format("Duplicate adducts found matching to the name \"{0}\"." +
-                    "\n\nPlease resolve this discrepency in the adduct tab by removing or renaming duplicates.", potentialAdductString));
-            }
-        }
-
-        /// <summary>
         /// Takes in an edited backbone classifier. Cross-reference existing lipid backbones in the backbone table and throw errors if this backbone doesn't exist yet. 
         /// </summary>
         /// <returns>
         /// true if the provided backbone is valid. Returns false otherwise and throws a popup.
         /// </returns>
-        private bool ValidateLipidBackboneClassifier(string textToValidate, int rowNumber, LibraryEditor libraryEditorInstance)
+        public bool ValidateLipidBackboneClassifier(string textToValidate, int rowNumber, LibraryEditor libraryEditorInstance)
         {
             try
             {
@@ -344,6 +320,95 @@ namespace LipiDex_2._0.LibraryGenerator
 
                 MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// Takes in an edited optimal polarity classifier. The following options are valid (ignore brackets):
+        /// <br/>
+        /// <br/>&#x9;[""] - empty string, never will be ID'd at <i>molecular species level</i>
+        /// <br/>&#x9;["+"] - ID'd at <i>molecular species level</i> only in <b>positive mode</b>
+        /// <br/>&#x9;["-"] - ID'd at <i>molecular species level</i> only in <b>negative mode</b>
+        /// <br/>&#x9;["+-"] - Can be ID'd at <i>molecular species level</i> in <b>both polarities</b>
+        /// <br/>&#x9;["-+"] - Can be ID'd at <i>molecular species level</i> in <b>both polarities</b>
+        /// <br/>&#x9;["-/+"] - Can be ID'd at <i>molecular species level</i> in <b>both polarities</b>
+        /// <br/>&#x9;["+-"] - Can be ID'd at <i>molecular species level</i> in <b>both polarities</b>
+        /// </summary>
+        /// <returns>
+        /// true if the provided optimal polarity is valid. Returns false otherwise and throws a popup.
+        /// </returns>
+		public bool ValidateOptimalPolarity(string textToValidate, int rowNumber)
+		{
+            try
+            {
+                if (string.IsNullOrWhiteSpace(textToValidate))
+                {
+                    this._optimalPolarity = "";
+                    this.optimalPolarity = this._optimalPolarity;
+                    return true;
+                }
+                else if (textToValidate.Equals("+"))
+                {
+                    this._optimalPolarity = "";
+                    this.optimalPolarity = this._optimalPolarity;
+                    return true;
+                }
+                else if (textToValidate.Equals("-"))
+                {
+                    this._optimalPolarity = "";
+                    this.optimalPolarity = this._optimalPolarity;
+                    return true;
+                }
+                else if (textToValidate.Equals("+-") || textToValidate.Equals("-+") || textToValidate.Equals("+/-") || textToValidate.Equals("-/+"))
+                {
+                    this._optimalPolarity = "";
+                    this.optimalPolarity = this._optimalPolarity;
+                    return true;
+                }
+                else
+                {
+                    // throw error
+                    return false;
+                }
+
+                
+            }
+            catch (Exception e)
+            {
+                var messageBoxQuery = string.Format("Optimal polarity parsing error in table column x, row {0}.\n\n " +
+                    "The exact error message is as follows:\n{1}\n\n", rowNumber + 1, e.Message);
+                var messageBoxShortPrompt = string.Format("Full Lipid Class Name Parsing Error!");
+                var messageBoxButtonOptions = MessageBoxButton.OK;
+                var messageBoxImage = MessageBoxImage.Error;
+
+                MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
+
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Takes in a string representation of a single lipid adduct. Cross-links adducts from the ObservableCollection&lt;Adduct&gt;
+        /// </summary>
+        /// <exception cref="ArgumentException">Thrown when a provided adduct string fails to cross-map to a lipid adduct.</exception>
+        /// 
+        private void CrossLinkAdductString(string potentialAdductString, LibraryEditor libraryEditorInstance)
+        {
+            List<Adduct> matchingAdducts = libraryEditorInstance.DataGridBinding_Adducts.Where(adduct => adduct.GetName().Equals(potentialAdductString)).ToList();
+
+            if (matchingAdducts.Count == 0)
+            {
+                throw new ArgumentException(string.Format("No adducts found which match to the provided adduct \"{0}\"." +
+                    "\n\nPlease define and save this adduct in the adduct tab before adding it to this class", potentialAdductString));
+            }
+            else if (matchingAdducts.Count == 1)
+            {
+                this._adducts.Add(matchingAdducts[0]);
+            }
+            else
+            {
+                throw new ArgumentException(string.Format("Duplicate adducts found matching to the name \"{0}\"." +
+                    "\n\nPlease resolve this discrepency in the adduct tab by removing or renaming duplicates.", potentialAdductString));
             }
         }
 
