@@ -60,8 +60,9 @@ namespace LipiDex_2._0.LibraryGenerator
         private List<Adduct> _adducts;                                  //Array of adduct objects allowed for each class
         private LipidBackbone _classBackbone;                           //Lipid backbone.	
         private string _optimalPolarity;                                //Polarities that generate structural information
+        private int _numberOfMoieties;                                  //Attached moities to this lipid class.
         private List<List<LipidMoiety>> _possibleLipidMoieties;			//Array of possible bound moieties
-        private ChemicalFormula _neutralFormula;                        //Elemental formula of entire lipid class without adduct
+        private ChemicalFormula _neutralFormula;                        //Elemental formula of entire lipid class without adduct or attached moieties
 
         #endregion
 
@@ -91,7 +92,8 @@ namespace LipiDex_2._0.LibraryGenerator
 		/// ...
         /// </summary>
         public LipidClass(string fullClassName, string classAbbreviation, string headgroupString,
-				string delimitedAdducts, string backboneClassifier, string optimalPolarity, LibraryEditor libraryEditorInstance)
+				string delimitedAdducts, string backboneClassifier, string optimalPolarity, string numberOfMoieties, string moiety1, string moiety2,
+                string moiety3, string moiety4, LibraryEditor libraryEditorInstance)
 		{
             //Instantiate class variables
             ValidateFullLipidClassName(fullClassName, -1);
@@ -100,17 +102,8 @@ namespace LipiDex_2._0.LibraryGenerator
             ValidateLipidAdductsClassifier(delimitedAdducts, -1, libraryEditorInstance);
             ValidateLipidBackboneClassifier(backboneClassifier, -1, libraryEditorInstance);
 			ValidateOptimalPolarity(optimalPolarity, -1);
-            /*
-			
-			ValidateOptimal
-			this.numberOfFattyAcids = numberOfFattyAcids;
-			this.optimalPolarity = optimalPolarity;
-			this.fattyAcidTypes = fattyAcidTypes;
-			this.possibleFattyAcids = new List<List<FattyAcid>>();
-
-			//Calculate elemental formula
-			CalculateFormula();
-			*/
+            ValidateNumberOfMoieties(numberOfMoieties, -1);
+            ValidateClassMoieties(moiety1, moiety2, moiety3, moiety4);
         }
 
         /// <summary>
@@ -248,9 +241,11 @@ namespace LipiDex_2._0.LibraryGenerator
                 }
                 else
                 {
-					// there's some sort of text in the adduct table.
-					// try to parse it
-					var splitAdducts = textToValidate.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                    // there's some sort of text in the adduct table.
+                    // try to parse it
+                    this._adducts = new List<Adduct>();
+
+                    var splitAdducts = textToValidate.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
 					foreach (var potentialAdductString in splitAdducts)
 					{
@@ -260,16 +255,8 @@ namespace LipiDex_2._0.LibraryGenerator
 					// made it this far, all adducts have been linked to the lipid class.
 					return true;
                 }
-
-                /*
-				var messageBoxQuery = string.Format("Lipid adduct parsing error in table column 3, row {0}. Adduct string \"{1}\" has not been parsed correctly.", rowNumber + 1, textToValidate);
-                var messageBoxShortPrompt = string.Format("Lipid Adduct(s) Parsing Error!");
-                var messageBoxButtonOptions = MessageBoxButton.OK;
-                var messageBoxImage = MessageBoxImage.Error;
-				*/
-
             }
-            catch (ArgumentException e)
+            catch (ApplicationException e)
             {
                 var messageBoxQuery = string.Format("Lipid adduct parsing error in table column 4, row {0}. Adduct string \"{1}\" has not been parsed correctly.\n\nSpecific error:\n{2}", rowNumber + 1, textToValidate, e.Message);
                 var messageBoxShortPrompt = string.Format("Lipid Adduct Parsing Error!");
@@ -368,7 +355,14 @@ namespace LipiDex_2._0.LibraryGenerator
                 else
                 {
                     // throw error
-                    return false;
+                    throw new FormatException("Optimal polarity value should be one of the following options:" +
+                        "\n\t[\"\"] - empty string, never will be ID'd at molecular species level" +
+                        "\n\t[\"+\"] - ID'd at molecular species level only in positive mode" +
+                        "\n\t[\"-\"] - ID'd at molecular species level only in negative mode" +
+                        "\n\t[\"+-\"] - Can be ID'd at molecular species level in both polarities" +
+                        "\n\t[\"-+\"] - Can be ID'd at molecular species level in both polarities" +
+                        "\n\t[\"-/+\"] - Can be ID'd at molecular species level in both polarities" +
+                        "\n\t[\"+-\"] - Can be ID'd at molecular species level in both polarities");
                 }
 
                 
@@ -377,7 +371,7 @@ namespace LipiDex_2._0.LibraryGenerator
             {
                 var messageBoxQuery = string.Format("Optimal polarity parsing error in table column x, row {0}.\n\n " +
                     "The exact error message is as follows:\n{1}\n\n", rowNumber + 1, e.Message);
-                var messageBoxShortPrompt = string.Format("Full Lipid Class Name Parsing Error!");
+                var messageBoxShortPrompt = string.Format("Optimal Polarity Parsing Error!");
                 var messageBoxButtonOptions = MessageBoxButton.OK;
                 var messageBoxImage = MessageBoxImage.Error;
 
@@ -387,10 +381,15 @@ namespace LipiDex_2._0.LibraryGenerator
             }
         }
 
+        public bool ValidateClassMoieties(string moiety1, string moiety2, string moiety3, string moiety4)
+        {
+
+        }
+
         /// <summary>
         /// Takes in a string representation of a single lipid adduct. Cross-links adducts from the ObservableCollection&lt;Adduct&gt;
         /// </summary>
-        /// <exception cref="ArgumentException">Thrown when a provided adduct string fails to cross-map to a lipid adduct.</exception>
+        /// <exception cref="ApplicationException">Thrown when a provided adduct string fails to cross-map to a lipid adduct.</exception>
         /// 
         private void CrossLinkAdductString(string potentialAdductString, LibraryEditor libraryEditorInstance)
         {
@@ -398,7 +397,7 @@ namespace LipiDex_2._0.LibraryGenerator
 
             if (matchingAdducts.Count == 0)
             {
-                throw new ArgumentException(string.Format("No adducts found which match to the provided adduct \"{0}\"." +
+                throw new ApplicationException(string.Format("No adducts found which match to the provided adduct \"{0}\"." +
                     "\n\nPlease define and save this adduct in the adduct tab before adding it to this class", potentialAdductString));
             }
             else if (matchingAdducts.Count == 1)
@@ -407,7 +406,7 @@ namespace LipiDex_2._0.LibraryGenerator
             }
             else
             {
-                throw new ArgumentException(string.Format("Duplicate adducts found matching to the name \"{0}\"." +
+                throw new ApplicationException(string.Format("Duplicate adducts found matching to the name \"{0}\"." +
                     "\n\nPlease resolve this discrepency in the adduct tab by removing or renaming duplicates.", potentialAdductString));
             }
         }
@@ -415,7 +414,7 @@ namespace LipiDex_2._0.LibraryGenerator
         /// <summary>
         /// Takes in a string representation of a single lipid backbone. Cross-links the backbone from the ObservableCollection&lt;LipidBackbone&gt;
         /// </summary>
-        /// <exception cref="ArgumentException">Thrown when a provided backbone string fails to cross-map to a lipid backbone.</exception>
+        /// <exception cref="ApplicationException">Thrown when a provided backbone string fails to cross-map to a lipid backbone.</exception>
         /// 
         private void CrossLinkBackboneString(string potentialBackboneString, LibraryEditor libraryEditorInstance)
         {
@@ -423,7 +422,7 @@ namespace LipiDex_2._0.LibraryGenerator
 
             if (matchingBackbones.Count == 0)
             {
-                throw new ArgumentException(string.Format("No backbones found which match to the provided backbone \"{0}\"." +
+                throw new ApplicationException(string.Format("No backbones found which match to the provided backbone \"{0}\"." +
                     "\n\nPlease define and save this backbone in the backbone tab before adding it to this class", potentialBackboneString));
             }
             else if (matchingBackbones.Count == 1)
@@ -432,9 +431,52 @@ namespace LipiDex_2._0.LibraryGenerator
             }
             else
             {
-                throw new ArgumentException(string.Format("Duplicate backbones found matching to the name \"{0}\"." +
+                throw new ApplicationException(string.Format("Duplicate backbones found matching to the name \"{0}\"." +
                     "\n\nPlease resolve this discrepency in the backbone tab by removing or renaming duplicates.", potentialBackboneString));
             }
+        }
+
+        /// <summary>
+        /// Takes in a edited string representing the number of moieties. Saves result to internal variable if it's a valid integer and it's less than the maximum allowed moieties for the backbone. 
+        /// </summary>
+        /// <returns>
+        /// true if the number of moieties is valid. Returns false otherwise.
+        /// </returns>
+        public bool ValidateNumberOfMoieties(string textToValidate, int rowNumber)
+        {
+            try
+            {
+                if (IsInteger(textToValidate))
+                {
+                    this._numberOfMoieties = Math.Abs(Convert.ToInt32(textToValidate));
+                    this.numberOfMoieties = this._numberOfMoieties.ToString();
+                    return true;
+                }
+                else
+                {
+                    throw new ArgumentException(string.Format("Number of moieties attached to this lipid class could not be evaluated. Please make sure the number of moieties is an integer."));
+                }
+            }
+            catch (ArgumentException e)
+            {
+                var messageBoxQuery = string.Format("Number of moieties parsing error in table column 4, row {0}.\n\nError Message:\n{1}", rowNumber + 1, e.Message);
+                var messageBoxShortPrompt = string.Format("Number of Moieties Parsing Error!");
+                var messageBoxButtonOptions = MessageBoxButton.OK;
+                var messageBoxImage = MessageBoxImage.Error;
+
+                MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// TODO: Binds relevant moities (fatty acids or other lipid classes) to the lipid class. If no matching moiety is found, open a popup and let the user know. Mark the lipid class as unbound
+        /// </summary>
+        /// <exception cref="ApplicationException">Thrown when a provided backbone string fails to cross-map to a lipid backbone.</exception>
+        /// 
+        public void BindMoieties(ObservableCollection<FattyAcid> DataGridBinding_FattyAcids, ObservableCollection<LipidClass> DataGridBinding_LipidClasses)
+        {
+
         }
 
         /// <summary>
@@ -446,6 +488,11 @@ namespace LipiDex_2._0.LibraryGenerator
         public string GetAbbreviation()
         {
             return this.GetName();
+        }
+
+        public bool IsValid()
+        {
+            return true;
         }
 
 		public new ChemicalFormula GetChemicalFormula()
@@ -480,97 +527,18 @@ namespace LipiDex_2._0.LibraryGenerator
 
 		}
 
+        /// <summary>
+        /// Creates all possible combinations of moieties for this lipid when creating templates. 
+        /// </summary>
+        /// <returns>
+        /// The shorthand representation of this lipid class as a string.
+        /// </returns>
 		public List<List<LipidMoiety>> GetPossibleMoieties()
 		{
 			return this._possibleLipidMoieties;
 		}
 
-        //Returns string array representation of class for table display
         /*
-        public List<string> GetTableArray()
-		{
-			string adductString = "";
-
-			List<string> result = new List<string>();
-
-			//Name
-			result[0] = this.className;
-
-			//Abbreviation
-			result[1] = this.classAbbreviation;
-
-			//Head Group
-			result[2] = this.headGroup;
-
-			//Adducts
-			for (int i = 0; i < this.adducts.Count; i++)
-			{
-				adductString += this.adducts[i].name;
-				if (i < this.adducts.Count - 1)
-				{
-					adductString += ";";
-				}
-			}
-			result[3] = adductString;
-
-			//Backbone
-			//this should eventually be updated to allow users to define their own backbone structure
-			if (this.glycerol)
-			{
-				result[4] = "Glycerol";
-			}
-			else if (this.sterol)
-			{
-				result[4] = "Sterol";
-			}
-			else if (this.sphingoid)
-			{
-				result[4] = "Sphingoid";
-			}
-			else
-			{
-				result[4] = this.backboneFormula;
-			}
-
-			//Num Fatty Acids
-			result[5] = this.numberOfFattyAcids.ToString();
-
-			//Optimal Polarity
-			result[6] = this.optimalPolarity;
-
-			//Add in fatty acid types
-			result[7] = this.fattyAcidTypes[0];
-
-			if (this.numberOfFattyAcids >= 2)
-			{
-				result[8] = this.fattyAcidTypes[1];
-			}
-			else 
-			{ 
-				result[8] = "-"; 
-			}
-			if (this.numberOfFattyAcids >= 3)
-			{
-				result[9] = this.fattyAcidTypes[2];
-			}
-			else
-			{
-				result[9] = "-";
-			}
-			if (this.numberOfFattyAcids >= 4)
-			{
-				result[10] = this.fattyAcidTypes[3];
-			}
-			else 
-			{ 
-				result[10] = "-"; 
-			}
-
-			return result;
-		}
-
-		
-
 		//Return array of all fatty acid types
 		public List<string> GetFattyAcidTypes()
 		{

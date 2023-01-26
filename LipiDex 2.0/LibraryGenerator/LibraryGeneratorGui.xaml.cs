@@ -35,7 +35,7 @@ namespace LipiDex_2._0
             // remove all library entries
             LipidexLibraries_ListBox.Items.Clear();
 
-            var libraryDirectory = System.IO.Path.Combine(AppContext.BaseDirectory, "Resources", "LipidexLibraries");
+            var libraryDirectory = Path.Combine(AppContext.BaseDirectory, "Resources", "LipidexLibraries");
             var existingLibraries = Directory.GetDirectories(libraryDirectory);
 
             foreach (var library in existingLibraries)
@@ -230,8 +230,8 @@ namespace LipiDex_2._0
                 }
                 catch (IOException exception)
                 {
-                    var messageBoxQuery = "Error in loading lipid library...";
-                    var messageBoxShortPrompt = exception.Message;
+                    var messageBoxQuery = exception.Message;
+                    var messageBoxShortPrompt = "Error in loading lipid library...";
                     var messageBoxButtonOptions = MessageBoxButton.OK;
                     var messageBoxImage = MessageBoxImage.Error;
 

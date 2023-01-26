@@ -24,27 +24,27 @@
         <Rectangle Grid.ColumnSpan="6" Grid.Row="0" Height="165" VerticalAlignment="Bottom" Fill="#FF818D99" ClipToBounds="True" HorizontalAlignment="Stretch"/>
 
         <!-- Button for triggering Library Generator Gui. I will not initially implement this as a .exe -->
-        <Image Grid.Column="0" Grid.Row="0" x:Name="LibraryGeneratorLogo" Height="165" VerticalAlignment="Bottom" Source="Resources/Icons/libraryGenerator.png" Stretch="Fill" MouseLeftButtonDown="LibraryGenerator_Click" MouseEnter="LibraryGenerator_MouseEnter" MouseLeave="LibraryGenerator_MouseLeave" MinWidth="120" MaxWidth="120" MinHeight="165" MaxHeight="165" HorizontalAlignment="Center"/>
+        <Image Grid.Column="0" Grid.Row="0" x:Name="LibraryGeneratorLogo" Height="165" VerticalAlignment="Bottom" Source="./Resources/Icons/libraryGenerator.png" Stretch="Fill" MouseLeftButtonDown="LibraryGenerator_Click" MouseEnter="LibraryGenerator_MouseEnter" MouseLeave="LibraryGenerator_MouseLeave" MinWidth="120" MaxWidth="120" MinHeight="165" MaxHeight="165" HorizontalAlignment="Center"/>
 
         <!-- Button for triggering Library Forge Gui. I will not initially implement this as a .exe -->
-        <Image Grid.Column="1" Grid.Row="0" x:Name="LibraryForgeLogo" Height="165" VerticalAlignment="Bottom" Source="Resources/Icons/libraryForge.png" Stretch="Fill" MouseLeftButtonDown="LibraryForge_Click" MouseEnter="LibraryForge_MouseEnter" MouseLeave="LibraryForge_MouseLeave" MinWidth="120" MaxWidth="120" MinHeight="165" MaxHeight="165" HorizontalAlignment="Center"/>
+        <Image Grid.Column="1" Grid.Row="0" x:Name="LibraryForgeLogo" Height="165" VerticalAlignment="Bottom" Source="./Resources/Icons/libraryForge.png" Stretch="Fill" MouseLeftButtonDown="LibraryForge_Click" MouseEnter="LibraryForge_MouseEnter" MouseLeave="LibraryForge_MouseLeave" MinWidth="120" MaxWidth="120" MinHeight="165" MaxHeight="165" HorizontalAlignment="Center"/>
 
         <!-- Button for triggering Spectrum Generator Gui. I will not be implementing this as a .exe -->
-        <Image Grid.Column="2" Grid.Row="0" x:Name="SpectrumGeneratorLogo" VerticalAlignment="Bottom" Source="Resources/Icons/spectrumGenerator.png" Stretch="Fill" MouseLeftButtonDown="SpectrumGenerator_Click" MouseEnter="SpectrumGenerator_MouseEnter" MouseLeave="SpectrumGenerator_MouseLeave" MinWidth="120" MaxWidth="120" MinHeight="165" MaxHeight="165" HorizontalAlignment="Center" Width="120"/>
+        <Image Grid.Column="2" Grid.Row="0" x:Name="SpectrumGeneratorLogo" VerticalAlignment="Bottom" Source="./Resources/Icons/spectrumGenerator.png" Stretch="Fill" MouseLeftButtonDown="SpectrumGenerator_Click" MouseEnter="SpectrumGenerator_MouseEnter" MouseLeave="SpectrumGenerator_MouseLeave" MinWidth="120" MaxWidth="120" MinHeight="165" MaxHeight="165" HorizontalAlignment="Center" Width="120"/>
 
         <!-- Button for triggering Spectrum Searcher Gui and .exe -->
-        <Image Grid.Column="3" Grid.Row="0" x:Name="SpectrumSearcherLogo" Height="165" VerticalAlignment="Bottom" Source="Resources/Icons/spectrumSearcher.png" Stretch="Fill" MouseLeftButtonDown="SpectrumSearcher_Click" MouseEnter="SpectrumSearcher_MouseEnter" MouseLeave="SpectrumSearcher_MouseLeave" MinWidth="120" MaxWidth="120" MinHeight="165" MaxHeight="165" HorizontalAlignment="Center"/>
+        <Image Grid.Column="3" Grid.Row="0" x:Name="SpectrumSearcherLogo" Height="165" VerticalAlignment="Bottom" Source="./Resources/Icons/spectrumSearcher.png" Stretch="Fill" MouseLeftButtonDown="SpectrumSearcher_Click" MouseEnter="SpectrumSearcher_MouseEnter" MouseLeave="SpectrumSearcher_MouseLeave" MinWidth="120" MaxWidth="120" MinHeight="165" MaxHeight="165" HorizontalAlignment="Center"/>
 
         <!-- Button for triggering Peak Finder Gui and .exe -->
-        <Image Grid.Column="4" Grid.Row="0" x:Name="PeakFinderLogo" Height="165" VerticalAlignment="Bottom" Source="Resources/Icons/peakFinder.png" Stretch="Fill" MouseLeftButtonDown="PeakFinder_Click" MouseEnter="PeakFinder_MouseEnter" MouseLeave="PeakFinder_MouseLeave" MinWidth="120" MaxWidth="120" MinHeight="165" MaxHeight="165" HorizontalAlignment="Center"/>
+        <Image Grid.Column="4" Grid.Row="0" x:Name="PeakFinderLogo" Height="165" VerticalAlignment="Bottom" Source="./Resources/Icons/peakFinder.png" Stretch="Fill" MouseLeftButtonDown="PeakFinder_Click" MouseEnter="PeakFinder_MouseEnter" MouseLeave="PeakFinder_MouseLeave" MinWidth="120" MaxWidth="120" MinHeight="165" MaxHeight="165" HorizontalAlignment="Center"/>
 
         <!-- Button for triggering Result Cleaner Gui.  -->
-        <Image Grid.Column="5" Grid.Row="0" x:Name="ResultCleanerLogo" Height="165" VerticalAlignment="Bottom" Source="Resources/Icons/resultCleanerBroomOutline.png" Stretch="Fill" MouseLeftButtonDown="DataCleaner_Click" MouseEnter="DataCleaner_MouseEnter" MouseLeave="DataCleaner_MouseLeave" MinWidth="120" MaxWidth="120" MinHeight="165" MaxHeight="165" HorizontalAlignment="Center"/>
+        <Image Grid.Column="5" Grid.Row="0" x:Name="ResultCleanerLogo" Height="165" VerticalAlignment="Bottom" Source="./Resources/Icons/resultCleanerBucket.png" Stretch="Fill" MouseLeftButtonDown="DataCleaner_Click" MouseEnter="DataCleaner_MouseEnter" MouseLeave="DataCleaner_MouseLeave" MinWidth="120" MaxWidth="120" MinHeight="165" MaxHeight="165" HorizontalAlignment="Center"/>
 
         <!-- Button for the Lipidex Logo and link to the GitHub currently -->
-        <Image Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="2" x:Name="LipidexLogo" HorizontalAlignment="Left" VerticalAlignment="Bottom" Source="Resources/Icons/lipidexLogo.png" Stretch="Uniform" MouseEnter="LipidexLogo_MouseEnter" MouseLeave="LipidexLogo_MouseLeave" MouseLeftButtonDown="LipidexLogo_Click" StretchDirection="Both" MaxWidth="350" Margin="40,0,0,0"/>
+        <Image Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="2" x:Name="LipidexLogo" HorizontalAlignment="Left" VerticalAlignment="Bottom" Source="./Resources/Icons/lipidexLogo.png" Stretch="Uniform" MouseEnter="LipidexLogo_MouseEnter" MouseLeave="LipidexLogo_MouseLeave" MouseLeftButtonDown="LipidexLogo_Click" StretchDirection="Both" MaxWidth="350" Margin="40,0,0,0"/>
 
         <!-- Button for the Coon lab Logo and link to the CoonLab website-->
-        <Image Grid.ColumnSpan="2" Grid.Row="2" Grid.Column="4" x:Name="CoonLogo" HorizontalAlignment="Right" VerticalAlignment="Bottom" Source="Resources/Icons/coonLogo.png" Stretch="Uniform" MouseLeftButtonDown="CoonLogo_Click" MouseEnter="CoonLogo_MouseEnter" MouseLeave="CoonLogo_MouseLeave" StretchDirection="Both" MaxHeight="150" Margin="0,0,40,0"/>
+        <Image Grid.ColumnSpan="2" Grid.Row="2" Grid.Column="4" x:Name="CoonLogo" HorizontalAlignment="Right" VerticalAlignment="Bottom" Source="./Resources/Icons/coonLogo.png" Stretch="Uniform" MouseLeftButtonDown="CoonLogo_Click" MouseEnter="CoonLogo_MouseEnter" MouseLeave="CoonLogo_MouseLeave" StretchDirection="Both" MaxHeight="150" Margin="0,0,40,0"/>
     </Grid>
 </Window>
