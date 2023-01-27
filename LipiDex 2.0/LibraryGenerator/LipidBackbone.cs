@@ -64,17 +64,6 @@ namespace LipiDex_2._0.LibraryGenerator
         }
 
         /// <summary>
-		/// Stringify relevant backbone properties to save to the library csv file.
-		/// </summary>
-		/// <returns>
-		/// Return a stringified representation of this LipidBackbone object
-		/// </returns>
-		public string SaveString()
-        {
-            return string.Format("{0},{1},{2}", this._name, this._formula.ToString(), this._numberMoieties);
-        }
-
-        /// <summary>
         /// Takes in a edited backbone name and makes sure it's not null or empty. Saves result to internal variable if valid. 
         /// </summary>
         /// <returns>
@@ -129,9 +118,16 @@ namespace LipiDex_2._0.LibraryGenerator
             }
         }
 
+        public int GetNumberOfMoieties()
+        {
+            return this._numberMoieties;
+        }
+
+
         /// <summary>
         /// Takes the intermediate variables from the supplied LipidBackbone object and double checks that all values are valid. If parsing fails, this method returns false.
         /// </summary>
+        /// 
         public bool IsValid(int rowNumber)
         {
             if (this.ValidateBackboneName(this.name, rowNumber) && this.ValidateBackboneFormula(this.formula, rowNumber)
@@ -140,6 +136,17 @@ namespace LipiDex_2._0.LibraryGenerator
                 return true;
             }
             return false;
+        }
+
+        /// <summary>
+		/// Stringify relevant backbone properties to save to the library csv file.
+		/// </summary>
+		/// <returns>
+		/// Return a stringified representation of this LipidBackbone object
+		/// </returns>
+		public string SaveString()
+        {
+            return string.Format("{0},{1},{2}", this._name, this._formula.ToString(), this._numberMoieties);
         }
     }
 }

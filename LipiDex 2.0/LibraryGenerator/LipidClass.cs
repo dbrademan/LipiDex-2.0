@@ -49,8 +49,12 @@ namespace LipiDex_2._0.LibraryGenerator
         public string headGroupFormula { get; set; }   					//Elemental formula of head group
         public string adducts { get; set; }                             //Array of adduct objects allowed for each class
         public string classBackbone { get; set; }                       //Lipid backbone.
-		public string numberOfMoieties { get; set; }					//Number of bound moieties to the listed backbone
         public string optimalPolarity { get; set; }                     //Polarities that generate structural information
+        public string numberOfMoieties { get; set; }                    //Number of bound moieties to the listed backbone
+        public string moiety1 { get; set; }                             //Lipid moiety at the sn1 position
+        public string moiety2 { get; set; }                             //Lipid moiety at the sn2 position
+        public string moiety3 { get; set; }                             //Lipid moiety at the sn3 position
+        public string moiety4 { get; set; }                             //Lipid moiety at the sn4 position
 
         #endregion
 
@@ -60,7 +64,8 @@ namespace LipiDex_2._0.LibraryGenerator
         private List<Adduct> _adducts;                                  //Array of adduct objects allowed for each class
         private LipidBackbone _classBackbone;                           //Lipid backbone.	
         private string _optimalPolarity;                                //Polarities that generate structural information
-        private int _numberOfMoieties;                                  //Attached moities to this lipid class.
+        private int _numberOfMoieties;                                  //Number of moities attached to this lipid class.
+        private List<string> _boundMoietyClassifiers;                   //the string identifiers for the bound moieties
         private List<List<LipidMoiety>> _possibleLipidMoieties;			//Array of possible bound moieties
         private ChemicalFormula _neutralFormula;                        //Elemental formula of entire lipid class without adduct or attached moieties
 
@@ -86,10 +91,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		/// organizing lipid classes in the GUI grid.
 		/// <br/>
 		/// <br/>
-		/// Some validation methods in this class behave differently than the other lipid moieties. If the linker variables don't validate, report errors in a log box.
-		/// Does not immediately populate the following fields:
-		/// - _neutralFormula
-		/// ...
+		/// Some validation methods in this class behave differently than the other lipid moieties. If the linker variables don't validate, report errors.
         /// </summary>
         public LipidClass(string fullClassName, string classAbbreviation, string headgroupString,
 				string delimitedAdducts, string backboneClassifier, string optimalPolarity, string numberOfMoieties, string moiety1, string moiety2,
@@ -103,7 +105,7 @@ namespace LipiDex_2._0.LibraryGenerator
             ValidateLipidBackboneClassifier(backboneClassifier, -1, libraryEditorInstance);
 			ValidateOptimalPolarity(optimalPolarity, -1);
             ValidateNumberOfMoieties(numberOfMoieties, -1);
-            ValidateClassMoieties(moiety1, moiety2, moiety3, moiety4);
+            ValidateAllClassMoieties(moiety1, moiety2, moiety3, moiety4, -1);
         }
 
         /// <summary>
@@ -244,20 +246,24 @@ namespace LipiDex_2._0.LibraryGenerator
                     // there's some sort of text in the adduct table.
                     // try to parse it
                     this._adducts = new List<Adduct>();
-
+                    
                     var splitAdducts = textToValidate.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                    var validAdductStrings = new List<string>();
 
 					foreach (var potentialAdductString in splitAdducts)
 					{
 						CrossLinkAdductString(potentialAdductString, libraryEditorInstance);
 					}
 
-					// made it this far, all adducts have been linked to the lipid class.
+                    // made it this far, all adducts have been linked to the lipid class.
+                    this.adducts = textToValidate;
 					return true;
                 }
             }
             catch (ApplicationException e)
             {
+                this.adducts = textToValidate;
+
                 var messageBoxQuery = string.Format("Lipid adduct parsing error in table column 4, row {0}. Adduct string \"{1}\" has not been parsed correctly.\n\nSpecific error:\n{2}", rowNumber + 1, textToValidate, e.Message);
                 var messageBoxShortPrompt = string.Format("Lipid Adduct Parsing Error!");
                 var messageBoxButtonOptions = MessageBoxButton.OK;
@@ -295,6 +301,7 @@ namespace LipiDex_2._0.LibraryGenerator
                     CrossLinkBackboneString(textToValidate, libraryEditorInstance);
 
                     // made it this far, the backbone has successfully been linked to the lipid class.
+                    this.classBackbone = this._classBackbone.GetName();
                     return true;
                 }
             }
@@ -313,13 +320,13 @@ namespace LipiDex_2._0.LibraryGenerator
         /// <summary>
         /// Takes in an edited optimal polarity classifier. The following options are valid (ignore brackets):
         /// <br/>
-        /// <br/>&#x9;[""] - empty string, never will be ID'd at <i>molecular species level</i>
-        /// <br/>&#x9;["+"] - ID'd at <i>molecular species level</i> only in <b>positive mode</b>
-        /// <br/>&#x9;["-"] - ID'd at <i>molecular species level</i> only in <b>negative mode</b>
-        /// <br/>&#x9;["+-"] - Can be ID'd at <i>molecular species level</i> in <b>both polarities</b>
-        /// <br/>&#x9;["-+"] - Can be ID'd at <i>molecular species level</i> in <b>both polarities</b>
-        /// <br/>&#x9;["-/+"] - Can be ID'd at <i>molecular species level</i> in <b>both polarities</b>
-        /// <br/>&#x9;["+-"] - Can be ID'd at <i>molecular species level</i> in <b>both polarities</b>
+        /// <br/>[""] - empty string, never will be ID'd at <i>molecular species level</i>
+        /// <br/>["+"] - ID'd at <i>molecular species level</i> only in <b>positive mode</b>
+        /// <br/>["-"] - ID'd at <i>molecular species level</i> only in <b>negative mode</b>
+        /// <br/>["+-"] - Can be ID'd at <i>molecular species level</i> in <b>both polarities</b>
+        /// <br/>["-+"] - Can be ID'd at <i>molecular species level</i> in <b>both polarities</b>
+        /// <br/>["-/+"] - Can be ID'd at <i>molecular species level</i> in <b>both polarities</b>
+        /// <br/>["+/-"] - Can be ID'd at <i>molecular species level</i> in <b>both polarities</b>
         /// </summary>
         /// <returns>
         /// true if the provided optimal polarity is valid. Returns false otherwise and throws a popup.
@@ -336,19 +343,19 @@ namespace LipiDex_2._0.LibraryGenerator
                 }
                 else if (textToValidate.Equals("+"))
                 {
-                    this._optimalPolarity = "";
+                    this._optimalPolarity = "+";
                     this.optimalPolarity = this._optimalPolarity;
                     return true;
                 }
                 else if (textToValidate.Equals("-"))
                 {
-                    this._optimalPolarity = "";
+                    this._optimalPolarity = "-";
                     this.optimalPolarity = this._optimalPolarity;
                     return true;
                 }
                 else if (textToValidate.Equals("+-") || textToValidate.Equals("-+") || textToValidate.Equals("+/-") || textToValidate.Equals("-/+"))
                 {
-                    this._optimalPolarity = "";
+                    this._optimalPolarity = "+/-";
                     this.optimalPolarity = this._optimalPolarity;
                     return true;
                 }
@@ -356,20 +363,20 @@ namespace LipiDex_2._0.LibraryGenerator
                 {
                     // throw error
                     throw new FormatException("Optimal polarity value should be one of the following options:" +
-                        "\n\t[\"\"] - empty string, never will be ID'd at molecular species level" +
-                        "\n\t[\"+\"] - ID'd at molecular species level only in positive mode" +
-                        "\n\t[\"-\"] - ID'd at molecular species level only in negative mode" +
-                        "\n\t[\"+-\"] - Can be ID'd at molecular species level in both polarities" +
-                        "\n\t[\"-+\"] - Can be ID'd at molecular species level in both polarities" +
-                        "\n\t[\"-/+\"] - Can be ID'd at molecular species level in both polarities" +
-                        "\n\t[\"+-\"] - Can be ID'd at molecular species level in both polarities");
+                        "\n[\"\"] - empty string, never will be ID'd at molecular species level" +
+                        "\n[\"+\"] - ID'd at molecular species level only in positive mode" +
+                        "\n[\"-\"] - ID'd at molecular species level only in negative mode" +
+                        "\n[\"+-\"] - Can be ID'd at molecular species level in both polarities" +
+                        "\n[\"-+\"] - Can be ID'd at molecular species level in both polarities" +
+                        "\n[\"-/+\"] - Can be ID'd at molecular species level in both polarities" +
+                        "\n[\"+/-\"] - Can be ID'd at molecular species level in both polarities");
                 }
 
                 
             }
             catch (Exception e)
             {
-                var messageBoxQuery = string.Format("Optimal polarity parsing error in table column x, row {0}.\n\n " +
+                var messageBoxQuery = string.Format("Optimal polarity parsing error in table column 6, row {0}.\n\n " +
                     "The exact error message is as follows:\n{1}\n\n", rowNumber + 1, e.Message);
                 var messageBoxShortPrompt = string.Format("Optimal Polarity Parsing Error!");
                 var messageBoxButtonOptions = MessageBoxButton.OK;
@@ -381,9 +388,142 @@ namespace LipiDex_2._0.LibraryGenerator
             }
         }
 
-        public bool ValidateClassMoieties(string moiety1, string moiety2, string moiety3, string moiety4)
+        /// <summary>
+        /// Called when loading lipid classes from template or saving classes to template. Checks to see if the number of provided moiety classifiers matches the class Number of Moieties
+        /// </summary>
+        /// <returns>
+        /// true if the count of the provided moiety classifiers match the number of class moieties. Returns false otherwise and throws a popup.
+        /// </returns>
+        public bool ValidateAllClassMoieties(string moiety1, string moiety2, string moiety3, string moiety4, int rowNumber)
         {
+            this._boundMoietyClassifiers= new List<string>();
 
+            // store all moieties in a list for easy manipulation
+            var moietiesToCheck = new List<string>
+            {
+                moiety1,
+                moiety2,
+                moiety3,
+                moiety4
+            };
+
+            try
+            {
+                // check to see that number of non-empty moieties is equal to or less than the number of moieties property
+                var numProvidedMoieties = 0;
+
+                foreach (var moiety in moietiesToCheck)
+                {
+                    if (!string.IsNullOrWhiteSpace(moiety))
+                    {
+                        numProvidedMoieties++;
+                    }
+                }
+
+                // check to make sure that Num Moieties == number provided moiety classifiers
+                if (numProvidedMoieties > this._numberOfMoieties)
+                {
+                    throw new ApplicationException("\"Error on lipid class import/export!\n\n\"Number of Moieties\" column is smaller than the number of moiety classifiers provided in columns 8-11. These numbers should be equal before saving data.");
+                }
+                else if (numProvidedMoieties < this._numberOfMoieties)
+                {
+                    throw new ApplicationException("Error on lipid class import/export!\n\nThe number of saved moiety classifiers is less than the \"Number of Moieties\" column. These numbers should have already been equal.");
+                }
+
+                // Made it this far. Classifiers are likely okay.
+                // Specific classifier validation will be done when defining fragmentation rules.
+                this._boundMoietyClassifiers = moietiesToCheck;
+                this.moiety1 = moiety1;
+                this.moiety2 = moiety2;
+                this.moiety3 = moiety3;
+                this.moiety4 = moiety4;
+                return true;
+            }
+            catch (ApplicationException e) 
+            { 
+                var messageBoxQuery = string.Format("Error parsing lipid class moiety categorical values in table columns 8-11, row {0}.\n\n " +
+                    "The exact error message is as follows:\n{1}\n\n", rowNumber + 1, e.Message);
+                var messageBoxShortPrompt = string.Format("Lipid Class Moiety 1-4 Parsing Error!");
+                var messageBoxButtonOptions = MessageBoxButton.OK;
+                var messageBoxImage = MessageBoxImage.Error;
+
+                MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage); 
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Called when editing a single lipid class moiety. Checks to see if the number of provided moiety classifiers matches the class Number of Moieties
+        /// </summary>
+        /// <returns>
+        /// true if the count of the provided moiety classifiers match the number of class moieties. Returns false otherwise and throws a popup.
+        /// </returns>
+        public bool ValidateSingleChangedMoiety(string moietyToValidate, int columnNumber, int rowNumber)
+        {
+            var changedMoietyIndex = columnNumber - 6;
+
+            // reset the boundMoietyClassifiers to empty list.
+            this._boundMoietyClassifiers = new List<string>();
+
+            // store all moieties in a list for easy manipulation
+            List<string> moietiesToCheck = null;
+
+            try
+            {
+                switch (changedMoietyIndex)
+                {
+                    case 1:
+                        moietiesToCheck = new List<string> { moietyToValidate, this.moiety2, this.moiety3, this.moiety4 };
+                        break;
+                    case 2:
+                        moietiesToCheck = new List<string> { this.moiety1, moietyToValidate, this.moiety3, this.moiety4 };
+                        break;
+                    case 3:
+                        moietiesToCheck = new List<string> { this.moiety1, this.moiety2, moietyToValidate, this.moiety4 };
+                        break;
+                    case 4:
+                        moietiesToCheck = new List<string> { this.moiety1, this.moiety2, this.moiety3, moietyToValidate };
+                        break;
+                }
+
+                // check to see that number of non-empty moieties is equal to or less than the number of moieties property
+                var numProvidedMoieties = 0;
+
+                foreach (var moiety in moietiesToCheck)
+                {
+                    if (!string.IsNullOrWhiteSpace(moiety))
+                    {
+                        numProvidedMoieties++;
+                    }
+                }
+
+                // check to make sure that Num Moieties == number provided moiety classifiers
+                if (numProvidedMoieties > this._numberOfMoieties)
+                {
+                    throw new ApplicationException("Moiety added in column {0}, row {1} has exceeded the value in \"Num Moieties\" column. This discrepency must be fixed before saving is possible.");
+                }
+
+                // Made it this far. Classifiers are likely okay.
+                // Specific classifier validation will be done when defining fragmentation rules.
+                this._boundMoietyClassifiers = moietiesToCheck;                
+                this.moiety1 = moietiesToCheck[0];
+                this.moiety2 = moietiesToCheck[1];
+                this.moiety3 = moietiesToCheck[2];
+                this.moiety4 = moietiesToCheck[3];
+                return true;
+            }
+            catch (ApplicationException e)
+            {
+                var messageBoxQuery = string.Format("Error parsing lipid class moiety categorical values in table column {2}, row {0}.\n\n " +
+                    "The exact error message is as follows:\n{1}\n\n", rowNumber + 1, e.Message, columnNumber);
+                var messageBoxShortPrompt = string.Format("Error Adding New Lipid Moiety!");
+                var messageBoxButtonOptions = MessageBoxButton.OK;
+                var messageBoxImage = MessageBoxImage.Error;
+
+                MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
+                return false;
+            }
+            
         }
 
         /// <summary>
@@ -448,9 +588,32 @@ namespace LipiDex_2._0.LibraryGenerator
             {
                 if (IsInteger(textToValidate))
                 {
-                    this._numberOfMoieties = Math.Abs(Convert.ToInt32(textToValidate));
-                    this.numberOfMoieties = this._numberOfMoieties.ToString();
-                    return true;
+                    var potentialNumberOfMoieties = Math.Abs(Convert.ToInt32(textToValidate));
+
+                    // make sure number of moieties is not greater than the maximum permissable number of moieties on the backbone.
+                    // This check will likely help down the line if we decide to do more advanced structural determination
+                    if (potentialNumberOfMoieties > this._classBackbone.GetNumberOfMoieties())
+                    {
+                        this._numberOfMoieties = this._classBackbone.GetNumberOfMoieties();
+                        this.numberOfMoieties = this._numberOfMoieties.ToString();
+                        return true;
+
+                        var messageBoxQuery = string.Format("Number of moieties for the lipid class {0} is greater than specified lipid backbone {1} allows.\n\n" +
+                            "\"Number of Moieties\" column has been set to the maximum number of moieties allowed by the backbone\n\nMore information:\n\nBackbone \"{1}\" allows {2} moieties" +
+                            "\nNumber of moieties provided: {2}", potentialNumberOfMoieties, this._classBackbone.GetName(), this._classBackbone.GetNumberOfMoieties());
+                        var messageBoxShortPrompt = string.Format("Warning - Too many moieties!");
+                        var messageBoxButtonOptions = MessageBoxButton.OK;
+                        var messageBoxImage = MessageBoxImage.Warning;
+
+                        MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
+                    }
+                    else
+                    {
+                        this._numberOfMoieties = Math.Abs(Convert.ToInt32(textToValidate));
+                        this.numberOfMoieties = this._numberOfMoieties.ToString();
+                        return true;
+                    }
+                    
                 }
                 else
                 {
@@ -459,7 +622,7 @@ namespace LipiDex_2._0.LibraryGenerator
             }
             catch (ArgumentException e)
             {
-                var messageBoxQuery = string.Format("Number of moieties parsing error in table column 4, row {0}.\n\nError Message:\n{1}", rowNumber + 1, e.Message);
+                var messageBoxQuery = string.Format("Number of moieties parsing error in table column 7, row {0}.\n\nError Message:\n{1}", rowNumber + 1, e.Message);
                 var messageBoxShortPrompt = string.Format("Number of Moieties Parsing Error!");
                 var messageBoxButtonOptions = MessageBoxButton.OK;
                 var messageBoxImage = MessageBoxImage.Error;
@@ -490,9 +653,18 @@ namespace LipiDex_2._0.LibraryGenerator
             return this.GetName();
         }
 
-        public bool IsValid()
+        public bool IsValid(LibraryEditor libraryEditorInstance)
         {
-            return true;
+
+            // do a bunch of validation methods on the properties stored in the data grid.
+            if (ValidateFullLipidClassName(this.fullClassName, -1) && ValidateLipidClassAbbreviation(this.name, -1) && ValidateLipidHeadgroup(this.headGroupFormula, -1)
+                && ValidateLipidAdductsClassifier(this.adducts, -1, libraryEditorInstance) && ValidateLipidBackboneClassifier(this.classBackbone, -1, libraryEditorInstance)
+                && ValidateOptimalPolarity(this.optimalPolarity, -1) && ValidateNumberOfMoieties(this.numberOfMoieties, -1) && ValidateAllClassMoieties(this.moiety1,
+                this.moiety2, this.moiety3, this.moiety4, -1)) 
+            {
+                return true;
+            }
+            return false;
         }
 
 		public new ChemicalFormula GetChemicalFormula()
@@ -504,23 +676,6 @@ namespace LipiDex_2._0.LibraryGenerator
 
 			// add headgroup formula
 			returnFormula.Add(this._headGroupFormula);
-
-            // don't add adduct formulas here.
-			// This needs to be done on the `lipid` side
-            /*
-			foreach (var adduct in this._adducts)
-			{
-
-			}
-			*/
-
-            // don't add the moity formula's here. Apparently that needs to be done on the `lipid` side
-            /*
-			foreach (var moiety in this._possibleLipidMoieties)
-			{
-
-			}
-			*/
 
             // add adduct formula
             return returnFormula;
@@ -537,6 +692,33 @@ namespace LipiDex_2._0.LibraryGenerator
 		{
 			return this._possibleLipidMoieties;
 		}
+
+        public string SaveString()
+        {
+            var adductStrings = new List<string>();
+
+            foreach (var adduct in this._adducts)
+            {
+                adductStrings.Add(adduct.GetName());
+            }
+            var savableAdductString = string.Join(";", adductStrings);
+            var backboneString = this._classBackbone.GetName();
+
+            var returnString = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}", 
+                this._name, 
+                this._fullClassName, 
+                this.headGroupFormula.ToString(),
+                savableAdductString,
+                backboneString,
+                this._optimalPolarity, 
+                this._numberOfMoieties, 
+                this._boundMoietyClassifiers[0],
+                this._boundMoietyClassifiers[1], 
+                this._boundMoietyClassifiers[2], 
+                this._boundMoietyClassifiers[3]
+                );
+            return returnString;
+        }
 
         /*
 		//Return array of all fatty acid types

@@ -40,7 +40,6 @@ namespace LipiDex_2._0.LibraryGenerator
             LoadLipidAdducts(libraryPath);
             LoadLipidBackbones(libraryPath);
             LoadLipidClasses(libraryPath);
-            LinkMoietiesToLipidClasses();
 
             //
             //LoadFragmentationRules();
@@ -994,9 +993,13 @@ namespace LipiDex_2._0.LibraryGenerator
                     string delimitedAdducts = reader["Adducts"];
                     string backboneClassifierString = reader["Backbone"];
                     string optimalPolarityString = reader["Optimal Polarity"];
-                    string numberOfMotifs = reader["Number of Moieties"];
+                    string numberOfMoieties = reader["Number of Moieties"];
+                    string moiety1 = reader["Moiety 1"];
+                    string moiety2 = reader["Moiety 2"];
+                    string moiety3 = reader["Moiety 3"];
+                    string moiety4 = reader["Moiety 4"];
 
-                    var lipidClass = new LipidClass(className, classAbbreviation, headGroup, delimitedAdducts, backboneClassifierString, optimalPolarityString, numberOfMotifs, moiety1, moitey2, moiety3, moiety4 this);
+                    var lipidClass = new LipidClass(className, classAbbreviation, headGroup, delimitedAdducts, backboneClassifierString, optimalPolarityString, numberOfMoieties, moiety1, moiety2, moiety3, moiety4, this);
                     DataGridBinding_LipidClasses.Add(lipidClass);
                 }
 
@@ -1014,24 +1017,6 @@ namespace LipiDex_2._0.LibraryGenerator
         }
 
         /// <summary>
-        /// Go through the ObservableCollection&lt;LipidClass&gt;<br/> and attach the respective lipid moieties to the object where required.
-        /// </summary>
-        private void LinkMoietiesToLipidClasses()
-        {
-            try
-            {
-                foreach (var lipidClass in DataGridBinding_LipidClasses)
-                {
-                    lipidClass.BindMoieties(DataGridBinding_FattyAcids, DataGridBinding_LipidClasses);
-                }
-            }
-            catch (ApplicationException e)
-            {
-
-            }
-        }
-
-        /// <summary>
         /// Add a new lipid class to the lipid class grid and bind a matching object to the adduct ObservableCollection&lt;LipidClass&gt;<br/>Adds brief color highlight when row is added
         /// </summary>
         private void Button_LipidClasses_Add_Click(object sender, RoutedEventArgs e)
@@ -1043,9 +1028,12 @@ namespace LipiDex_2._0.LibraryGenerator
             var newClassBackboneClassifier = "Glycerol";
             var newClassOptimalPolarity = "+";
             var newClassNumberOfMoieties = "2";
-
+            var newClassMoiety1 = "Alkyl";
+            var newClassMoiety2 = "Alkyl";
+            var newClassMoiety3 = "";
+            var newClassMoiety4 = "";
             var newlipidClassObject = new LipidClass(newClassFullName, newClassAbbreviation, newClassHeadgroup, newClassDelimitedAdducts, newClassBackboneClassifier, 
-                newClassOptimalPolarity, newClassNumberOfMoieties, this);
+                newClassOptimalPolarity, newClassNumberOfMoieties, newClassMoiety1, newClassMoiety2, newClassMoiety3, newClassMoiety4, this);
             DataGridBinding_LipidClasses.Add(newlipidClassObject);
 
             // force update of data grid? 
@@ -1094,8 +1082,7 @@ namespace LipiDex_2._0.LibraryGenerator
                 var lipidClass = DataGridBinding_LipidClasses[i];
 
                 // if there is an invalid lipidClass, let validation message box be thrown and set all valid to false.
-                // this will break on 
-                if (lipidClass.IsValid())
+                if (lipidClass.IsValid(this))
                 {
                     validLibrary = true;
                 }
@@ -1137,7 +1124,7 @@ namespace LipiDex_2._0.LibraryGenerator
             }
             else
             {
-                var messageBoxQuery = string.Format("Formatting error(s) detected with adduct entries in library \"{0}\". They must be corrected before this library can be saved.", System.IO.Path.GetFileNameWithoutExtension(libraryPath));
+                var messageBoxQuery = string.Format("Formatting error(s) detected with lipid class entries in library \"{0}\". They must be corrected before this library can be saved.", System.IO.Path.GetFileNameWithoutExtension(libraryPath));
                 var messageBoxShortPrompt = "Library Formatting Error!";
                 var messageBoxButtonOptions = MessageBoxButton.OK;
                 var messageBoxImage = MessageBoxImage.Error;
@@ -1147,32 +1134,33 @@ namespace LipiDex_2._0.LibraryGenerator
         }
 
         /// <summary>
-        /// - Saves all changes made to the lipid adduct library stored in the [base]/Resources/LipidexLibraries directory if all changes are valid.
+        /// - Saves all changes made to the lipid class library stored in the [base]/Resources/LipidexLibraries directory if all changes are valid.
         /// <br/>
         /// - If an error occurs during save, rolls back library changes to original
         /// <br/>
-        /// - Clears the ObservableCollection&lt;Adduct&gt; and repopulates it from the text-based LipiDex libraries.
+        /// - Clears the ObservableCollection&lt;LipidClass&gt; and repopulates it from the text-based LipiDex libraries.
         /// </summary>
         private void SaveLipidClassLibrary(string libraryBasePath)
         {
-            var adductLibraryPath = System.IO.Path.Combine(libraryBasePath, "Adducts.csv");
-            var backupAdductLibraryPath = System.IO.Path.Combine(libraryBasePath, "Adducts_tmpBackup.csv");
+            var lipidClassLibraryPath = System.IO.Path.Combine(libraryBasePath, "Lipid_Classes.csv");
+            var backupLipidClassLibraryPath = System.IO.Path.Combine(libraryBasePath, "Lipid_Classes_tmpBackup.csv");
 
             try
             {
                 // first, back up old version of the adduct library
-                File.Copy(adductLibraryPath, backupAdductLibraryPath);
+                File.Copy(lipidClassLibraryPath, backupLipidClassLibraryPath);
 
                 // overwrite old library version
-                var writer = new StreamWriter(adductLibraryPath);
+                var writer = new StreamWriter(lipidClassLibraryPath);
 
                 // write txt file headers
-                writer.WriteLine(string.Format("{0},{1},{2},{3},{4}", "Name", "Formula", "Loss", "Polarity", "Charge"));
+                writer.WriteLine(string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}", "Abbreviation","Full Name","Head Group",
+                    "Adducts","Backbone","Optimal Polarity","Number of Moieties","Moiety 1","Moiety 2","Moiety 3","Moiety 4"));
 
                 // write out each adduct
-                foreach (var adduct in DataGridBinding_Adducts)
+                foreach (var lipidClass in DataGridBinding_LipidClasses)
                 {
-                    writer.WriteLine(adduct.SaveString());
+                    writer.WriteLine(lipidClass.SaveString());
                 }
 
                 writer.Close();
@@ -1180,16 +1168,16 @@ namespace LipiDex_2._0.LibraryGenerator
 
                 // successfully wrote library
                 // delete backup copy of old library.
-                File.Delete(backupAdductLibraryPath);
+                File.Delete(backupLipidClassLibraryPath);
             }
             catch (Exception e)
             {
                 // something about updating the new library failed.
                 // restore old library
-                File.Copy(backupAdductLibraryPath, adductLibraryPath, true);
+                File.Copy(backupLipidClassLibraryPath, lipidClassLibraryPath, true);
 
                 // delete backup copy
-                File.Delete(backupAdductLibraryPath);
+                File.Delete(backupLipidClassLibraryPath);
 
                 // throw exception back to upper level
                 throw new InvalidOperationException(e.Message);
@@ -1197,9 +1185,9 @@ namespace LipiDex_2._0.LibraryGenerator
         }
 
         /// <summary>
-        /// Effectively discards all changes since the library was last saved. Clears the ObservableCollection&lt;Adduct&gt; and repopulates it from the text-based LipiDex Libraries
+        /// Effectively discards all changes since the library was last saved. Clears the ObservableCollection&lt;LipidClass&gt; and repopulates it from the text-based LipiDex Libraries
         /// </summary>
-        private void Button_LipidClasses_ReloadOldAdducts_Click(object sender, RoutedEventArgs e)
+        private void Button_LipidClasses_ReloadOldLipidClasses_Click(object sender, RoutedEventArgs e)
         {
             var messageBoxQuery = string.Format("Reload library \"{0}\" from last-saved version? Any unsaved edits will be lost.", System.IO.Path.GetFileNameWithoutExtension(libraryPath));
             var messageBoxShortPrompt = "Reloading last saved version of library!";
@@ -1212,13 +1200,10 @@ namespace LipiDex_2._0.LibraryGenerator
             {
                 LoadLipidClasses(this.libraryPath);
             }
-
         }
 
-
-
         /// <summary>
-        /// Event which generates row numbers in data grid using an object's index in the ObservableCollection&lt;Adduct&gt;.
+        /// Event which generates row numbers in data grid using an object's index in the ObservableCollection&lt;LipidClass&gt;.
         /// </summary>
         private void DataGrid_LipidClasses_LoadingRow(object sender, DataGridRowEventArgs e)
         {
@@ -1236,43 +1221,58 @@ namespace LipiDex_2._0.LibraryGenerator
             // validate the individual edited cell
             switch (e.Column.DisplayIndex)
             {
-                // adduct name
+                // lipid class abbreviation
                 case 0:
                     var index = e.Row.GetIndex();
                     var editedTextBox = (TextBox)e.EditingElement;
-                   // DataGridBinding_LipidClasses[index].IsValid(editedTextBox.Text, index);
+                    DataGridBinding_LipidClasses[index].ValidateLipidClassAbbreviation(editedTextBox.Text, index);
                     break;
 
-                // adduct formula
+                // lipid class full name
                 case 1:
                     index = e.Row.GetIndex();
                     editedTextBox = (TextBox)e.EditingElement;
-                    DataGridBinding_Adducts[index].ValidateAdductFormula(editedTextBox.Text, e.Row.GetIndex());
+                    DataGridBinding_LipidClasses[index].ValidateFullLipidClassName(editedTextBox.Text, e.Row.GetIndex());
                     break;
 
-                // adduct loss
+                // lipid class headgroup
                 case 2:
+                    index = e.Row.GetIndex();
+                    editedTextBox = (TextBox)e.EditingElement;
+                    DataGridBinding_LipidClasses[index].ValidateLipidHeadgroup(editedTextBox.Text, e.Row.GetIndex());
                     break;
-                // don't need a check for enabled/disabled since it's boolean. It will always be valid.
 
-                // adduct polarity
+                // lipid class adducts
                 case 3:
                     index = e.Row.GetIndex();
                     editedTextBox = (TextBox)e.EditingElement;
-                    DataGridBinding_Adducts[index].ValidateAdductPolarity(editedTextBox.Text, e.Row.GetIndex());
+                    DataGridBinding_LipidClasses[index].ValidateLipidAdductsClassifier(editedTextBox.Text, e.Row.GetIndex(), this);
                     break;
-                // don't need a check for enabled/disabled since it's boolean. It will always be valid.
 
-                // adduct charge
+                // lipid class backbone
                 case 4:
                     index = e.Row.GetIndex();
                     editedTextBox = (TextBox)e.EditingElement;
+                    DataGridBinding_LipidClasses[index].ValidateLipidBackboneClassifier(editedTextBox.Text, e.Row.GetIndex(), this);
+                    break;
 
-                    if (DataGridBinding_Adducts[index].ValidateAdductCharge(editedTextBox.Text, e.Row.GetIndex()))
-                    {
-                        editedTextBox.Text = DataGridBinding_Adducts[index].charge;
-                    }
+                // lipid class optimal polarity
+                case 5:
+                    index = e.Row.GetIndex();
+                    editedTextBox = (TextBox)e.EditingElement;
+                    DataGridBinding_LipidClasses[index].ValidateOptimalPolarity(editedTextBox.Text, e.Row.GetIndex());
+                    break;
 
+                case 6:
+                    index = e.Row.GetIndex();
+                    editedTextBox= (TextBox)e.EditingElement;
+                    DataGridBinding_LipidClasses[index].ValidateNumberOfMoieties(editedTextBox.Text, e.Row.GetIndex());
+                    break;
+
+                case 7: case 8: case 9: case 10:
+                    index = e.Row.GetIndex();
+                    editedTextBox = (TextBox)e.EditingElement;
+                    DataGridBinding_LipidClasses[index].ValidateSingleChangedMoiety(editedTextBox.Text, e.Column.DisplayIndex, e.Row.GetIndex());
                     break;
             }
         }
