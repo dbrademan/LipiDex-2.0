@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LipiDex_2._0.PeakFinder
+namespace LipiDex2.PeakFinder
 {
     public class Library
     {
@@ -16,7 +16,6 @@ namespace LipiDex_2._0.PeakFinder
         {
             this.name = name;
             this.file = file;
-
         }
         // Activate library
         public void ChangeActive()

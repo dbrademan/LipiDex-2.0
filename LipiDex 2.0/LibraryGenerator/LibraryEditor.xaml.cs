@@ -15,7 +15,7 @@ using LumenWorks.Framework.IO.Csv;
 using System.IO;
 using CSMSL.Chemistry;
 
-namespace LipiDex_2._0.LibraryGenerator
+namespace LipiDex2.LibraryGenerator
 {
     /// <summary>
     /// Interaction logic for LibraryEditor.xaml

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using CSMSL.Chemistry;
 
-namespace LipiDex_2._0.LibraryGenerator
+namespace LipiDex2.LibraryGenerator
 {
     public class FattyAcid
     {

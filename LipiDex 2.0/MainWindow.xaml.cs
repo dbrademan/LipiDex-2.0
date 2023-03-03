@@ -1,4 +1,6 @@
-﻿using LipiDex_2._0.PeakFinder;
+﻿using LipiDex2.PeakFinder;
+using LipiDex2.SpectrumSearcher;
+using LipiDex2.tests;
 
 using System;
 using System.Collections.Generic;
@@ -20,7 +22,7 @@ using System.Windows.Threading;
 using System.Threading;
 using System.Diagnostics;
 
-namespace LipiDex_2._0
+namespace LipiDex2
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -47,8 +49,12 @@ namespace LipiDex_2._0
         {
             LibraryGeneratorLogo.Source = UpdateImageEvent(System.IO.Path.Combine("Resources","Icons","libraryGeneratorActive.png"));
 
-            var pf = new PeakFinder.PeakFinder();
-            string x = "asdf";
+            SpectrumSearcherTests ssTests = new SpectrumSearcherTests();
+            ssTests.ReadRawfile_WithTestRawfile_DoesntFail();
+            string a = "";
+
+            //var pf = new PeakFinder.PeakFinder();
+            //string x = "asdf";
         }
 
         private void LibraryGenerator_MouseLeave(object sender, RoutedEventArgs e)

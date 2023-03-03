@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CSMSL.Chemistry;
 
-namespace LipiDex_2._0.LibraryGenerator
+namespace LipiDex2.LibraryGenerator
 {
 	public class Adduct
     {

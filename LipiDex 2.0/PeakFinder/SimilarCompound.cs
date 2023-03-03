@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using static LipiDex_2._0.Utilities.Utilities;
+using static LipiDex2.Utilities.Utilities;
 
-namespace LipiDex_2._0.PeakFinder
+namespace LipiDex2.PeakFinder
 {
     public class SimilarCompound
     {

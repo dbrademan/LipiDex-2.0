@@ -1,9 +1,9 @@
-﻿<Window x:Name="Library_Selector" x:Class="LipiDex_2._0.LibraryGeneratorGui"
+﻿<Window x:Name="Library_Selector" x:Class="LipiDex2.LibraryGeneratorGui"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:LipiDex_2._0"
+        xmlns:local="clr-namespace:LipiDex2"
         mc:Ignorable="d"
         Title="Library Selector - Library Generator" Height="350" Width="644" MinWidth="644" MinHeight="350" Icon="../Resources/Icons/libraryGeneratorIcon.png">
     <Grid MinWidth="3" Background="#FFF1F1F1">

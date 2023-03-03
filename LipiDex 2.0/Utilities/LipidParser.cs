@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 using csgoslin; 
 
-namespace LipiDex_2._0.Utils
+namespace LipiDex2.Utils
 {
     public class LipidParser
     {

@@ -10,7 +10,7 @@ using System.Data.SQLite;
 
 
 
-namespace LipiDex_2._0.PeakFinder 
+namespace LipiDex2.PeakFinder 
 {
     public class PeakFinder  
     {

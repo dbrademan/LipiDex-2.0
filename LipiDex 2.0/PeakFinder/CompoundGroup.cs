@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 using csgoslin;
 
-namespace LipiDex_2._0.PeakFinder
+namespace LipiDex2.PeakFinder
 {
     internal class CompoundGroup
     {

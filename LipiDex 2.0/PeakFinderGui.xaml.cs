@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace LipiDex_2._0
+namespace LipiDex2
 {
     /// <summary>
     /// Interaction logic for PeakFinderGui.xaml

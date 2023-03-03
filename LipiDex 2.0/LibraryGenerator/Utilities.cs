@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 
-namespace LipiDex_2._0.LibraryGenerator
+namespace LipiDex2.LibraryGenerator
 {
     //Class with parameters and utilities used by all classes
 	//All the formula math seems really hacky. Should convert to CSMSL at some point...

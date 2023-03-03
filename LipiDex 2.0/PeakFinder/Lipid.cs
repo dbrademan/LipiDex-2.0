@@ -1,12 +1,12 @@
 ﻿using CSMSL.Analysis.ExperimentalDesign;
-using LipiDex_2._0.LibraryGenerator;
+using LipiDex2.LibraryGenerator;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LipiDex_2._0.PeakFinder
+namespace LipiDex2.PeakFinder
 {
     public class Lipid  // Inherit from Comparable<Lipid> 
     {

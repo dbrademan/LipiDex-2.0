@@ -11,9 +11,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.IO;
-using LipiDex_2._0.LibraryGenerator;
+using LipiDex2.LibraryGenerator;
 
-namespace LipiDex_2._0
+namespace LipiDex2
 {
     /// <summary>
     /// Interaction logic for LibraryGeneratorGui.xaml

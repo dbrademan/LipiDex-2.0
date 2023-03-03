@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LipiDex_2._0.LibraryGenerator
+namespace LipiDex2.LibraryGenerator
 {
     public class TransitionDefinition
     {

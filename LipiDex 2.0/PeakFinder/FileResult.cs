@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LipiDex_2._0.PeakFinder
+namespace LipiDex2.PeakFinder
 {
     /* 
     Contains all the data for one file, for one compound group 
