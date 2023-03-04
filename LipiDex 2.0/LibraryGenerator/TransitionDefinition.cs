@@ -10,11 +10,11 @@ namespace LipiDex_2._0.LibraryGenerator
     {
 		public double mass;                    //Mass of fragment if applicable
 		public double relativeIntensity;       //Relative intensity scaled to 1000
-		public string formula;                 //Elemental formula
+		public string formula;                 //Elemental Formula
 		public string displayName;      //Display name for Jtree display
-		public bool isFormula;              //Boolean if a formula was supplied
+		public bool isFormula;              //Boolean if a Formula was supplied
 		public int charge;                 //Charge on transition
-		public string massFormula;             //String to store supplied mass/formula string
+		public string massFormula;             //String to store supplied mass/Formula string
 		public string type;                    //String to store supplied type
 		public TransitionType typeObject;      //Transition type object					
 
@@ -35,7 +35,7 @@ namespace LipiDex_2._0.LibraryGenerator
 			//Parse massFormula field
 			ParseMassFormula(massFormula);
 
-			//Update mass and formula field if applicable
+			//Update mass and Formula field if applicable
 			UpdateMassFormula();
 		}
 
@@ -51,21 +51,21 @@ namespace LipiDex_2._0.LibraryGenerator
 
 		public void UpdateMassFormula()
 		{
-			//If a formula
+			//If a Formula
 			if (this.isFormula)
 			{
 				this.mass = Utilities.CalculateMassFromFormula(this.massFormula);
 				this.formula = this.massFormula;
 
 			}
-			//If not a formula
+			//If not a Formula
 			else
 			{
 				this.mass = Convert.ToDouble(this.massFormula);
 			}
 		}
 
-		//Check mass formula for correct declaration
+		//Check mass Formula for correct declaration
 		public void ParseMassFormula(string massFormula)
 		{
 			bool formula = false;
@@ -97,7 +97,7 @@ namespace LipiDex_2._0.LibraryGenerator
 					//CustomError e1 = new CustomError(massFormula + " is not a valid mass", null);
 				}
 			}
-			//Check formula validity
+			//Check Formula validity
 			else
 			{
 				try
@@ -111,13 +111,13 @@ namespace LipiDex_2._0.LibraryGenerator
                     }
 					else
                     {
-						throw new CustomException(massFormula + " is not a valid elemental formula", new ApplicationException(massFormula + " is not a valid elemental formula"));
+						throw new CustomException(massFormula + " is not a valid elemental Formula", new ApplicationException(massFormula + " is not a valid elemental Formula"));
 					}
 				}
 				catch (Exception e)
 				{
-					throw new CustomException(massFormula + " is not a valid elemental formula", e);
-					//CustomError e1 = new CustomError(massFormula + " is not a valid elemental formula", null);
+					throw new CustomException(massFormula + " is not a valid elemental Formula", e);
+					//CustomError e1 = new CustomError(massFormula + " is not a valid elemental Formula", null);
 				}
 			}
 
@@ -142,7 +142,7 @@ namespace LipiDex_2._0.LibraryGenerator
 				//Reparse display name
 				this.displayName = ParseDisplayName(massFormula + "," + relInt + "," + charge + "," + type);
 
-				//Update mass and formula field if applicable
+				//Update mass and Formula field if applicable
 				UpdateMassFormula();
 			}
 			catch (Exception e)
@@ -190,13 +190,13 @@ namespace LipiDex_2._0.LibraryGenerator
 			return result;
 		}
 
-		//Adds elemental formula to transition
+		//Adds elemental Formula to transition
 		public void AddFormula(string formula)
 		{
 			this.formula = formula;
 		}
 
-		//Returns elemental formula
+		//Returns elemental Formula
 		public string GetFormula()
 		{
 			return this.formula;
@@ -214,7 +214,7 @@ namespace LipiDex_2._0.LibraryGenerator
 			return this.relativeIntensity;
 		}
 
-		//Calculate elemental formula for transitions based on precursor formula
+		//Calculate elemental Formula for transitions based on precursor Formula
 		public void CalculateElementalComposition(string precursorFormula)
 		{
 			AddFormula(Utilities.AnnotateMassWithMZTolerance(mass, precursorFormula));

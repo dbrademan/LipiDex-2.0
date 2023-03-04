@@ -11,16 +11,16 @@ namespace LipiDex_2._0.LibraryGenerator
     {
 		public string className;                               //Full Class Name
 		public string classAbbreviation;                          //Abbreviated class name
-		public ChemicalFormula headGroup;                               //elemental formula of head group
+		public ChemicalFormula headGroup;                               //elemental Formula of head group
 		public List<Adduct> adducts;                                //Array of adduct objects allowed for each class
 		public bool sterol;                                 //true iff backbone of lipid is sterol
 		public bool glycerol;                               //true iff backbone of lipid is glycerol
 		public bool sphingoid;                              //true iff sphingoid base
-		public ChemicalFormula backboneFormula;                         //Elemental formula of backbone							
+		public ChemicalFormula backboneFormula;                         //Elemental Formula of backbone							
 		public int numberOfFattyAcids;                              //number of allowed fatty acids
 		public string optimalPolarity;                         //Fragment informative polarity
 		public List<List<FattyAcid>> possibleFattyAcids;  //Array of possible fatty acids
-		public string formula;                                 //Elemental formula of lipid class - fatty acids - adduct
+		public string formula;                                 //Elemental Formula of lipid class - fatty acids - adduct
 		public List<string> fattyAcidTypes;               //Arraylist of all possible fatty acid classes for class
 
 		//Constructor
@@ -42,7 +42,7 @@ namespace LipiDex_2._0.LibraryGenerator
 			this.fattyAcidTypes = fattyAcidTypes;
 			this.possibleFattyAcids = new List<List<FattyAcid>>();
 
-			//Calculate elemental formula
+			//Calculate elemental Formula
 			CalculateFormula();
 		}
 
@@ -147,7 +147,7 @@ namespace LipiDex_2._0.LibraryGenerator
 			return this.numberOfFattyAcids;
 		}
 
-		//Returns headgroup elemental formula
+		//Returns headgroup elemental Formula
 		public string GetHeadGroup()
 		{
 			return this.headGroup;
@@ -210,7 +210,7 @@ namespace LipiDex_2._0.LibraryGenerator
 			return count;
 		}
 
-		//Returns elemental formula
+		//Returns elemental Formula
 		public string GetFormula()
 		{
 			return this.formula;

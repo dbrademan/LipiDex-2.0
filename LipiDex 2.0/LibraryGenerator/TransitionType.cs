@@ -46,7 +46,7 @@ namespace LipiDex_2._0.LibraryGenerator
 					fragSum += fattyAcidArray[i].mass;
 				}
 
-				//(Electrons + moiety mass + formula mass) / charge
+				//(Electrons + moiety mass + Formula mass) / charge
 				result = AddElectrons((fragSum+mass),charge, polarity)/charge;
 			}
 			//If moiety-based fragment
@@ -60,25 +60,25 @@ namespace LipiDex_2._0.LibraryGenerator
 					fragSum += fattyAcidArray[i].mass;
 				}
 
-				//(Electrons + moiety mass + formula mass) / charge
+				//(Electrons + moiety mass + Formula mass) / charge
 				result = AddElectrons((fragSum + mass), charge, polarity) / charge;
 			}
 			//If static fragment
 			else if (!this.isNeutralLoss && !this.isFattyAcid)
 			{
-				//(Electrons + formula mass) / charge
+				//(Electrons + Formula mass) / charge
 				result = AddElectrons(mass, charge, polarity) / charge;
 			}
 			//If moeity-based neutral loss
 			else if (this.isNeutralLoss && this.isFattyAcid)
 			{
-				//(Electrons + (precursor - moiety + formula mass)) / charge
+				//(Electrons + (precursor - moiety + Formula mass)) / charge
 				result = AddElectrons((lipid.mass - fattyAcidArray[0].mass + mass), charge, polarity) / charge;
 			}
 			//If static neutral loss
 			else if (this.isNeutralLoss && !this.isFattyAcid)
 			{
-				//(Electrons + (precursor + formula mass)) / charge
+				//(Electrons + (precursor + Formula mass)) / charge
 				result = AddElectrons((lipid.mass + mass), charge, polarity) / charge;
 			}
 

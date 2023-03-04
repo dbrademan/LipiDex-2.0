@@ -70,7 +70,7 @@ namespace LipiDex_2._0.LibraryGenerator
 			this.uniqueTypes.Add(fattyAcidType);
 		}
 
-		//Get formula
+		//Get Formula
 		public string GetFormula()
 		{
 			return this.formula;

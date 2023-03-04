@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 namespace LipiDex_2._0.LibraryGenerator
 {
     //Class with parameters and utilities used by all classes
-	//All the formula math seems really hacky. Should convert to CSMSL at some point...
+	//All the Formula math seems really hacky. Should convert to CSMSL at some point...
 	public static class Utilities 
 	{
 		//User-supplied parameters
@@ -54,7 +54,7 @@ namespace LipiDex_2._0.LibraryGenerator
 			return result;
 		}
 
-		//Removes heavy elements from formula for later calculations
+		//Removes heavy elements from Formula for later calculations
 		public static string RemoveHeavyElements(string formula)
 		{
 			string result = formula;
@@ -78,7 +78,7 @@ namespace LipiDex_2._0.LibraryGenerator
 			return Math.Round(input, 4);
 		}
 
-		//Returns true iff a string is a valid elemental formula
+		//Returns true iff a string is a valid elemental Formula
 		public static bool IsFormula(string formulaString)
 		{
 			string newFormula = RemoveHeavyElements(formulaString);
@@ -99,7 +99,7 @@ namespace LipiDex_2._0.LibraryGenerator
 			return false;
 		}
 
-		//Returns the putative elementa formula of a mass based on user-prodvided constrains
+		//Returns the putative elementa Formula of a mass based on user-prodvided constrains
 		public static string AnnotateMassWithMZTolerance(double fragmentMass, string formula, double minimumMzTolerance, double minimumRingDoubleBondEquivalents)
 		{
 			List<string> elements = FormulaToElementArray(formula);
@@ -120,7 +120,7 @@ namespace LipiDex_2._0.LibraryGenerator
 					SkipPermutation(limits, counters);
 				}
 
-				//Check if formula minimizes ppm error
+				//Check if Formula minimizes ppm error
 				mzDifferenceTemporary = Math.Abs(fragmentMass- massTemporary);
 
 				if (mzDifferenceTemporary < minimumMz && CalculateRingDoubleBondEquivalents(ArrayToFormula(elements, counters)) >= minimumRingDoubleBondEquivalents)
@@ -139,7 +139,7 @@ namespace LipiDex_2._0.LibraryGenerator
 			return formulaMinimumPPM;
 		}
 
-		//Check if a formula is a valid elemental formula
+		//Check if a Formula is a valid elemental Formula
 		public static bool ValidElementalFormula(string input)
 		{
 			bool result = true;
@@ -208,7 +208,7 @@ namespace LipiDex_2._0.LibraryGenerator
 			}
 		}
 
-		//Calculate the monoisotopic mass from a formula, 
+		//Calculate the monoisotopic mass from a Formula, 
 		public static double CalculateMassFromFormula(string input)
 		{
 			double result = 0.0; //mass
@@ -250,8 +250,8 @@ namespace LipiDex_2._0.LibraryGenerator
 
 			string merged = formula1+formula2;
 
-			List<int> intArray; //numbers for formula
-			List<string> elementArray; //elements for formula
+			List<int> intArray; //numbers for Formula
+			List<string> elementArray; //elements for Formula
 
 			//parse out integers
 			intArray = FormulaToCountArray(merged);
@@ -291,7 +291,7 @@ namespace LipiDex_2._0.LibraryGenerator
 			return result;
 		}
 
-		//Converts a formula to an array of all contained elements
+		//Converts a Formula to an array of all contained elements
 		public static List<string> FormulaToElementArray(string formula)
 		{
 			List<string> split;
@@ -302,13 +302,13 @@ namespace LipiDex_2._0.LibraryGenerator
 			return split;
 		}
 
-		//Returns an integer array of the count of all elements in formula
+		//Returns an integer array of the count of all elements in Formula
 		public static List<int> FormulaToCountArray(string formula)
 		{
 			string temporaryString = RemoveHeavyElements(formula);
 			List<string> elementArray = FormulaToElementArray(temporaryString);
 
-			//Remove elements from formula and replace with comma
+			//Remove elements from Formula and replace with comma
 			for (int i = 0; i < elementArray.Count; i++)
 			{
 				temporaryString = temporaryString.Replace(elementArray[i], ", ");
@@ -357,7 +357,7 @@ namespace LipiDex_2._0.LibraryGenerator
 			return result;
 		}
 
-		//Annotate mass with putatuve elements formula within mass tolerance
+		//Annotate mass with putatuve elements Formula within mass tolerance
 		public static string AnnotateMassWithMZTolerance(double fragMass, string formula)
 		{
 			List<string> elements = FormulaToElementArray(formula);
@@ -378,7 +378,7 @@ namespace LipiDex_2._0.LibraryGenerator
 					SkipPermutation(limits, counters);
 				}
 
-				//Check if formula minimizes ppm error
+				//Check if Formula minimizes ppm error
 				mzDiffTemp = Math.Abs(fragMass - massTemp);
 
 				if (mzDiffTemp < minMZ)
@@ -418,7 +418,7 @@ namespace LipiDex_2._0.LibraryGenerator
 					SkipPermutation(limits, counters);
 				}
 
-				//Check if formula minimizes ppm error
+				//Check if Formula minimizes ppm error
 				ppmTemp = PpmDifference(fragMass, massTemp);
 
 				if (ppmTemp < minPPM)
@@ -457,7 +457,7 @@ namespace LipiDex_2._0.LibraryGenerator
 					SkipPermutation(limits, counters);
 				}
 
-				//Check if formula minimizes ppm error
+				//Check if Formula minimizes ppm error
 				ppmTemp = PpmDifference(fragMass, massTemp);
 				formulaTemp = ArrayToFormula(elements, counters);
 
@@ -490,7 +490,7 @@ namespace LipiDex_2._0.LibraryGenerator
 			return formulaMinPPM;
 		}
 
-		//Method to convert element array string to formula string
+		//Method to convert element array string to Formula string
 		public static string ElementArrayToString (string input)
 		{
 			string result = ""; //result string
@@ -573,7 +573,7 @@ namespace LipiDex_2._0.LibraryGenerator
 			return result;
 		}
 
-		//Converts arrays of elements and counts to formula
+		//Converts arrays of elements and counts to Formula
 		public static string ArrayToFormula(List<string> elements, List<int> counts)
 		{
 			string result = "";

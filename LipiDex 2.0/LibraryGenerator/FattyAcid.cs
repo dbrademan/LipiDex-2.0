@@ -11,7 +11,7 @@ namespace LipiDex_2._0.LibraryGenerator
     public class FattyAcid
     {
 		public static FattyAcidComparer FattyAcidComparer = new FattyAcidComparer();
-		public ChemicalFormula formula { get; set; }              //Elemental formula
+		public ChemicalFormula formula { get; set; }              //Elemental Formula
 		public string name { get; set; }                 //Abbreviated name
 		public double mass;              //Mass for sorting purpose
 		public int carbonNumber;        //Number of carbons in FA chain
@@ -68,10 +68,10 @@ namespace LipiDex_2._0.LibraryGenerator
 		}
 
 		/// <summary>
-		/// Return elemental formula of fatty acid
+		/// Return elemental Formula of fatty acid
 		/// </summary>
 		/// <returns>
-		/// Fatty acid chemical formula as a string
+		/// Fatty acid chemical Formula as a string
 		/// </returns>
 		/// <remarks>
 		/// Should refactor all formulae options to use CSMSL ChemicalFormula Object
@@ -96,7 +96,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		/// Get the mass of a fatty acid
 		/// </summary>
 		/// <returns>
-		/// (double) Fatty acid mass (as defined from the fatty acid's chemical formula)
+		/// (double) Fatty acid mass (as defined from the fatty acid's chemical Formula)
 		/// </returns>
 		public double GetMass()
 		{

@@ -58,7 +58,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		}
 
 
-		//Returns chemical formula
+		//Returns chemical Formula
 		public string GetFormula()
 		{
 			return this.formula;
