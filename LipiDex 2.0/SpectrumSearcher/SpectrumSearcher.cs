@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using csgoslin;
 using CSMSL;
 using CSMSL.IO.Thermo;
@@ -159,15 +160,19 @@ public class SpectrumSearcher
 			}
 		}
 
-		// Calculate spectral purity using the Spectral Deconvolution Workflow (LipiDex Cell paper, Fig. S6) 
-		foreach (var sampleSpectrum in sampleMs2Spectra)
+		Parallel.ForEach(sampleMs2Spectra, sampleSpectrum =>
 		{
+			// Calculate spectral purity using the Spectral Deconvolution Workflow (LipiDex Cell paper, Fig. S6).
 			sampleSpectrum.CalculateSpectralPurity(fattyAcidsDB, mzTol: mzTol);
-		}
+
+			// Then store the final identification results in properties for writing using ResultsWriter 
+			sampleSpectrum.FinalizeIdentifications();
+
+		});
+
 
 		// Write Spectrum Search results to CSV
 		ResultsWriter.WriteResults(sampleMs2Spectra);
-
 	}
 
 	/// <summary>
@@ -249,11 +254,11 @@ public class SpectrumSearcher
 	}
 
 	/// <summary>
-	/// LipiDex 1 included a "FattyAcids.csv" file that gave:
+	/// LipiDex 1 included a "FattyAcids.csv" file with 4 columns:
 	///		1. Fatty acid name (e.g. 18:2, O-16:0, P-18:1, d16:1)
 	///		2. Base (one of Plasmanyl, Plasmenyl, Sphingoid, Alkyl)
 	///		3. Formula (e.g. C13H27O1)
-	///		4. Enabled (true or false flag whether to use)
+	///		4. Enabled (true or false flag whether to include in processing)
 	///
 	/// This method parses that file. 
 	/// </summary>

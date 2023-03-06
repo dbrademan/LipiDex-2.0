@@ -44,32 +44,35 @@ namespace LipiDex_2._0.SpectrumSearcher
         }
 
         //Parse m/z array using byte buffer
-        public void ParseMZArray(SampleSpectrum spec) 
+        public void ParseMZArray(SampleSpectrum spec)
         {
-		    double[] values;
-		    byte[] decoded = Base64.getDecoder().decode(mzArray);
-            ByteBuffer byteBuffer = ByteBuffer.wrap(decoded);
-            byteBuffer.order(ByteOrder.BIG_ENDIAN);
-            
-            values = new double[byteBuffer.asDoubleBuffer().capacity()];
-		    byteBuffer.asDoubleBuffer().get(values);
-		
-		    if (values.Length % 2 > 0)
-			    throw new Exception("Different number of m/z and intensity values encountered in peak list.");
-		
-		    for (int peakIndex = 0; peakIndex<values.Length - 1; peakIndex += 2)
-		    {
-			    double mz = values[peakIndex];
-                double intensity = values[peakIndex + 1];
-                spec.AddFrag(mz, intensity);
-		    }
-	    }
+	        throw new NotImplementedException();
+	        // double[] values;
+	        // byte[] decoded = Base64.getDecoder().decode(mzArray);
+	        //       ByteBuffer byteBuffer = ByteBuffer.wrap(decoded);
+	        //       byteBuffer.order(ByteOrder.BIG_ENDIAN);
+	        //       
+	        //       values = new double[byteBuffer.asDoubleBuffer().capacity()];
+	        // byteBuffer.asDoubleBuffer().get(values);
+	        //
+	        // if (values.Length % 2 > 0)
+	        //  throw new Exception("Different number of m/z and intensity values encountered in peak list.");
+	        //
+	        // for (int peakIndex = 0; peakIndex<values.Length - 1; peakIndex += 2)
+	        // {
+	        //  double mz = values[peakIndex];
+	        //           double intensity = values[peakIndex + 1];
+	        //           spec.AddFrag(mz, intensity);
+	        // }
+        }
 	
 	    //Convert MZXML file to a common sampleSpectrum type
 	    public SampleSpectrum ConvertToSampleSpectrum()
         {
             //Create new sample spectrum object
-            SampleSpectrum spec = new SampleSpectrum(precursor, polarity, file, retentionTime, scanNum, msnOrder: this.msLevel);
+            SampleSpectrum spec = new SampleSpectrum(precursor, polarity, file, retentionTime, scanNum
+	            // msnOrder: this.msLevel
+	            );
 
         //Parse MZ array
         ParseMZArray(spec);

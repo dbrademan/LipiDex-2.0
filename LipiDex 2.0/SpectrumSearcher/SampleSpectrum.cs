@@ -2,22 +2,36 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LipiDex_2._0.SpectrumSearcher;
 
 public class SampleSpectrum  
 {
-	public double precursor;										//Precursor of MS2
-	public double retention;										//Retention time
-	public string polarity;										//Polarity of MS2
-	public string file;											//.mgf file
-	public List<Transition> transitionArray;					//Array of all transitions
-	public List<Identification> IdentificationsList;						//Array of all identifications
-	public List<double> allMatchedMassesArray;				//Array of all identifications
-	public double maxIntensity;									//Intensity of most intense fragment
-	public double maxIntensityMass;								//Mass of most intense fragment
-	public int spectraNumber = 0;								//Spectra number
-	public PeakPurity peakPurity = null;							//Object for storing peak purity information
+	public double precursor;							//Precursor of MS2
+	public double retention;							//Retention time
+	public string polarity;								//Polarity of MS2
+	public string RawFileSource;						//.mgf file
+	public List<Transition> transitionArray;			//Array of all transitions
+	public List<Identification> IdentificationsList;	//Array of all identifications
+	public List<double> allMatchedMassesArray;			//Array of all identifications
+	public double maxIntensity;							//Intensity of most intense fragment
+	public double maxIntensityMass;						//Mass of most intense fragment
+	public int spectraNumber = 0;						//Spectra number
+	public PeakPurity peakPurity = null;				//Object for storing peak purity information
+
+	public string BestHitIdentification;
+	public double BestHitLibraryPrecursorMz;
+	public double BestHitPpmError;
+	public double BestHitDotProduct;
+	public double BestHitReverseDotProduct;
+	public double BestHitPurity;
+	public bool BestHitIsOptimalPolarity;
+	public bool BestHitIsLipiDex;
+	public string BestHitLibrarySource;
+		
+	public string PeakPurityString = "";					// Identification and purity for each ID. Written to Result CSV 
+	public string MatchedMassesString = "";					// MZ values found in matching. 
 
 	//Constructor
 	public SampleSpectrum(
@@ -27,9 +41,9 @@ public class SampleSpectrum
 		//Initialize variables
 		this.precursor = Math.Round(precursor * 1000.0) / 1000.0;
 		this.polarity = polarity;
-		this.file = file;
-		this.transitionArray = new List<Transition>();
-		this.IdentificationsList = new List<Identification>();
+		RawFileSource = file;
+		transitionArray = new List<Transition>();
+		IdentificationsList = new List<Identification>();
 		allMatchedMassesArray = new List<double>();
 		maxIntensity = 0.0;
 		maxIntensityMass = 0.0;	
@@ -96,9 +110,62 @@ public class SampleSpectrum
 		//Calculate purity
 		peakPurity = IdentificationsList[0].CalcPurityAll(faDB, librarySpectra, transitionArray, mzTol);
 	}
-	
-	// public void BJACalculateSpectralPurity()
 
+	// Get purity values and strings from Purity object within each ID in the IdentificationsList.
+	
+	public void FinalizeIdentifications(int maxResults = 1)
+	{
+		// Sort IDs by dot product
+		IdentificationsList.Sort();
+
+		BestHitIdentification = IdentificationsList[0].LibrarySpectrum.Name;
+		BestHitLibraryPrecursorMz = IdentificationsList[0].LibrarySpectrum.PrecursorMz;
+		BestHitPpmError = CalculatePpmDifference(precursor, BestHitLibraryPrecursorMz);
+		BestHitDotProduct = IdentificationsList[0].DotProduct;
+		BestHitReverseDotProduct = IdentificationsList[0].ReverseDotProduct;
+		BestHitPurity = IdentificationsList[0].Purity;
+		BestHitIsOptimalPolarity = IdentificationsList[0].LibrarySpectrum.IsOptimalPolarity;
+		BestHitIsLipiDex = IdentificationsList[0].LibrarySpectrum.IsLipiDex;
+		BestHitLibrarySource = IdentificationsList[0].LibrarySpectrum.Library;
+
+
+		// Get identifications up to the maxResults number
+		for (var i = 0; i < maxResults; i++)
+		{
+			var peakPurityStrings = new List<string>();
+			if (peakPurity != null)
+			{
+				foreach (var lipid in peakPurity.Lipids)
+				{
+					// Generate a string with purity percentage in parentheses for Peak Finder to parse 
+					var lipidPurity = $"{lipid.Name.Replace(";", "")}({peakPurity.Purities})";  // e.g. PC 36:2 [M-H]-(60)
+					peakPurityStrings.Add(lipidPurity);
+				}
+			}
+
+			PeakPurityString = string.Join(" / ", peakPurityStrings);
+			
+			// If there is a purity, then the "Potential Fragments" column will contain only the matched masses
+			if (IdentificationsList[i].Purity > 1 && peakPurity != null)
+			{
+				var uniqueMasses = peakPurity.MatchedMasses.Distinct().ToList();
+				uniqueMasses.Sort();
+					
+				MatchedMassesString = string.Join(" | ", uniqueMasses);
+			}
+			
+			// If purity is null, then Potential Fragments will contain best ID masses
+			else if (IdentificationsList[i].Purity < 1)
+			{
+				foreach (var transition in IdentificationsList[i].LibrarySpectrum.TransitionArray)
+				{
+					MatchedMassesString = string.Join(" | ", transition.mass); 
+				}
+			}
+		}
+	}
+	
+	
 	//Calculate dot product between to sample spectra
 	public double CalculateDotProduct(List<MzIntensityComment> libArray, double mzTol,
 								 bool reverse, double massWeight, double intWeight)
@@ -208,7 +275,7 @@ public class SampleSpectrum
 		}
 	}
 
-	//A method to scale intensities to max. intensity on scale of 0-999
+	// Scale intensities between 0 to 999 
 	public void scaleIntensities()
 	{
 		for (int i=0; i<transitionArray.Count; i++)
@@ -253,7 +320,7 @@ public class SampleSpectrum
 		return false;
 	}
 
-	//Returns string representation of array
+	// // Returns string representation of array
 	// public string toString(int maxResults)
 	// {
 	// 	string result = "";
@@ -278,7 +345,7 @@ public class SampleSpectrum
 	// 		{
 	// 			for (int j=0; j<peakPurity.Lipids.Count; j++)
 	// 			{
-	// 				result+= peakPurity.Lipids[j].Name.Replace(";", "")+"("+peakPurity.Purities[j]+")";
+	// 				result += peakPurity.Lipids[j].Name.Replace(";", "")+"("+peakPurity.Purities[j]+")";
 	// 				if (j!=peakPurity.Lipids.Count-1) result += " / ";
 	// 			}
 	//
@@ -295,8 +362,8 @@ public class SampleSpectrum
 	// 		{
 	// 			for (int j=0; j<peakPurity.MatchedMasses.Count; j++)
 	// 			{
-	// 				if (!result.Contains(peakPurity.MatchedMasses[j].ToString()))  // Java code was String.valueOf() instead of ToString
-	// 					result+=peakPurity.MatchedMasses[j]+" | ";
+	// 				if (!result.Contains(peakPurity.MatchedMasses[j].ToString()))
+	// 					result += peakPurity.MatchedMasses[j]+" | ";
 	// 			}
 	// 		}
 	//
@@ -309,7 +376,8 @@ public class SampleSpectrum
 	// 			}
 	// 		}
 	//
-	// 		if (IdentificationsList.Count > 1 && (i < (IdentificationsList.Count-1) && i < (maxResults-1))) result += "\n";
+	// 		if (IdentificationsList.Count > 1 && (i < (IdentificationsList.Count-1) && i < (maxResults-1))) 
+	// 			result += "\n";
 	// 	}
 	// 	return result;
 	// }

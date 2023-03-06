@@ -31,27 +31,56 @@ public static class ResultsWriter
 /// Maps properties in SampleSpectrum object to columns in Results CSV.
 /// the .Name() method gives the column name to write to. 
 /// </summary>
-public sealed class SpectrumSearcherResultsClassMapper: ClassMap<SampleSpectrum>
+public sealed class SpectrumSearcherResultsClassMapper : ClassMap<SampleSpectrum>
 {
     public SpectrumSearcherResultsClassMapper()
     {
-        Map(m => m.spectraNumber).Name("scan_number");
-        Map(m => m.retention).Name("retention_time_mins");
-        // Map(m => m.Rank).Name("rank");  // Ranking of the match (from an option to select more than one ID in SS) 
-        Map(m => m.IdentificationsList[0].LibrarySpectrum.Name).Name("identification");     // Name and adduct, e.g.  LysoPC 20:5 [M+H]+;
-        Map(m => m.precursor).Name("precursor_mz");
-        Map(m => m.libraryPrecursorMz).Name("library_precursor_mz");
-        Map(m => m.ppmError).Name("ppm_error");
-        Map(m => m.DotProduct).Name("dot_product");
-        Map(m => m.ReverseDotProduct).Name("reverse_dot_product");
-        Map(m => m.Purity).Name("purity");
-        Map(m => m.SpectralComponents).Name("spectral_components");  // e.g.  PC 16:1_16:0 [M+Ac-H]-(62) / PC 14:0_18:1 [M+Ac-H]-(38)
+
+        Map(m => m.spectraNumber)
+            .Name("scan_number");
         
-        Map(m => m.IsOptimalPolarity).Name("optimal_polarity");
-        Map(m => m.IsLipiDex).Name("from_lipidex_library");
-        Map(m => m.LibrarySource).Name("library");
-        Map(m => m.RawFileSource).Name("rawfile");
+        Map(m => m.retention)
+            .Name("retention_time_mins");
         
-        Map(m => m.LibraryFragments).Name("matched_library_fragments");
+        // Map(m => m.Rank).Name("rank");  // Ranking of the match (from an option to select more than one ID in SS)
+        
+        Map(m => m.BestHitIdentification)
+            .Name("identification");     // Name and adduct, e.g.  LysoPC 20:5 [M+H]+;
+        
+        Map(m => m.precursor)
+            .Name("precursor_mz");
+        
+        Map(m => m.BestHitLibraryPrecursorMz)
+            .Name("library_precursor_mz");
+        
+        Map(m => m.BestHitPpmError)
+            .Name("ppm_error");
+        
+        Map(m => m.BestHitDotProduct)
+            .Name("dot_product");
+        
+        Map(m => m.BestHitReverseDotProduct)
+            .Name("reverse_dot_product");
+        
+        Map(m => m.BestHitPurity)
+            .Name("purity");
+        
+        Map(m => m.PeakPurityString)
+            .Name("spectral_components");  // e.g.  PC 16:1_16:0 [M+Ac-H]-(62) / PC 14:0_18:1 [M+Ac-H]-(38)
+        
+        Map(m => m.BestHitIsOptimalPolarity)
+            .Name("optimal_polarity");
+        
+        Map(m => m.BestHitIsLipiDex)
+            .Name("from_lipidex_library");
+        
+        Map(m => m.BestHitLibrarySource)
+            .Name("library");
+        
+        Map(m => m.RawFileSource)
+            .Name("rawfile");
+        
+        Map(m => m.MatchedMassesString)
+            .Name("potential_fragments");
     }
 }
