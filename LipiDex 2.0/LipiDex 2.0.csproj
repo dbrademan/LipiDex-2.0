@@ -99,6 +99,7 @@
     <Compile Include="LibraryGenerator\LipidMoietyComparer.cs" />
     <Compile Include="LibraryGenerator\MSn.cs" />
     <Compile Include="LibraryGenerator\MSnTemplate.cs" />
+    <Compile Include="LibraryGenerator\PolymericHeadgroup.cs" />
     <Compile Include="LibraryGenerator\Transition.cs" />
     <Compile Include="LibraryGenerator\TransitionDefinition.cs" />
     <Compile Include="LibraryGenerator\TransitionType.cs" />

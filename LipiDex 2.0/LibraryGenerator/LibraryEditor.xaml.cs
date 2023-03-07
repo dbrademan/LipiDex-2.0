@@ -131,11 +131,11 @@ namespace LipiDex_2._0.LibraryGenerator
         /// </summary>
         private void Button_Adducts_Remove_Click(object sender, RoutedEventArgs e)
         {
-            var selectedRow = DataGrid_Adducts.SelectedIndex;
+            Adduct selectedItem = (Adduct)DataGrid_Adducts.SelectedItem;
 
-            if (selectedRow != -1)
+            if (selectedItem != null)
             {
-                DataGridBinding_Adducts.RemoveAt(selectedRow);
+                DataGridBinding_Adducts.Remove(selectedItem);
             }
         }
 
@@ -422,11 +422,11 @@ namespace LipiDex_2._0.LibraryGenerator
         /// </summary>
         private void Button_FattyAcids_Remove_Click(object sender, RoutedEventArgs e)
         {
-            var selectedRow = DataGrid_FattyAcids.SelectedIndex;
+            FattyAcid selectedItem = (FattyAcid)DataGrid_FattyAcids.SelectedItem;
 
-            if (selectedRow != -1)
+            if (selectedItem != null)
             {
-                DataGridBinding_FattyAcids.RemoveAt(selectedRow);
+                DataGridBinding_FattyAcids.Remove(selectedItem);
             }
         }
 
@@ -730,11 +730,11 @@ namespace LipiDex_2._0.LibraryGenerator
         /// </summary>
         private void Button_Backbones_Remove_Click(object sender, RoutedEventArgs e)
         {
-            var selectedRow = DataGrid_Backbones.SelectedIndex;
+            LipidBackbone selectedItem = (LipidBackbone)DataGrid_Backbones.SelectedItem;
 
-            if (selectedRow != -1)
+            if (selectedItem != null)
             {
-                DataGridBinding_Backbones.RemoveAt(selectedRow);
+                DataGridBinding_Backbones.Remove(selectedItem);
             }
         }
 
@@ -948,19 +948,54 @@ namespace LipiDex_2._0.LibraryGenerator
             return new ChemicalFormula(nonStandardBackbone);
         }
 
-        private bool BackboneBooleanConverter(string booleanString)
+        #endregion
+
+        #region Polymeric Headgroup Tab Controls
+
+        /// <summary>
+        /// Add a new polymeric headgroup to the polymeric headgroup grid and bind a matching object to the polymeric headgroup ObservableCollection&lt;PolymericHeadgroup&gt;
+        /// <br/>
+        /// Adds brief color highlight when row is added
+        /// </summary>
+        private void Button_PolyHeadgroups_Add_Click(object sender, RoutedEventArgs e)
         {
-            if (booleanString.Equals("TRUE"))
+            var newBackboneName = "HeadgroupClassifier";
+            var isPeptide = true;
+            var isGlycan = false;
+
+            var newBackboneObject = new LipidBackbone(newBackboneName, newBackboneFormula, newBackboneNumberOfMoieties);
+            DataGridBinding_Backbones.Add(newBackboneObject);
+
+            // force update of data grid? 
+            DataGrid_Backbones.UpdateLayout();
+
+            // programatically select newly added adduct row
+            DataGrid_Backbones.SelectedItems.Clear();
+
+            var newRowIndex = DataGridBinding_Backbones.Count - 1;
+            var newSelectedRow = DataGrid_Backbones.Items[newRowIndex];
+            DataGrid_Backbones.ScrollIntoView(newSelectedRow);
+
+            // mark a color animation transition for added row
+            DataGridRow row = (DataGridRow)DataGrid_Backbones.ItemContainerGenerator.ContainerFromIndex(newRowIndex);
+            Color startColor = LibraryEditor.addedRowColor;
+            Color endColor = Colors.White;
+
+            ColorAnimation ca = new ColorAnimation(endColor, new Duration(TimeSpan.FromSeconds(0.5)));
+            row.Background = new SolidColorBrush(startColor);
+            row.Background.BeginAnimation(SolidColorBrush.ColorProperty, ca);
+        }
+
+        /// <summary>
+        /// Remove an backbone from the backbone data grid and the corresponding object from the ObservableCollection&lt;LipidBackbone&gt;
+        /// </summary>
+        private void Button_Backbones_Remove_Click(object sender, RoutedEventArgs e)
+        {
+            LipidBackbone selectedItem = (LipidBackbone)DataGrid_Backbones.SelectedItem;
+
+            if (selectedItem != null)
             {
-                return true;
-            }
-            else if (booleanString.Equals("FALSE"))
-            {
-                return false;
-            }
-            else
-            {
-                throw new ArgumentException("Boolean evaluation of Lipid_Classes.csv library column {0} failed. Check the csv and make sure formatting is correct.");
+                DataGridBinding_Backbones.Remove(selectedItem);
             }
         }
 
@@ -1061,11 +1096,11 @@ namespace LipiDex_2._0.LibraryGenerator
         /// </summary>
         private void Button_LipidClasses_Remove_Click(object sender, RoutedEventArgs e)
         {
-            var selectedRow = DataGrid_LipidClasses.SelectedIndex;
+            LipidClass selectedItem = (LipidClass)DataGrid_LipidClasses.SelectedItem;
 
-            if (selectedRow != -1)
+            if (selectedItem != null)
             {
-                DataGridBinding_LipidClasses.RemoveAt(selectedRow);
+                DataGridBinding_LipidClasses.Remove(selectedItem);
             }
         }
 

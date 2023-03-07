@@ -209,8 +209,108 @@
                 </GroupBox>
             </Grid>
         </TabItem>
-        <TabItem Header="Glycans">
-            <Grid Background="#FFE5E5E5"/>
+        <TabItem Header="Glycan/Peptide Headgroups">
+            <Grid ClipToBounds="True" ShowGridLines="True" Background="#FFE5E5E5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="181*"></ColumnDefinition>
+                    <ColumnDefinition Width="63*"></ColumnDefinition>
+                    <ColumnDefinition Width="169*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <DataGrid
+                    x:Name="DataGrid_PolyHeadgroups"
+                    
+                    LoadingRow="DataGrid_PolyHeadgroups_LoadingRow"
+                    CellEditEnding="DataGrid_PolyHeadgroups_CellEditEnding"
+                    BeginningEdit="DataGrid_PolyHeadgroups_BeginningEdit"
+                    AutoGenerateColumns="False" 
+                    CanUserResizeColumns="True" 
+                    CanUserAddRows="True" 
+                    
+                    Grid.Column="0"
+                    Grid.Row="0"
+                    Margin="10,10,10,10" 
+                    ScrollViewer.HorizontalScrollBarVisibility="Auto" 
+                    ScrollViewer.VerticalScrollBarVisibility="Auto">
+
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Classifier" Binding="{Binding name}" MinWidth="100" Width=".75*"/>
+                        <DataGridCheckBoxColumn Header="Is Peptide" Binding="{Binding formula}" MinWidth="100" Width="*"/>
+                        <DataGridCheckBoxColumn Header="Is Glycan" Binding="{Binding formula}" MinWidth="100" Width="*"/>
+                        <DataGridTextColumn Header="Sequence" Binding="{Binding numberMoieties}" MinWidth="100" Width="*"/>
+                        
+                    </DataGrid.Columns>
+                </DataGrid>
+                <GroupBox
+                    Header="Data Grid Controls"
+                    FontWeight="Bold"
+                    FontSize="16"
+                    Grid.Column="1" Margin="10,10,10,10">
+                    <Grid HorizontalAlignment="Center">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Button 
+                            x:Name="Button_PolyHeadgroups_Add"
+                            Content="Add New Row"
+                            Click="Button_PolyHeadgroups_Add_Click"
+                            
+                            Grid.Column="0"
+                            Grid.Row="0"
+                            Margin="0,0,0,0"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                            FontSize="12"
+                            FontWeight="Normal">
+                        </Button>
+                        <Button 
+                            x:Name="Button_PolyHeadgroups_Remove"
+                            Content="Delete Selected Row"
+                            Click="Button_PolyHeadgroups_Remove_Click"
+                            
+                            Grid.Column="0"
+                            Grid.Row="1"
+                            Margin="0,0,0,0"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                            FontSize="12"
+                            FontWeight="Normal">
+                        </Button>
+                        <Button 
+                            x:Name="Button_PolyHeadgroups_ReloadOldPolyHeadgroups"
+                            Content="Revert To Last Save"
+                            Click="Button_PolyHeadgroups_ReloadOldPolyHeadgroups_Click"
+                            
+                            Grid.Column="0"
+                            Grid.Row="2"
+                            Margin="0,0,0,0"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                            FontSize="12"
+                            FontWeight="Normal">
+                        </Button>
+                        <Button 
+                            x:Name="Button_PolyHeadgroups_SavePolyHeadgroups"
+                            Content="Save Changes"
+                            Click="Button_PolyHeadgroups_SavePolyHeadgroups_Click"
+                            
+                            Grid.Column="0"
+                            Grid.Row="3"
+                            Margin="0,0,0,0"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                            FontSize="12"
+                            FontWeight="Normal">
+                        </Button>
+                    </Grid>
+                </GroupBox>
+            </Grid>
         </TabItem>
         <TabItem Header="Fatty Acids">
             <Grid ClipToBounds="True" ShowGridLines="True" Background="#FFE5E5E5">
