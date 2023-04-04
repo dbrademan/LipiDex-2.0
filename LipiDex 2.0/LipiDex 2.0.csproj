@@ -84,7 +84,7 @@
     <Compile Include="LibraryForgeGui.xaml.cs">
       <DependentUpon>LibraryForgeGui.xaml</DependentUpon>
     </Compile>
-    <Compile Include="LibraryGenerator\Backbone.cs" />
+    <Compile Include="LibraryGenerator\FattyAcidComparer.cs" />
     <Compile Include="LibraryGenerator\LibraryEditor.xaml.cs">
       <DependentUpon>LibraryEditor.xaml</DependentUpon>
     </Compile>
@@ -94,8 +94,12 @@
     <Compile Include="LibraryGenerator\Adduct.cs" />
     <Compile Include="LibraryGenerator\CustomException.cs" />
     <Compile Include="LibraryGenerator\Lipid.cs" />
+    <Compile Include="LibraryGenerator\LipidBackbone.cs" />
+    <Compile Include="LibraryGenerator\LipidMoiety.cs" />
+    <Compile Include="LibraryGenerator\LipidMoietyComparer.cs" />
     <Compile Include="LibraryGenerator\MSn.cs" />
     <Compile Include="LibraryGenerator\MSnTemplate.cs" />
+    <Compile Include="LibraryGenerator\PolymericHeadgroup.cs" />
     <Compile Include="LibraryGenerator\Transition.cs" />
     <Compile Include="LibraryGenerator\TransitionDefinition.cs" />
     <Compile Include="LibraryGenerator\TransitionType.cs" />
@@ -176,104 +180,69 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Resources\LibraryTemplates\template_Adducts.csv" />
-    <None Include="Resources\LibraryTemplates\template_FattyAcids.csv" />
-    <None Include="Resources\LibraryTemplates\template_Lipid_Classes.csv" />
-    <None Include="Resources\LibraryTemplates\template_MS2_Templates.csv" />
-    <None Include="Resources\LipidexLibraries\Coon_Lab_CID_MSn\Adducts.csv" />
-    <None Include="Resources\LipidexLibraries\Coon_Lab_CID_MSn\FattyAcids.csv" />
-    <None Include="Resources\LipidexLibraries\Coon_Lab_CID_MSn\Lipid_Classes.csv" />
-    <None Include="Resources\LipidexLibraries\Coon_Lab_CID_MSn\MS2_Templates.csv" />
-    <None Include="Resources\LipidexLibraries\Coon_Lab_HCD_Acetate\Adducts.csv" />
-    <None Include="Resources\LipidexLibraries\Coon_Lab_HCD_Acetate\FattyAcids.csv" />
-    <None Include="Resources\LipidexLibraries\Coon_Lab_HCD_Acetate\Lipid_Classes.csv" />
-    <None Include="Resources\LipidexLibraries\Coon_Lab_HCD_Acetate\MS2_Templates.csv" />
-    <None Include="Resources\LipidexLibraries\LipiDex_HCD_Acetate\Adducts.csv" />
-    <None Include="Resources\LipidexLibraries\LipiDex_HCD_Acetate\FattyAcids.csv" />
-    <None Include="Resources\LipidexLibraries\LipiDex_HCD_Acetate\Lipid_Classes.csv" />
-    <None Include="Resources\LipidexLibraries\LipiDex_HCD_Acetate\MS2_Templates.csv" />
+    <EmbeddedResource Include="Resources\LibraryTemplates\template_Adducts.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\LibraryTemplates\template_Backbones.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\LibraryTemplates\template_FattyAcids.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\LibraryTemplates\template_Lipid_Classes.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\LibraryTemplates\template_MS2_Templates.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\LipidexLibraries\Coon_Lab_CID_MSn\Adducts.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\LipidexLibraries\Coon_Lab_CID_MSn\Backbones.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\LipidexLibraries\Coon_Lab_CID_MSn\FattyAcids.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\LipidexLibraries\Coon_Lab_CID_MSn\Lipid_Classes.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\LipidexLibraries\Coon_Lab_CID_MSn\MS2_Templates.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\LipidexLibraries\Coon_Lab_HCD_Acetate\Adducts.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\LipidexLibraries\Coon_Lab_HCD_Acetate\Backbones.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\LipidexLibraries\Coon_Lab_HCD_Acetate\FattyAcids.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\LipidexLibraries\Coon_Lab_HCD_Acetate\Lipid_Classes.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\LipidexLibraries\Coon_Lab_HCD_Acetate\MS2_Templates.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\LipidexLibraries\LipiDex_HCD_Acetate\Adducts.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\LipidexLibraries\LipiDex_HCD_Acetate\Backbones.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\LipidexLibraries\LipiDex_HCD_Acetate\FattyAcids.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\LipidexLibraries\LipiDex_HCD_Acetate\Lipid_Classes.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\LipidexLibraries\LipiDex_HCD_Acetate\MS2_Templates.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ContentWithTargetPath Include="Resources\LipidexLibraries\Coon_Lab_CID_MSn\Adducts.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>Resources\LipidexLibraries\Coon_Lab_CID_MSn\\Adducts.csv</TargetPath>
-    </ContentWithTargetPath>
-    <ContentWithTargetPath Include="Resources\LipidexLibraries\Coon_Lab_CID_MSn\FattyAcids.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>Resources\LipidexLibraries\Coon_Lab_CID_MSn\\FattyAcids.csv</TargetPath>
-    </ContentWithTargetPath>
-    <ContentWithTargetPath Include="Resources\LipidexLibraries\Coon_Lab_CID_MSn\Lipid_Classes.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>Resources\LipidexLibraries\Coon_Lab_CID_MSn\\Lipid_Classes.csv</TargetPath>
-    </ContentWithTargetPath>
-    <ContentWithTargetPath Include="Resources\LipidexLibraries\Coon_Lab_CID_MSn\MS2_Templates.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>Resources\LipidexLibraries\Coon_Lab_CID_MSn\\MS2_Templates.csv</TargetPath>
-    </ContentWithTargetPath>
-    <ContentWithTargetPath Include="Resources\LipidexLibraries\Coon_Lab_HCD_Acetate\Adducts.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>Resources\LipidexLibraries\Coon_Lab_HCD_Acetate\\Adducts.csv</TargetPath>
-    </ContentWithTargetPath>
-    <ContentWithTargetPath Include="Resources\LipidexLibraries\Coon_Lab_HCD_Acetate\FattyAcids.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>Resources\LipidexLibraries\Coon_Lab_HCD_Acetate\\FattyAcids.csv</TargetPath>
-    </ContentWithTargetPath>
-    <ContentWithTargetPath Include="Resources\LipidexLibraries\Coon_Lab_HCD_Acetate\Lipid_Classes.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>Resources\LipidexLibraries\Coon_Lab_HCD_Acetate\\Lipid_Classes.csv</TargetPath>
-    </ContentWithTargetPath>
-    <ContentWithTargetPath Include="Resources\LipidexLibraries\Coon_Lab_HCD_Acetate\MS2_Templates.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>Resources\LipidexLibraries\Coon_Lab_HCD_Acetate\\MS2_Templates.csv</TargetPath>
-    </ContentWithTargetPath>
-    <ContentWithTargetPath Include="Resources\LipidexLibraries\LipiDex_HCD_Acetate\Adducts.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>Resources\LipidexLibraries\LipiDex_HCD_Acetate\\Adducts.csv</TargetPath>
-    </ContentWithTargetPath>
-    <ContentWithTargetPath Include="Resources\LipidexLibraries\LipiDex_HCD_Acetate\FattyAcids.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>Resources\LipidexLibraries\LipiDex_HCD_Acetate\\FattyAcids.csv</TargetPath>
-    </ContentWithTargetPath>
-    <ContentWithTargetPath Include="Resources\LipidexLibraries\LipiDex_HCD_Acetate\Lipid_Classes.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>Resources\LipidexLibraries\LipiDex_HCD_Acetate\\Lipid_Classes.csv</TargetPath>
-    </ContentWithTargetPath>
-    <ContentWithTargetPath Include="Resources\LipidexLibraries\LipiDex_HCD_Acetate\MS2_Templates.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>Resources\LipidexLibraries\LipiDex_HCD_Acetate\\MS2_Templates.csv</TargetPath>
-    </ContentWithTargetPath>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Icons\backgroundTile.png" />
-    <Resource Include="Resources\Icons\coonLogo.png" />
-    <Resource Include="Resources\Icons\coonLogoActive.png" />
-    <Resource Include="Resources\Icons\libraryForge.png" />
-    <Resource Include="Resources\Icons\libraryForgeActive.png" />
-    <Resource Include="Resources\Icons\libraryForgeIcon.png" />
-    <Resource Include="Resources\Icons\libraryGenerator.png" />
-    <Resource Include="Resources\Icons\libraryGeneratorActive.png" />
-    <Resource Include="Resources\Icons\libraryGeneratorIcon.png" />
-    <Resource Include="Resources\Icons\lipidexLogo.png" />
-    <Resource Include="Resources\Icons\lipidexLogoActive.png" />
-    <Resource Include="Resources\Icons\peakFinder.png" />
-    <Resource Include="Resources\Icons\peakFinderActive.png" />
-    <Resource Include="Resources\Icons\peakFinderIcon.png" />
-    <Resource Include="Resources\Icons\resultCleanerBroom.png" />
-    <Resource Include="Resources\Icons\resultCleanerBroomActive.png" />
-    <Resource Include="Resources\Icons\resultCleanerBroomOutline.png" />
-    <Resource Include="Resources\Icons\resultCleanerBroomOutlineActive.png" />
-    <Resource Include="Resources\Icons\resultCleanerBucket.png" />
-    <Resource Include="Resources\Icons\resultCleanerBucketActive.png" />
-    <Resource Include="Resources\Icons\resultCleanerIcon.png" />
-    <Resource Include="Resources\Icons\spectrumGenerator.png" />
-    <Resource Include="Resources\Icons\spectrumGeneratorActive.png" />
-    <Resource Include="Resources\Icons\spectrumGeneratorIcon.png" />
-    <Resource Include="Resources\Icons\spectrumSearcher.png" />
-    <Resource Include="Resources\Icons\spectrumSearcherActive.png" />
-    <Resource Include="Resources\Icons\spectrumSearcherIcon.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\..\Software\CSMSLx64\CSMSL\CSMSL.csproj">
@@ -284,6 +253,89 @@
       <Project>{24dc85ff-e97b-4140-9614-77dd8fddd32f}</Project>
       <Name>Thermo</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Icons\backgroundTile.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Icons\coonLogo.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Icons\coonLogoActive.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Icons\libraryForge.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Icons\libraryForgeActive.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Icons\libraryForgeIcon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Icons\libraryGenerator.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Icons\libraryGeneratorActive.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Icons\libraryGeneratorIcon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Icons\lipidexLogo.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Icons\lipidexLogoActive.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Icons\peakFinder.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Icons\peakFinderActive.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Icons\peakFinderIcon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Icons\resultCleanerBroom.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Icons\resultCleanerBroomActive.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Icons\resultCleanerBroomOutline.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Icons\resultCleanerBroomOutlineActive.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Icons\resultCleanerBucket.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Icons\resultCleanerBucketActive.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Icons\resultCleanerIcon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Icons\spectrumGenerator.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Icons\spectrumGeneratorActive.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Icons\spectrumGeneratorIcon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Icons\spectrumSearcher.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Icons\spectrumSearcherActive.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Icons\spectrumSearcherIcon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

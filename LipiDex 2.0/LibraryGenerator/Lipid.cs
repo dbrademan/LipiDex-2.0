@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CSMSL.Chemistry;
 
 namespace LipiDex_2._0.LibraryGenerator
 {
 	public class Lipid
 	{
-		public List<FattyAcid> fattyAcids;    //array of FAs
+		public List<LipidMoiety> fattyAcids;    //array of FAs
 		public LipidClass lipidClass;                  //Class
 		public Adduct adduct;                      //Adduct
 		public string formula;                     //Formula
@@ -19,7 +20,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		public List<string> uniqueTypes;      //Array of fa types this lipid can identify, used in LF
 
 		//Constructor
-		public Lipid(List<FattyAcid> fattyAcids, LipidClass lipidClass, Adduct adduct)
+		public Lipid(List<LipidMoiety> fattyAcids, LipidClass lipidClass, Adduct adduct)
 		{
 			this.fattyAcids = fattyAcids;
 			this.lipidClass = lipidClass;
@@ -54,7 +55,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		}
 
 		//Return arrayList of fatty acids in lipid
-		public List<FattyAcid> GetFattyAcids()
+		public List<LipidMoiety> GetFattyAcids()
 		{
 			return this.fattyAcids;
 		}
@@ -97,26 +98,26 @@ namespace LipiDex_2._0.LibraryGenerator
 		//Sort FA Array
 		public void SortFattyAcids()
 		{
-			var fattyAcidComparer = new FattyAcidComparer();
+			var fattyAcidComparer = new LipidMoietyComparer();
 			this.fattyAcids.Sort(fattyAcidComparer);
 		}
 
 		//Calculate Elemental Composition
 		public void CalculateFormula()
 		{
-			string tempFormula = "";
+			ChemicalFormula tempFormula = new ChemicalFormula();
 
 			//add in backbone + headgroup
-			tempFormula = this.lipidClass.GetFormula();
+			tempFormula = this.lipidClass.GetChemicalFormula();
 
 			//add in FAs
 			for (int i = 0; i < this.fattyAcids.Count; i++)
 			{
-				tempFormula = Utilities.MergeFormulas(tempFormula, this.fattyAcids[i].GetFormula());
+				tempFormula = Utilities.MergeFormulas(tempFormula, this.fattyAcids[i].GetChemicalFormula());
 			}
 
 			//add in adduct
-			tempFormula = Utilities.MergeFormulas(tempFormula, this.adduct.GetFormula());
+			tempFormula = Utilities.MergeFormulas(tempFormula, this.adduct.GetChemicalFormula());
 
 			this.formula = tempFormula;
 
@@ -131,7 +132,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		//Calculate Monoisotopic mass
 		public void CalculateMass()
 		{
-			this.mass = Utilities.CalculateMassFromFormula(this.formula) / this.adduct.charge;
+			this.mass = Utilities.CalculateMassFromFormula(this.formula) / this.adduct.GetCharge();
 		}
 
 		//Generate canonical name

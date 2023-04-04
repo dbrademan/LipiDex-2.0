@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
+using CSMSL;
+using CSMSL.Chemistry;
 
 namespace LipiDex_2._0.LibraryGenerator
 {
@@ -243,7 +245,41 @@ namespace LipiDex_2._0.LibraryGenerator
 			return result;
 		}
 
+		/// <summary>
+		/// Takes two chemical formulas and sums them together. This is a CSMSL adaption from PDH's original implementation
+		/// </summary>
+		/// <returns>
+		/// Return the two chemical formulas combined together.
+		/// </returns>
+		public static ChemicalFormula MergeFormulas(ChemicalFormula formula1, ChemicalFormula formula2)
+        {
+			var returnFormula = new ChemicalFormula();
+			
+			returnFormula.Add(formula1);
+			returnFormula.Add(formula2);
+
+			return returnFormula;
+        }
+
+		/// <summary>
+		/// Takes two chemical formulas and sums them together. This overload uses strings instead of ChemicalFormula objects to aid in refactoring PDH's original implementation
+		/// </summary>
+		/// <returns>
+		/// Return the two chemical formulas combined together.
+		/// </returns>
+		public static ChemicalFormula MergeFormulas(string formula1, string formula2)
+        {
+			var returnFormula = new ChemicalFormula();
+
+			returnFormula.Add(new ChemicalFormula(formula1));
+			returnFormula.Add(new ChemicalFormula(formula2));
+
+			return returnFormula;
+		}
+
 		//Add two elemental compositions together
+		// Paul's original implementation of MergeFormulas
+		/*
 		public static string MergeFormulas(string formula1, string formula2)
 		{
 			string result = "";
@@ -290,6 +326,7 @@ namespace LipiDex_2._0.LibraryGenerator
 
 			return result;
 		}
+		*/
 
 		//Converts a Formula to an array of all contained elements
 		public static List<string> FormulaToElementArray(string formula)
@@ -611,7 +648,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		//Decides if mass could come from a fatty acid fragment or neutral loss
 		public static string FindFattyAcidFragment(double mass, FattyAcid fattyAcid)
 		{
-			string fattyAcidFormula = fattyAcid.GetFormula();
+			string fattyAcidFormula = fattyAcid.GetFormulaString();
 			string annotatedFormula = "";
 
 			//if mass is at least 0.75 mass of total fatty acid

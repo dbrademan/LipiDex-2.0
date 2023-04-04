@@ -123,12 +123,12 @@ namespace LipiDex_2._0
 
         private void DataCleaner_MouseEnter(object sender, RoutedEventArgs e)
         {
-            ResultCleanerLogo.Source = UpdateImageEvent(System.IO.Path.Combine("Resources", "Icons", "resultCleanerBroomOutlineActive.png"));
+            ResultCleanerLogo.Source = UpdateImageEvent(System.IO.Path.Combine("Resources", "Icons", "resultCleanerBucketActive.png"));
         }
 
         private void DataCleaner_MouseLeave(object sender, RoutedEventArgs e)
         {
-            ResultCleanerLogo.Source = UpdateImageEvent(System.IO.Path.Combine("Resources", "Icons", "resultCleanerBroomOutline.png"));
+            ResultCleanerLogo.Source = UpdateImageEvent(System.IO.Path.Combine("Resources", "Icons", "resultCleanerBucket.png"));
         }
 
         private void DataCleaner_Click(object sender, RoutedEventArgs e)
