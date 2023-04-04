@@ -3,10 +3,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LipiDex_2._0.SpectrumSearcher;
+
 
 namespace LipiDex_2._0.SpectrumSearcher;
 
-public class SampleSpectrum  
+public class SampleSpectrum
 {
 	public double precursor;							//Precursor of MS2
 	public double retention;							//Retention time
@@ -29,7 +31,7 @@ public class SampleSpectrum
 	public bool BestHitIsOptimalPolarity;
 	public bool BestHitIsLipiDex;
 	public string BestHitLibrarySource;
-		
+
 	public string PeakPurityString = "";					// Identification and purity for each ID. Written to Result CSV 
 	public string MatchedMassesString = "";					// MZ values found in matching. 
 
