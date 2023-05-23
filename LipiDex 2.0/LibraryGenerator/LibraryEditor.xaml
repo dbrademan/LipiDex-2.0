@@ -212,9 +212,8 @@
         <TabItem Header="Glycan/Peptide Headgroups">
             <Grid ClipToBounds="True" ShowGridLines="True" Background="#FFE5E5E5">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="181*"></ColumnDefinition>
-                    <ColumnDefinition Width="63*"></ColumnDefinition>
-                    <ColumnDefinition Width="169*"></ColumnDefinition>
+                    <ColumnDefinition Width="1052*"></ColumnDefinition>
+                    <ColumnDefinition Width="187*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition/>
@@ -237,11 +236,12 @@
                     ScrollViewer.VerticalScrollBarVisibility="Auto">
 
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Classifier" Binding="{Binding name}" MinWidth="100" Width=".75*"/>
-                        <DataGridCheckBoxColumn Header="Is Peptide" Binding="{Binding formula}" MinWidth="100" Width="*"/>
-                        <DataGridCheckBoxColumn Header="Is Glycan" Binding="{Binding formula}" MinWidth="100" Width="*"/>
-                        <DataGridTextColumn Header="Sequence" Binding="{Binding numberMoieties}" MinWidth="100" Width="*"/>
-                        
+                        <DataGridTextColumn Header="Name/Classifier" Binding="{Binding name}" MinWidth="100" Width=".75*"/>
+                        <DataGridCheckBoxColumn Header="Is Peptide" Binding="{Binding isPeptide}" MinWidth="100" Width="0.5*"/>
+                        <DataGridCheckBoxColumn Header="Is Glycan" Binding="{Binding isGlycan}" MinWidth="100" Width="0.5*"/>
+                        <DataGridTextColumn Header="Sequence" Binding="{Binding sequence}" MinWidth="100" Width="2*"/>
+                        <DataGridTextColumn Header="Formula Modifier" Binding="{Binding otherFormula}" MinWidth="100" Width="*"/>
+                        <DataGridTextColumn Header="Calculated Formula" Binding="{Binding calculatedHeadgroupFormula}" MinWidth="100" Width="*" IsReadOnly="True"/>
                     </DataGrid.Columns>
                 </DataGrid>
                 <GroupBox

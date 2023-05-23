@@ -117,6 +117,11 @@ namespace LipiDex_2._0
                 var targetFile = Path.Combine(libraryDirectory.FullName, "Adducts.csv");
                 File.Copy(templateFile, targetFile);
 
+                // copy polymeric headgroup table
+                templateFile = Path.Combine(templateDirectory, "template_Poly_Headgroups.csv");
+                targetFile = Path.Combine(libraryDirectory.FullName, "Poly_Headgroups.csv");
+                File.Copy(templateFile, targetFile);
+
                 // copy fatty acid table
                 templateFile = Path.Combine(templateDirectory, "template_FattyAcids.csv");
                 targetFile = Path.Combine(libraryDirectory.FullName, "FattyAcids.csv");

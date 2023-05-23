@@ -43,7 +43,7 @@ namespace LipiDex_2._0.LibraryGenerator
         // This set of properties are used as intermediate placeholders during editing of the data grid.
         #region Lipid Backbone Properties - Data Grid Display
 
-        public string numberMoieties { get; set; }                      // Number of possible lipid moieties attached
+            public string numberMoieties { get; set; }                      // Number of possible lipid moieties attached
 
         #endregion
 

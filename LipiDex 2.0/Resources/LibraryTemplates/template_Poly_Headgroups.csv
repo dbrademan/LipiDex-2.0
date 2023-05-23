@@ -1,0 +1,2 @@
+Name,IsPeptide,IsGlycan,Sequence,OtherFormula
+TestPeptide,TRUE,FALSE,PEPTIDEK,O-1H-2
