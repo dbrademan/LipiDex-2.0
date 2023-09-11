@@ -10,9 +10,9 @@ namespace LipiDex_2._0.LibraryGenerator
     {
 		public string name;             //Name of transition type
 		public string fattyAcidType;    //Type of fatty acid
-		public bool isFattyAcid;     //True iff the transition type involves fatty acid moieties
-		public bool isNeutralLoss;   //True iff the transition type is a loss from a precursor
-		public int numberOfFattyAcids;       //Number of fatty acids involved in transition
+		public bool isFattyAcid;		//True iff the transition type involves fatty acid moieties
+		public bool isNeutralLoss;		//True iff the transition type is a loss from a precursor
+		public int numberOfFattyAcids;  //Number of fatty acids involved in transition
 
 		//Constructor
 		public TransitionType(string name, string fattyAcidType, bool isFattyAcid, bool isNeutralLoss, int numFattyAcids)

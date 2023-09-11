@@ -118,7 +118,7 @@ namespace LipiDex_2._0.LibraryGenerator
                 // if chemical formula is just whitespace or empty, return the default empty ChemicalFormula object
                 if (string.IsNullOrWhiteSpace(textToValidate))
                 {
-                    this._formula = ChemicalFormula.Empty;
+                    this._formula = new ChemicalFormula();
                     this.formula = this._formula.ToString();
                     return true;
                 }

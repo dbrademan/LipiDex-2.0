@@ -13,7 +13,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		int charge;                         //Charge of samples precursor
 		double maxIntensity;                //Intensity of most intense fragment
 		double sn;                          //signal to noise
-		List<Transition> transitions;  //ArrayList of all transitions
+		List<Transition> transitions;		//List of all transitions
 
 		//Constructor
 		public MSn(double precursor, string polarity, int charge)

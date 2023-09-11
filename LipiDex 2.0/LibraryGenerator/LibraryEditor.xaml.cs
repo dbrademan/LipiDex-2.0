@@ -17,6 +17,7 @@ using System.Windows.Shapes;
 using LumenWorks.Framework.IO.Csv;
 using System.IO;
 using CSMSL.Chemistry;
+using ThermoFisher.CommonCore.Data;
 
 namespace LipiDex_2._0.LibraryGenerator
 {
@@ -38,14 +39,22 @@ namespace LipiDex_2._0.LibraryGenerator
             // TODO - CONVERT LIBRARY TEMPLATE FILES TO NEW FORMAT IF NECESSARY
             LoadFattyAcids(libraryPath);
             LoadLipidAdducts(libraryPath);
+            LoadPolymericHeadgroups(libraryPath);
             LoadLipidBackbones(libraryPath);
             LoadLipidClasses(libraryPath);
-
-            //
-            //LoadFragmentationRules();
+            LoadFragmentationRules(libraryPath);
             //LoadLibraryGeneration();
 
             //DataContext = this;
+        }
+
+        public void LoadFragmentationRules(string libraryPath)
+        {
+            ObservableCollection<TestTreeViewObject> testObjects = TestTreeViewObject.GenerateSampleData();
+
+            TreeView_FragmentationTemplates.ItemsSource = testObjects;
+
+            var t = "";
         }
 
         // Completed 2022-01-19 DRB
@@ -215,7 +224,7 @@ namespace LipiDex_2._0.LibraryGenerator
         {
             var adductLibraryPath = System.IO.Path.Combine(libraryBasePath, "Adducts.csv");
             var backupAdductLibraryPath = System.IO.Path.Combine(libraryBasePath, "Adducts_tmpBackup.csv");
-            
+
             try
             {
                 // first, back up old version of the adduct library
@@ -309,7 +318,7 @@ namespace LipiDex_2._0.LibraryGenerator
                 // adduct loss
                 case 2:
                     break;
-                    // don't need a check for enabled/disabled since it's boolean. It will always be valid.
+                // don't need a check for enabled/disabled since it's boolean. It will always be valid.
 
                 // adduct polarity
                 case 3:
@@ -323,12 +332,12 @@ namespace LipiDex_2._0.LibraryGenerator
                 case 4:
                     index = e.Row.GetIndex();
                     editedTextBox = (TextBox)e.EditingElement;
-                    
+
                     if (DataGridBinding_Adducts[index].ValidateAdductCharge(editedTextBox.Text, e.Row.GetIndex()))
                     {
                         editedTextBox.Text = DataGridBinding_Adducts[index].charge;
                     }
-                    
+
                     break;
             }
         }
@@ -452,7 +461,7 @@ namespace LipiDex_2._0.LibraryGenerator
             foreach (FattyAcid fattyAcid in DataGrid_FattyAcids.Items)
             {
                 fattyAcid.enabled = false;
-                
+
             }
             DataGrid_FattyAcids.ItemsSource = new List<FattyAcid>();
             DataGrid_FattyAcids.ItemsSource = DataGridBinding_FattyAcids;
@@ -481,9 +490,9 @@ namespace LipiDex_2._0.LibraryGenerator
                     // break iteration and send popup alert
                     validLibrary = false;
                     break;
-                }                
+                }
             }
-            
+
             if (validLibrary)
             {
                 try
@@ -538,7 +547,7 @@ namespace LipiDex_2._0.LibraryGenerator
             {
                 LoadFattyAcids(this.libraryPath);
             }
-            
+
         }
 
         /// <summary>
@@ -553,7 +562,7 @@ namespace LipiDex_2._0.LibraryGenerator
         /// Event fired when user clicks off a data grid after editing a fatty acid property. Validates column edits and rolls back changes if edits are invalid
         /// </summary>
         private void DataGrid_FattyAcids_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
-        {            
+        {
             switch (e.Column.DisplayIndex)
             {
                 // fatty acid name
@@ -584,7 +593,7 @@ namespace LipiDex_2._0.LibraryGenerator
                 case 3:
                     break;
                     // don't need a check for enabled/disabled since it's boolean. It will always be valid.
-            }            
+            }
         }
 
         /// <summary>
@@ -618,7 +627,7 @@ namespace LipiDex_2._0.LibraryGenerator
                 // overwrite old library version
                 var writer = new StreamWriter(fattyAcidPath);
 
-                
+
                 // write txt file headers
                 writer.WriteLine(string.Format("{0},{1},{2},{3}", "Name", "Base", "Formula", "Enabled"));
                 foreach (var fattyAcid in DataGridBinding_FattyAcids)
@@ -950,34 +959,94 @@ namespace LipiDex_2._0.LibraryGenerator
 
         #endregion
 
+        // Completed 2023-08-28 DRB
         #region Polymeric Headgroup Tab Controls
+
+        /// <summary>
+        /// Stores two-way bound PolymericHeadgroup objects to the Library Generator DataGrid - Polymeric Headgroups tab.
+        /// </summary>
+        public ObservableCollection<PolymericHeadgroup> DataGridBinding_PolyHeadgroups = new ObservableCollection<PolymericHeadgroup>();
+
+        // <summary>
+        /// Loads all lipid backbones from the specified library (libraryBasePath).
+        /// </summary>
+        private void LoadPolymericHeadgroups(string libraryBasePath)
+        {
+            var polyHeadgroupPath = System.IO.Path.Combine(libraryBasePath, "PolyHeadgroups.csv");
+
+            try
+            {
+                var reader = new CsvReader(new StreamReader(polyHeadgroupPath), true);
+                this.DataGridBinding_PolyHeadgroups = new ObservableCollection<PolymericHeadgroup>();
+
+                while (reader.ReadNextRecord())
+                {
+                    string name = reader["Name"];
+                    bool isPeptide = TextToBoolConverter(reader["IsPeptide"]);
+                    bool isGlycan = TextToBoolConverter(reader["IsGlycan"]);
+                    string sequence = reader["Sequence"];
+                    string otherFormula = reader["Chemical Modifier"];
+
+                    this.DataGridBinding_PolyHeadgroups.Add(new PolymericHeadgroup(name, isPeptide, isGlycan, sequence, otherFormula));
+                }
+
+                DataGrid_PolyHeadgroups.ItemsSource = this.DataGridBinding_PolyHeadgroups;
+            }
+            catch (Exception e)
+            {
+                var messageBoxQuery = e.Message;
+                var messageBoxShortPrompt = "Lipid Polymeric Headgroup Template Loading Error!";
+                var messageBoxButtonOptions = MessageBoxButton.OK;
+                var messageBoxImage = MessageBoxImage.Error;
+
+                var messageBoxResult = MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
+            }
+        }
+
+        private bool TextToBoolConverter(string textToConvert)
+        {
+            if (textToConvert.ToLower().Equals("true"))
+            {
+                return true;
+            }
+            else if (textToConvert.ToLower().Equals("false"))
+            {
+                return false;
+            }
+            else
+            {
+                throw new ApplicationException("This polymeric headgroup column ain't a bool. try again.");
+            }
+        }
 
         /// <summary>
         /// Add a new polymeric headgroup to the polymeric headgroup grid and bind a matching object to the polymeric headgroup ObservableCollection&lt;PolymericHeadgroup&gt;
         /// <br/>
         /// Adds brief color highlight when row is added
         /// </summary>
-        private void Button_PolyHeadgroups_Add_Click(object sender, RoutedEventArgs e)
+        private void Button_PolyHeadgroups_AddPeptide_Click(object sender, RoutedEventArgs e)
         {
-            var newBackboneName = "HeadgroupClassifier";
+            var newPolyHeadgroupName = "Example Peptide";
             var isPeptide = true;
             var isGlycan = false;
+            var sequence = "TESTPEPTIDEK";
+            var formulaModifier = "H-2O-1";
 
-            var newBackboneObject = new LipidBackbone(newBackboneName, newBackboneFormula, newBackboneNumberOfMoieties);
-            DataGridBinding_Backbones.Add(newBackboneObject);
+            var newPolyHeadgroupObject = new PolymericHeadgroup(newPolyHeadgroupName, isPeptide, isGlycan, sequence, formulaModifier);
+            DataGridBinding_PolyHeadgroups.Add(newPolyHeadgroupObject);
 
             // force update of data grid? 
-            DataGrid_Backbones.UpdateLayout();
+            DataGrid_PolyHeadgroups.UpdateLayout();
 
             // programatically select newly added adduct row
-            DataGrid_Backbones.SelectedItems.Clear();
+            DataGrid_PolyHeadgroups.SelectedItems.Clear();
 
-            var newRowIndex = DataGridBinding_Backbones.Count - 1;
-            var newSelectedRow = DataGrid_Backbones.Items[newRowIndex];
-            DataGrid_Backbones.ScrollIntoView(newSelectedRow);
+            var newRowIndex = DataGridBinding_PolyHeadgroups.Count - 1;
+            var newSelectedRow = DataGrid_PolyHeadgroups.Items[newRowIndex];
+            DataGrid_PolyHeadgroups.ScrollIntoView(newSelectedRow);
 
             // mark a color animation transition for added row
-            DataGridRow row = (DataGridRow)DataGrid_Backbones.ItemContainerGenerator.ContainerFromIndex(newRowIndex);
+            DataGridRow row = (DataGridRow)DataGrid_PolyHeadgroups.ItemContainerGenerator.ContainerFromIndex(newRowIndex);
             Color startColor = LibraryEditor.addedRowColor;
             Color endColor = Colors.White;
 
@@ -987,20 +1056,265 @@ namespace LipiDex_2._0.LibraryGenerator
         }
 
         /// <summary>
-        /// Remove an backbone from the backbone data grid and the corresponding object from the ObservableCollection&lt;LipidBackbone&gt;
+        /// Add a new polymeric headgroup to the polymeric headgroup grid and bind a matching object to the polymeric headgroup ObservableCollection&lt;PolymericHeadgroup&gt;
+        /// <br/>
+        /// Adds brief color highlight when row is added
         /// </summary>
-        private void Button_Backbones_Remove_Click(object sender, RoutedEventArgs e)
+        private void Button_PolyHeadgroups_AddGlycan_Click(object sender, RoutedEventArgs e)
         {
-            LipidBackbone selectedItem = (LipidBackbone)DataGrid_Backbones.SelectedItem;
+            var newPolyHeadgroupName = "Example Glycan";
+            var isPeptide = false;
+            var isGlycan = true;
+            var sequence = "HexNAc-HexNAc";
+            var formulaModifier = "C-2H-4O-2";
+
+            var newPolyHeadgroupObject = new PolymericHeadgroup(newPolyHeadgroupName, isPeptide, isGlycan, sequence, formulaModifier);
+            DataGridBinding_PolyHeadgroups.Add(newPolyHeadgroupObject);
+
+            // force update of data grid? 
+            DataGrid_PolyHeadgroups.UpdateLayout();
+
+            // programatically select newly added adduct row
+            DataGrid_PolyHeadgroups.SelectedItems.Clear();
+
+            var newRowIndex = DataGridBinding_PolyHeadgroups.Count - 1;
+            var newSelectedRow = DataGrid_PolyHeadgroups.Items[newRowIndex];
+            DataGrid_PolyHeadgroups.ScrollIntoView(newSelectedRow);
+
+            // mark a color animation transition for added row
+            DataGridRow row = (DataGridRow)DataGrid_PolyHeadgroups.ItemContainerGenerator.ContainerFromIndex(newRowIndex);
+            Color startColor = LibraryEditor.addedRowColor;
+            Color endColor = Colors.White;
+
+            ColorAnimation ca = new ColorAnimation(endColor, new Duration(TimeSpan.FromSeconds(0.5)));
+            row.Background = new SolidColorBrush(startColor);
+            row.Background.BeginAnimation(SolidColorBrush.ColorProperty, ca);
+        }
+
+        /// <summary>
+        /// Remove an polymeric headgroup from the polymeric headgroup data grid and the corresponding object from the ObservableCollection&lt;PolymericHeadgroup&gt;
+        /// </summary>
+        private void Button_PolyHeadgroups_Remove_Click(object sender, RoutedEventArgs e)
+        {
+            PolymericHeadgroup selectedItem = (PolymericHeadgroup)DataGrid_PolyHeadgroups.SelectedItem;
 
             if (selectedItem != null)
             {
-                DataGridBinding_Backbones.Remove(selectedItem);
+                DataGridBinding_PolyHeadgroups.Remove(selectedItem);
             }
+        }
+
+        /// <summary>
+        /// Saves all polymeric headgroups in the polymeric headgroup data grid to the text-based LipiDex library .csv file.
+        /// </summary>
+        private void Button_PolyHeadgroups_SavePolyHeadgroups_Click(object sender, RoutedEventArgs e)
+        {
+            // default to false so we don't try writing out an empty library
+            var validLibrary = false;
+
+            for (var i = 0; i < DataGridBinding_PolyHeadgroups.Count; i++)
+            {
+                var polyHeadgroup = DataGridBinding_PolyHeadgroups[i];
+
+                // if there is an invalid polymericHeadgroup, let validation message box be thrown and set all valid to false.
+                if (polyHeadgroup.IsValid(i))
+                {
+                    validLibrary = true;
+                }
+                else
+                {
+                    // bad polymeric headgroup
+                    // break iteration and send popup alert
+                    validLibrary = false;
+                    break;
+                }
+            }
+
+            if (validLibrary)
+            {
+                try
+                {
+                    SavePolymericHeadgroupLibrary(libraryPath);
+
+                    var messageBoxQuery = string.Format("Library \"{0}\" has been successfully saved.\n\nOther open windows referencing \"{0}\" will not reflect these changes and should be reloaded!", System.IO.Path.GetFileNameWithoutExtension(libraryPath));
+                    var messageBoxShortPrompt = "Library Saved Successfully!";
+                    var messageBoxButtonOptions = MessageBoxButton.OK;
+                    var messageBoxImage = MessageBoxImage.Asterisk;
+
+                    MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
+
+                    // just in case there's weird shenanigans in my code, reload the lipid adducts from the file to make sure there are no
+                    // weird artifacts left over from the data grid
+                    LoadPolymericHeadgroups(libraryPath);
+                }
+                catch (InvalidOperationException exception)
+                {
+                    var messageBoxQuery = string.Format("Unexpected error while saving changes to library \"{0}\".All edits have been rolled back!\n\nError Message:\n{1}", System.IO.Path.GetFileNameWithoutExtension(libraryPath), exception.Message);
+                    var messageBoxShortPrompt = "Error - Changes Not Saved!";
+                    var messageBoxButtonOptions = MessageBoxButton.OK;
+                    var messageBoxImage = MessageBoxImage.Error;
+
+                    MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
+                }
+            }
+            else
+            {
+                var messageBoxQuery = string.Format("Formatting error(s) detected with polymeric headgroup entries in library \"{0}\". They must be corrected before this library can be saved.", System.IO.Path.GetFileNameWithoutExtension(libraryPath));
+                var messageBoxShortPrompt = "Library Formatting Error!";
+                var messageBoxButtonOptions = MessageBoxButton.OK;
+                var messageBoxImage = MessageBoxImage.Error;
+
+                var results = MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
+            }
+        }
+
+        /// <summary>
+        /// Effectively discards all changes since the library was last saved. Clears the ObservableCollection&lt;PolymericHeadgroup&gt; and repopulates it from the text-based LipiDex Libraries
+        /// </summary>
+        private void Button_PolyHeadgroups_ReloadOldPolyHeadgroups_Click(object sender, RoutedEventArgs e)
+        {
+            var messageBoxQuery = string.Format("Reload library \"{0}\" from last-saved version? Any unsaved edits will be lost.", System.IO.Path.GetFileNameWithoutExtension(libraryPath));
+            var messageBoxShortPrompt = "Reloading last saved version of library!";
+            var messageBoxButtonOptions = MessageBoxButton.YesNoCancel;
+            var messageBoxImage = MessageBoxImage.Question;
+
+            var results = MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
+
+            if (results.Equals(MessageBoxResult.Yes))
+            {
+                LoadPolymericHeadgroups(this.libraryPath);
+            }
+        }
+
+        /// <summary>
+        /// TODO!!!
+        /// - Saves all changes made to the polymeric headgroup library stored in the [base]/Resources/LipidexLibraries directory if all changes are valid.
+        /// <br/>
+        /// - If an error occurs during save, rolls back library changes to original
+        /// <br/>
+        /// - Clears the ObservableCollection&lt;PolymericHeadgroup&gt; and repopulates it from the text-based LipiDex libraries.
+        /// </summary>
+        private void SavePolymericHeadgroupLibrary(string libraryBasePath)
+        {
+            var polyHeadgroupLibraryPath = System.IO.Path.Combine(libraryBasePath, "PolyHeadgroups.csv");
+            var backupPolyHeadgroupLibraryPath = System.IO.Path.Combine(libraryBasePath, "PolyHeadgroups_tmpBackup.csv");
+
+            try
+            {
+                
+                // first, back up old version of the polyHeadgroup library
+                File.Copy(polyHeadgroupLibraryPath, backupPolyHeadgroupLibraryPath);
+
+                // overwrite old library version
+                var writer = new StreamWriter(polyHeadgroupLibraryPath);
+
+                // write txt file headers
+                writer.WriteLine(string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\"", "Name", "IsPeptide", "IsGlycan",
+                    "Sequence", "Chemical Modifier"));
+
+                // write out each headgroup
+                foreach (var headgroup in DataGridBinding_PolyHeadgroups)
+                {
+                    writer.WriteLine(headgroup.SaveString());
+                }
+
+                writer.Close();
+                writer.Dispose();
+
+                // successfully wrote library
+                // delete backup copy of old library.
+                File.Delete(backupPolyHeadgroupLibraryPath);
+            }
+            catch (Exception e)
+            {
+                
+                // something about updating the new library failed.
+                // restore old library
+                File.Copy(backupPolyHeadgroupLibraryPath, polyHeadgroupLibraryPath, true);
+
+                // delete backup copy
+                File.Delete(backupPolyHeadgroupLibraryPath);
+
+                // throw exception back to upper level
+                throw new InvalidOperationException(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Event which generates row numbers in data grid using an object's index in the ObservableCollection&lt;PolyHeadgroup&gt;.
+        /// </summary>
+        private void DataGrid_PolyHeadgroups_LoadingRow(object sender, DataGridRowEventArgs e)
+        {
+            var row = e.Row;
+
+            // show row number
+            row.Header = (e.Row.GetIndex() + 1).ToString();
+        }
+
+        /// <summary>
+        /// Validates a cell which just finished editing.
+        /// </summary>
+        private void DataGrid_PolyHeadgroups_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        {
+            // validate the individual edited cell
+            switch (e.Column.DisplayIndex)
+            {
+                // PolyHeadgroup name
+                case 0:
+                    var index = e.Row.GetIndex();
+                    var editedTextBox = (TextBox)e.EditingElement;
+                    DataGridBinding_PolyHeadgroups[index].ValidatePolyHeadgroupName(editedTextBox.Text, index);
+                    break;
+
+                // PolyHeadgroup peptide type edited
+                case 1:
+                    index = e.Row.GetIndex();
+                    var peptideBoolean = ((CheckBox)e.EditingElement).IsChecked ?? false;
+                    // programatically "click th
+                    DataGridBinding_PolyHeadgroups[index].ValidatePolyHeadgroupType_Peptide(peptideBoolean, index);
+                    
+                    ResetPolyHeadgroupDataGrid();
+                    break;
+
+                // PolyHeadgroup glycan type edited
+                case 2:
+                    index = e.Row.GetIndex();
+                    var glycanBoolean = ((CheckBox)e.EditingElement).IsChecked ?? false;
+                    DataGridBinding_PolyHeadgroups[index].ValidatePolyHeadgroupType_Glycan(glycanBoolean, index);
+                    ResetPolyHeadgroupDataGrid();
+                    break;
+
+                //  PolyHeadgroup sequence
+                case 3:
+                    index = e.Row.GetIndex();
+                    editedTextBox = (TextBox)e.EditingElement;
+                    DataGridBinding_PolyHeadgroups[index].ValidatePolyHeadgroupSequence(editedTextBox.Text, index);
+                    ResetPolyHeadgroupDataGrid();
+                    break;
+
+                case 4:
+                    index = e.Row.GetIndex();
+                    editedTextBox = (TextBox)e.EditingElement;
+                    DataGridBinding_PolyHeadgroups[index].ValidateExtraFormulaBalancer(editedTextBox.Text, index);
+                    ResetPolyHeadgroupDataGrid();
+                    break;
+            }
+        }
+
+        private void ResetPolyHeadgroupDataGrid()
+        {
+            DataGrid_PolyHeadgroups.ItemsSource = null;
+            DataGrid_PolyHeadgroups.ItemsSource = DataGridBinding_PolyHeadgroups;
+        }
+
+        private void DataGrid_PolyHeadgroups_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
+        {
+
         }
 
         #endregion
 
+        // Completed 2023-03-14 DRB
         #region Lipid Class Tab Controls
 
         /// <summary>
@@ -1034,6 +1348,10 @@ namespace LipiDex_2._0.LibraryGenerator
                     string moiety3 = reader["Moiety 3"];
                     string moiety4 = reader["Moiety 4"];
 
+                    if (classAbbreviation.Equals("TG"))
+                    {
+                        var t = "";
+                    }
                     var lipidClass = new LipidClass(className, classAbbreviation, headGroup, delimitedAdducts, backboneClassifierString, optimalPolarityString, numberOfMoieties, moiety1, moiety2, moiety3, moiety4, this);
                     DataGridBinding_LipidClasses.Add(lipidClass);
                 }
@@ -1067,7 +1385,7 @@ namespace LipiDex_2._0.LibraryGenerator
             var newClassMoiety2 = "Alkyl";
             var newClassMoiety3 = "";
             var newClassMoiety4 = "";
-            var newlipidClassObject = new LipidClass(newClassFullName, newClassAbbreviation, newClassHeadgroup, newClassDelimitedAdducts, newClassBackboneClassifier, 
+            var newlipidClassObject = new LipidClass(newClassFullName, newClassAbbreviation, newClassHeadgroup, newClassDelimitedAdducts, newClassBackboneClassifier,
                 newClassOptimalPolarity, newClassNumberOfMoieties, newClassMoiety1, newClassMoiety2, newClassMoiety3, newClassMoiety4, this);
             DataGridBinding_LipidClasses.Add(newlipidClassObject);
 
@@ -1189,8 +1507,8 @@ namespace LipiDex_2._0.LibraryGenerator
                 var writer = new StreamWriter(lipidClassLibraryPath);
 
                 // write txt file headers
-                writer.WriteLine(string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}", "Abbreviation","Full Name","Head Group",
-                    "Adducts","Backbone","Optimal Polarity","Number of Moieties","Moiety 1","Moiety 2","Moiety 3","Moiety 4"));
+                writer.WriteLine(string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}", "Abbreviation", "Full Name", "Head Group",
+                    "Adducts", "Backbone", "Optimal Polarity", "Number of Moieties", "Moiety 1", "Moiety 2", "Moiety 3", "Moiety 4"));
 
                 // write out each adduct
                 foreach (var lipidClass in DataGridBinding_LipidClasses)
@@ -1300,11 +1618,14 @@ namespace LipiDex_2._0.LibraryGenerator
 
                 case 6:
                     index = e.Row.GetIndex();
-                    editedTextBox= (TextBox)e.EditingElement;
+                    editedTextBox = (TextBox)e.EditingElement;
                     DataGridBinding_LipidClasses[index].ValidateNumberOfMoieties(editedTextBox.Text, e.Row.GetIndex());
                     break;
 
-                case 7: case 8: case 9: case 10:
+                case 7:
+                case 8:
+                case 9:
+                case 10:
                     index = e.Row.GetIndex();
                     editedTextBox = (TextBox)e.EditingElement;
                     DataGridBinding_LipidClasses[index].ValidateSingleChangedMoiety(editedTextBox.Text, e.Column.DisplayIndex, e.Row.GetIndex());
@@ -1315,6 +1636,29 @@ namespace LipiDex_2._0.LibraryGenerator
         private void DataGrid_LipidClasses_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
         {
 
+        }
+        #endregion
+
+        #region Fragmentation Template Controls
+
+        private void Button_FragmentationTemplates_TestButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private string GetRandomString()
+        {
+            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            var stringChars = new char[8];
+            var random = new Random();
+
+            for (int i = 0; i < stringChars.Length; i++)
+            {
+                stringChars[i] = chars[random.Next(chars.Length)];
+            }
+
+            var finalString = new String(stringChars);
+            return finalString;
         }
         #endregion
     }

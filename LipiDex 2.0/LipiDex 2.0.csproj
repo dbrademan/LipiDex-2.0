@@ -69,6 +69,18 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="ThermoFisher.CommonCore.BackgroundSubtraction, Version=5.0.0.88, Culture=neutral, PublicKeyToken=1aef06afb5abd953, processorArchitecture=MSIL">
+      <HintPath>..\packages\Coon.CSMSL.Thermo.0.1.0\lib\net48\ThermoFisher.CommonCore.BackgroundSubtraction.dll</HintPath>
+    </Reference>
+    <Reference Include="ThermoFisher.CommonCore.Data, Version=5.0.0.88, Culture=neutral, PublicKeyToken=1aef06afb5abd953, processorArchitecture=MSIL">
+      <HintPath>..\packages\Coon.CSMSL.Thermo.0.1.0\lib\net48\ThermoFisher.CommonCore.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="ThermoFisher.CommonCore.MassPrecisionEstimator, Version=5.0.0.88, Culture=neutral, PublicKeyToken=1aef06afb5abd953, processorArchitecture=MSIL">
+      <HintPath>..\packages\Coon.CSMSL.Thermo.0.1.0\lib\net48\ThermoFisher.CommonCore.MassPrecisionEstimator.dll</HintPath>
+    </Reference>
+    <Reference Include="ThermoFisher.CommonCore.RawFileReader, Version=5.0.0.88, Culture=neutral, PublicKeyToken=1aef06afb5abd953, processorArchitecture=MSIL">
+      <HintPath>..\packages\Coon.CSMSL.Thermo.0.1.0\lib\net48\ThermoFisher.CommonCore.RawFileReader.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -100,6 +112,7 @@
     <Compile Include="LibraryGenerator\MSn.cs" />
     <Compile Include="LibraryGenerator\MSnTemplate.cs" />
     <Compile Include="LibraryGenerator\PolymericHeadgroup.cs" />
+    <Compile Include="LibraryGenerator\TestTreeViewObject.cs" />
     <Compile Include="LibraryGenerator\Transition.cs" />
     <Compile Include="LibraryGenerator\TransitionDefinition.cs" />
     <Compile Include="LibraryGenerator\TransitionType.cs" />
@@ -240,21 +253,16 @@
     <EmbeddedResource Include="Resources\LipidexLibraries\LipiDex_HCD_Acetate\MS2_Templates.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <None Include="README.md" />
+    <EmbeddedResource Include="Resources\LibraryTemplates\template_PolyHeadgroups.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\..\Software\CSMSLx64\CSMSL\CSMSL.csproj">
-      <Project>{3c8c9f05-9c19-4251-95fa-05d7edc8cae6}</Project>
-      <Name>CSMSL</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\..\..\..\Software\CSMSLx64\CSMSL\IO\Thermo\Thermo.csproj">
-      <Project>{24dc85ff-e97b-4140-9614-77dd8fddd32f}</Project>
-      <Name>Thermo</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
+    <Resource Include="icon.png" />
     <Content Include="Resources\Icons\backgroundTile.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -336,6 +344,12 @@
     <Content Include="Resources\Icons\spectrumSearcherIcon.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\CSMSL.DotNetFramework\CSMSL\CSMSL.csproj">
+      <Project>{30e1c3b3-d2a5-42a3-be43-8089cdb2ef0e}</Project>
+      <Name>CSMSL</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

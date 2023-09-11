@@ -54,7 +54,7 @@
                         </Grid.RowDefinitions>
                         <Button 
                             x:Name="Button_Backbones_Add"
-                            Content="Add New Row"
+                            Content="Add New Peptide"
                             Click="Button_Backbones_Add_Click"
                             
                             Grid.Column="0"
@@ -212,9 +212,8 @@
         <TabItem Header="Glycan/Peptide Headgroups">
             <Grid ClipToBounds="True" ShowGridLines="True" Background="#FFE5E5E5">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="181*"></ColumnDefinition>
-                    <ColumnDefinition Width="63*"></ColumnDefinition>
-                    <ColumnDefinition Width="169*"></ColumnDefinition>
+                    <ColumnDefinition Width="1052*"></ColumnDefinition>
+                    <ColumnDefinition Width="187*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition/>
@@ -237,11 +236,14 @@
                     ScrollViewer.VerticalScrollBarVisibility="Auto">
 
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Classifier" Binding="{Binding name}" MinWidth="100" Width=".75*"/>
-                        <DataGridCheckBoxColumn Header="Is Peptide" Binding="{Binding formula}" MinWidth="100" Width="*"/>
-                        <DataGridCheckBoxColumn Header="Is Glycan" Binding="{Binding formula}" MinWidth="100" Width="*"/>
-                        <DataGridTextColumn Header="Sequence" Binding="{Binding numberMoieties}" MinWidth="100" Width="*"/>
-                        
+                        <DataGridTextColumn Header="Name/Classifier" Binding="{Binding name}" MinWidth="100" Width=".75*"/>
+
+                        <DataGridCheckBoxColumn Header="Is Peptide" Binding="{Binding isPeptide, NotifyOnTargetUpdated=True,  UpdateSourceTrigger=PropertyChanged}" MinWidth="100" Width="0.5*"/>
+                        <DataGridCheckBoxColumn Header="Is Glycan" Binding="{Binding isGlycan, NotifyOnTargetUpdated=True,  UpdateSourceTrigger=PropertyChanged}" MinWidth="100" Width="0.5*"/>
+
+                        <DataGridTextColumn Header="Sequence" Binding="{Binding sequence}" MinWidth="100" Width="2*"/>
+                        <DataGridTextColumn Header="Formula Modifier" Binding="{Binding otherFormula}" MinWidth="100" Width="*"/>
+                        <DataGridTextColumn Header="Calculated Formula" Binding="{Binding calculatedHeadgroupFormula}" MinWidth="100" Width="*" IsReadOnly="True"/>
                     </DataGrid.Columns>
                 </DataGrid>
                 <GroupBox
@@ -255,14 +257,26 @@
                             <RowDefinition/>
                             <RowDefinition/>
                             <RowDefinition/>
+                            <RowDefinition/>
                         </Grid.RowDefinitions>
                         <Button 
-                            x:Name="Button_PolyHeadgroups_Add"
-                            Content="Add New Row"
-                            Click="Button_PolyHeadgroups_Add_Click"
-                            
+                            x:Name="Button_PolyHeadgroups_AddPeptide"
+                            Content="Add New Peptide Row"
+                            Click="Button_PolyHeadgroups_AddPeptide_Click"
                             Grid.Column="0"
                             Grid.Row="0"
+                            Margin="0,0,0,0"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                            FontSize="12"
+                            FontWeight="Normal">
+                        </Button>
+                        <Button 
+                            x:Name="Button_PolyHeadgroups_AddGlycan"
+                            Content="Add New Glycan Row"
+                            Click="Button_PolyHeadgroups_AddGlycan_Click"
+                            Grid.Column="0"
+                            Grid.Row="1"
                             Margin="0,0,0,0"
                             VerticalAlignment="Center"
                             HorizontalAlignment="Center"
@@ -275,7 +289,7 @@
                             Click="Button_PolyHeadgroups_Remove_Click"
                             
                             Grid.Column="0"
-                            Grid.Row="1"
+                            Grid.Row="2"
                             Margin="0,0,0,0"
                             VerticalAlignment="Center"
                             HorizontalAlignment="Center"
@@ -288,7 +302,7 @@
                             Click="Button_PolyHeadgroups_ReloadOldPolyHeadgroups_Click"
                             
                             Grid.Column="0"
-                            Grid.Row="2"
+                            Grid.Row="3"
                             Margin="0,0,0,0"
                             VerticalAlignment="Center"
                             HorizontalAlignment="Center"
@@ -301,7 +315,7 @@
                             Click="Button_PolyHeadgroups_SavePolyHeadgroups_Click"
                             
                             Grid.Column="0"
-                            Grid.Row="3"
+                            Grid.Row="4"
                             Margin="0,0,0,0"
                             VerticalAlignment="Center"
                             HorizontalAlignment="Center"
@@ -544,7 +558,66 @@
             </Grid>
         </TabItem>
         <TabItem Header="Fragmentation Rules">
-            <Grid Background="#FFE5E5E5"/>
+            <Grid ClipToBounds="True" ShowGridLines="True" Background="#FFE5E5E5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1052*"></ColumnDefinition>
+                    <ColumnDefinition Width="187*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Label 
+                    Content="Fragmentation Rules (Mass/Formula, Intensity, Charge, Type)" 
+                    HorizontalAlignment="Left" 
+                    Margin="10,19,0,0" 
+                    VerticalAlignment="Top" FontSize="14" 
+                    />
+                <TreeView 
+                    x:Name="TreeView_FragmentationTemplates"               
+                    Grid.Column="0"
+                    Grid.Row="0"
+                    Margin="10,50,10,10"
+                    ScrollViewer.HorizontalScrollBarVisibility="Auto" 
+                    ScrollViewer.VerticalScrollBarVisibility="Auto"
+                    ItemsSource="{Binding testObject}"
+                >
+                    <TreeView.ItemTemplate>
+                        <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding LipidClass_AdductCombo}" FontWeight="Bold" />
+                                <TextBlock Text="{Binding type}" />
+                            </StackPanel>
+                        </HierarchicalDataTemplate>
+                    </TreeView.ItemTemplate>
+                </TreeView>
+                <GroupBox
+                    Header="Data Grid Controls"
+                    FontWeight="Bold"
+                    FontSize="16"
+                    Grid.Column="1" Margin="10,10,10,10">
+                    <Grid HorizontalAlignment="Center">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <Button 
+                            x:Name="Button_FragmentationTemplates_TestButton"
+                            Content="Test Button - Add Text"
+                            Click="Button_FragmentationTemplates_TestButton_Click"
+                            Grid.Column="0"
+                            Grid.Row="0"
+                            Margin="0,0,0,0"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                            FontSize="12"
+                            FontWeight="Normal">
+                        </Button>
+                    </Grid>
+                </GroupBox>
+            </Grid>
         </TabItem>
         <TabItem Header="Library Generation">
             <Grid Background="#FFE5E5E5"/>

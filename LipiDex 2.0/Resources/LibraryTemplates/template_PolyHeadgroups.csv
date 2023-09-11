@@ -1,0 +1,3 @@
+Name,IsPeptide,IsGlycan,Sequence,Chemical Modifier
+Example-Peptide,true,false,ATESTPEPTIDEK,H-2O-1
+Example-Glycan,false,true,Hex-HexNAc-HexN-HexA-Pent,C-2H-4O-2

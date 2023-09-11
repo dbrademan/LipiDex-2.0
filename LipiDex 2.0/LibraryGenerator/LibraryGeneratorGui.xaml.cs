@@ -128,6 +128,11 @@ namespace LipiDex_2._0
                 File.Copy(templateFile, targetFile);
 
                 // copy lipid classes table
+                templateFile = Path.Combine(templateDirectory, "template_PolyHeadgroups.csv");
+                targetFile = Path.Combine(libraryDirectory.FullName, "PolyHeadgroups.csv");
+                File.Copy(templateFile, targetFile);
+
+                // copy lipid classes table
                 templateFile = Path.Combine(templateDirectory, "template_Lipid_Classes.csv");
                 targetFile = Path.Combine(libraryDirectory.FullName, "Lipid_Classes.csv");
                 File.Copy(templateFile, targetFile);

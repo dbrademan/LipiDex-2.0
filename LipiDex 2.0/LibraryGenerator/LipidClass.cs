@@ -704,7 +704,7 @@ namespace LipiDex_2._0.LibraryGenerator
             var savableAdductString = string.Join(";", adductStrings);
             var backboneString = this._classBackbone.GetName();
 
-            var returnString = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}", 
+            var returnString = string.Format("\"{0}\",\"{1}\",\"{2}\",\"{3}\",\"{4}\",\"{5}\",\"{6}\",\"{7}\",\"{8}\",\"{9}\",\"{10}\"", 
                 this._name, 
                 this._fullClassName, 
                 this.headGroupFormula.ToString(),

@@ -60,7 +60,7 @@ namespace LipiDex_2._0.LibraryGenerator
             ValidateBackboneName(name, -1);
             ValidateBackboneFormula(formula, -1);
             ValidateNumberOfMoieties(numMoieties, -1);
-            _attachedMoieties = new List<LipidMoiety>(_numberMoieties);
+            this._attachedMoieties = new List<LipidMoiety>(_numberMoieties);
         }
 
         /// <summary>
@@ -146,7 +146,7 @@ namespace LipiDex_2._0.LibraryGenerator
 		/// </returns>
 		public string SaveString()
         {
-            return string.Format("{0},{1},{2}", this._name, this._formula.ToString(), this._numberMoieties);
+            return string.Format("\"{0}\",\"{1}\",\"{2}\"", this._name, this._formula.ToString(), this._numberMoieties);
         }
     }
 }
