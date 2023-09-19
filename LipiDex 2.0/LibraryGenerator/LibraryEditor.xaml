@@ -567,11 +567,57 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <Label 
-                    Content="Fragmentation Rules (Mass/Formula, Intensity, Charge, Type)" 
+                    Content="Fragmentation Templates: ⯑ (Hover for more information)" 
                     HorizontalAlignment="Left" 
                     Margin="10,19,0,0" 
                     VerticalAlignment="Top" FontSize="14" 
-                    />
+                >
+                    <Label.ToolTip>
+                        <ToolTip>
+                            <TextBlock>
+                                <Run FontWeight="Bold">Fragmentation Template Property Descriptions:</Run>
+                                <LineBreak /><LineBreak />
+                                • <Italic>Unique Id</Italic> - Procedurally generated and cannot be edited. Used to link related MSⁿ transitions together if using serial activations.
+                                <LineBreak /><LineBreak />
+                                • <Italic>Mass/Formula</Italic> - The mass or formula balancer of a fragmentation transition. Describes the absolute mass or formula of a fragment/neutral loss. Alternatively, this is used as a mass balancer to properly describe fragmentation patterns.
+                                <LineBreak /><LineBreak />
+                                • <Italic>Intensity</Italic> - The relative intensity of a fragment ion. We suggest a range between 0-1000 (arbitrary units). Absolute intensities can be entered as well.
+                                <LineBreak /><LineBreak />
+                                • <Italic>Charge</Italic> – Charge of the fragment ion. Used to calculate m/z values of resulting fragment ions.
+                                <LineBreak /><LineBreak />
+                                • <Italic>Transition Type</Italic> – Category used to delineate fragmentation behavior.
+                                    <LineBreak />
+                                    <InlineUIContainer>
+                                        <TextBlock Margin="20,0,0,0"><Run>       </Run></TextBlock>
+                                    </InlineUIContainer>
+                                    - <Italic>Fragment</Italic> or <Italic>Neutral Loss</Italic> options are not dependent on variable lipid class constituents and are typically shared across all species in a lipid class.
+                                    <LineBreak />
+                                    <InlineUIContainer>
+                                        <TextBlock Margin="20,0,0,0"><Run>       </Run></TextBlock>
+                                    </InlineUIContainer>
+                                    - Other options are dependent on the relevant lipid class's variable motifs
+                                    <LineBreak />
+                                    <InlineUIContainer>
+                                        <TextBlock Margin="20,0,0,0"><Run>       </Run></TextBlock>
+                                    </InlineUIContainer>
+                                    - The keyword <Italic>Fragment</Italic> indicates the charge will be located on the selected variable motif
+                                    <LineBreak />
+                                    <InlineUIContainer>
+                                        <TextBlock Margin="20,0,0,0"><Run>       </Run></TextBlock>
+                                    </InlineUIContainer>
+                                    - The keyword <Italic>Loss</Italic> indicates the the selected variable motif will not retain the charge and be treated as a neutral loss.
+                                    <LineBreak /><LineBreak />
+                                • <Italic>Evidence Type</Italic> – Indicator on which level of structural information this fragment ion provides.
+                                <LineBreak /><LineBreak />
+                                • <Italic>Activation Type</Italic> – Classifier used to filter mass spectra in Spectrum Searcher specific to this fragment ion transition. Options are CID, HCD, and UVPD.
+                                <LineBreak /><LineBreak />
+                                • <Italic>MSⁿ Level</Italic> – Classifier used to filter mass spectra in Spectrum Searcher specific to this fragment ion transition.
+                                <LineBreak /><LineBreak />
+                                • <Italic>Parent Transition</Italic> – Unique ID for the parent transition if this is part of an MSⁿ tree. Leave blank otherwise.
+                            </TextBlock>
+                        </ToolTip>
+                    </Label.ToolTip>
+                </Label>
                 <TreeView 
                     x:Name="TreeView_FragmentationTemplates"               
                     Grid.Column="0"

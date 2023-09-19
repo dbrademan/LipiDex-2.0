@@ -96,6 +96,9 @@
     <Compile Include="LibraryForgeGui.xaml.cs">
       <DependentUpon>LibraryForgeGui.xaml</DependentUpon>
     </Compile>
+    <Compile Include="LibraryGenerator\DrbFragmentationRule.cs" />
+    <Compile Include="LibraryGenerator\DrbFragmentationTemplate.cs" />
+    <Compile Include="LibraryGenerator\EvidenceType.cs" />
     <Compile Include="LibraryGenerator\FattyAcidComparer.cs" />
     <Compile Include="LibraryGenerator\LibraryEditor.xaml.cs">
       <DependentUpon>LibraryEditor.xaml</DependentUpon>

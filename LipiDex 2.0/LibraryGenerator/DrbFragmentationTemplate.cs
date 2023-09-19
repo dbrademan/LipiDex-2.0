@@ -11,9 +11,14 @@ using System.Collections.ObjectModel;
 
 namespace LipiDex_2._0.LibraryGenerator
 {
-    internal class TestTreeViewObject
+    internal class DrbFragmentationTemplate
     {
-        // only set if is top level
+
+        public LipidClass lipidClass;
+
+
+
+
         public string LipidClass_AdductCombo { get; set; }
 
         // always set
@@ -26,13 +31,13 @@ namespace LipiDex_2._0.LibraryGenerator
         public double intensity { get; set; }               //Relative intensity of fragment, scaled to 999
         public string type { get; set; }                 //Type of transition
 
-        
 
-        public TestTreeViewObject(string name)
+
+        public DrbFragmentationTemplate(string name)
         {
             this.LipidClass_AdductCombo = name;
             this.Children = new ObservableCollection<TestTreeViewObject>();
-            
+
             this.formulaShift = new ChemicalFormula();
             this.massShift = -1;
             this.intensity = -1;
@@ -40,7 +45,7 @@ namespace LipiDex_2._0.LibraryGenerator
         }
 
         //Constructor
-        public TestTreeViewObject(double mass, double intensity, string type)
+        public DrbFragmentationTemplate(double mass, double intensity, string type)
         {
             this.LipidClass_AdductCombo = null;
             this.Children = new ObservableCollection<TestTreeViewObject>();
@@ -51,7 +56,7 @@ namespace LipiDex_2._0.LibraryGenerator
             this.type = type;
         }
 
-        public TestTreeViewObject(string formulaShiftString, int intensity, string type)
+        public DrbFragmentationTemplate(string formulaShiftString, int intensity, string type)
         {
             this.LipidClass_AdductCombo = null;
             this.Children = new ObservableCollection<TestTreeViewObject>();
@@ -62,7 +67,7 @@ namespace LipiDex_2._0.LibraryGenerator
             this.type = type;
         }
 
-        public TestTreeViewObject(ChemicalFormula formulaShift, double intensity, string type)
+        public DrbFragmentationTemplate(ChemicalFormula formulaShift, double intensity, string type)
         {
             this.LipidClass_AdductCombo = null;
             this.Children = new ObservableCollection<TestTreeViewObject>();
