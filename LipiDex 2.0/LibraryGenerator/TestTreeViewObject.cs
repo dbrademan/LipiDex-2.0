@@ -107,7 +107,7 @@ namespace LipiDex_2._0.LibraryGenerator
             var exampleTreeViewObjects = new ObservableCollection<TestTreeViewObject>();
 
             TestTreeViewObject object1 = new TestTreeViewObject("PC [M+H]+");
-            object1.Children.Add(new TestTreeViewObject("Choline Headgroup", 100, "1      | Phosphocholine Headgroup                  | H2PO4C2H4N(CH3)3              | 999       | 1      | Fragment                          | Species Level              | HCD  | 2   |        | "));
+            object1.Children.Add(new TestTreeViewObject(/*"Choline Headgroup"*/"C1H2O3P4N5", 100, "1      | Phosphocholine Headgroup                  | H2PO4C2H4N(CH3)3              | 999       | 1      | Fragment                          | Species Level              | HCD  | 2   |        | "));
             object1.Children.Add(new TestTreeViewObject("CH3CH2CH3", 150, "An Important Fragment"));
             object1.Children.Add(new TestTreeViewObject(184.079, 999, "Choline Headgroup"));
 

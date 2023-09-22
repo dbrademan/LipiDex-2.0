@@ -5,8 +5,6 @@ VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LipiDex 2.0", "LipiDex 2.0\LipiDex 2.0.csproj", "{3FE18D21-6B6F-4918-BDD4-BC68C4877202}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSMSL", "..\..\CSMSL.DotNetFramework\CSMSL\CSMSL.csproj", "{30E1C3B3-D2A5-42A3-BE43-8089CDB2EF0E}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Automated_Build|Any CPU = Automated_Build|Any CPU
@@ -38,24 +36,6 @@ Global
 		{3FE18D21-6B6F-4918-BDD4-BC68C4877202}.Release|x64.Build.0 = Release|x64
 		{3FE18D21-6B6F-4918-BDD4-BC68C4877202}.Release|x86.ActiveCfg = Release|Any CPU
 		{3FE18D21-6B6F-4918-BDD4-BC68C4877202}.Release|x86.Build.0 = Release|Any CPU
-		{30E1C3B3-D2A5-42A3-BE43-8089CDB2EF0E}.Automated_Build|Any CPU.ActiveCfg = Debug|Any CPU
-		{30E1C3B3-D2A5-42A3-BE43-8089CDB2EF0E}.Automated_Build|Any CPU.Build.0 = Debug|Any CPU
-		{30E1C3B3-D2A5-42A3-BE43-8089CDB2EF0E}.Automated_Build|x64.ActiveCfg = Debug|Any CPU
-		{30E1C3B3-D2A5-42A3-BE43-8089CDB2EF0E}.Automated_Build|x64.Build.0 = Debug|Any CPU
-		{30E1C3B3-D2A5-42A3-BE43-8089CDB2EF0E}.Automated_Build|x86.ActiveCfg = Debug|Any CPU
-		{30E1C3B3-D2A5-42A3-BE43-8089CDB2EF0E}.Automated_Build|x86.Build.0 = Debug|Any CPU
-		{30E1C3B3-D2A5-42A3-BE43-8089CDB2EF0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{30E1C3B3-D2A5-42A3-BE43-8089CDB2EF0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{30E1C3B3-D2A5-42A3-BE43-8089CDB2EF0E}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{30E1C3B3-D2A5-42A3-BE43-8089CDB2EF0E}.Debug|x64.Build.0 = Debug|Any CPU
-		{30E1C3B3-D2A5-42A3-BE43-8089CDB2EF0E}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{30E1C3B3-D2A5-42A3-BE43-8089CDB2EF0E}.Debug|x86.Build.0 = Debug|Any CPU
-		{30E1C3B3-D2A5-42A3-BE43-8089CDB2EF0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{30E1C3B3-D2A5-42A3-BE43-8089CDB2EF0E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{30E1C3B3-D2A5-42A3-BE43-8089CDB2EF0E}.Release|x64.ActiveCfg = Release|Any CPU
-		{30E1C3B3-D2A5-42A3-BE43-8089CDB2EF0E}.Release|x64.Build.0 = Release|Any CPU
-		{30E1C3B3-D2A5-42A3-BE43-8089CDB2EF0E}.Release|x86.ActiveCfg = Release|Any CPU
-		{30E1C3B3-D2A5-42A3-BE43-8089CDB2EF0E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

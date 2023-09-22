@@ -9,7 +9,7 @@ using ThermoFisher.CommonCore.Data.FilterEnums;
 
 namespace LipiDex_2._0.LibraryGenerator
 {
-    internal class DrbFragmentationRule
+    public class DrbFragmentationRule
     {
         /// <summary>
         /// Identifier used to link related MSⁿ transitions together if using serial activations. Procedurally generated.

@@ -9,7 +9,7 @@ namespace LipiDex_2._0.LibraryGenerator
     /// <summary>
     /// Easy way to delineate possible levels of structural information a specific fragment ion could provide. Feel free to add more options as necessary. Just follow the bit-shifting pattern.
     /// </summary>
-    internal enum EvidenceType
+    public enum EvidenceType
     {
         /// <summary>
         /// This fragment doesn't provide any species diagnostic information. Maybe it's too common to be considered, always present across many species, etc. 

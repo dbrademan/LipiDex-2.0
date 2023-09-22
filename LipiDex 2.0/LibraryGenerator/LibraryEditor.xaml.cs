@@ -48,13 +48,163 @@ namespace LipiDex_2._0.LibraryGenerator
             //DataContext = this;
         }
 
-        public void LoadFragmentationRules(string libraryPath)
+        /// <summary>
+        /// Trigger specific behaviors when each tab is clicked. This is namely used to compile lipid classes into Fragmentation Templates when the fragmentation tab is clicked
+        /// </summary>
+        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            string selectedTab = ((sender as TabControl).SelectedItem as TabItem).Header as string;
+
+            switch(selectedTab)
+            {
+                case "Fragmentation Rules":
+                    CompileLipidFragmentationTemplates(this.libraryPath);
+                    break;
+
+                default:
+                    return;
+            }
+        }
+
+        /// <summary>
+        /// Stores two-way bound FragmentationTemplate objects to the Library Generator DataGrid - FragmentationRules tab.
+        /// </summary>
+        public ObservableCollection<DrbFragmentationTemplate> DataGridBinding_FragmentationTemplates = new ObservableCollection<DrbFragmentationTemplate>();
+
+        /// <summary>
+        /// Stores individual fragmentation rules to link to lipid class - adduct fragmentation templates once 
+        /// </summary>
+        public List<DrbFragmentationRule> unlinkedFragmentationRules;
+
+        public void CompileLipidFragmentationTemplates(string libraryPath)
+        {
+            // take all lipid classes in memory. split into their own unique lipid class/adduct combinations
+            foreach (var lipidClass in DataGridBinding_LipidClasses)
+            {
+                var adducts = lipidClass.GetLipidAdducts();
+
+                if (adducts.Count() > 0)
+                {
+                    foreach (var adduct in adducts)
+                    {
+                        DataGridBinding_FragmentationTemplates.Add(new DrbFragmentationTemplate(lipidClass, adduct));
+                    }
+                }
+            }
+            
+            // Load in Fragmentation Rules from file and link to FragmentationTemplates
+            LoadFragmentationRules(libraryPath);
+
+            // final step, link known fragmentation rules to templates
+            TreeView_FragmentationTemplates.ItemsSource = DataGridBinding_FragmentationTemplates;
+        }
+
+        public void LoadFragmentationRules(string libraryBasePath)
+        {
+            var fragmentRulePath = System.IO.Path.Combine(libraryBasePath, "MS2_Templates.csv");
+            var reader = new CsvReader(new StreamReader(fragmentRulePath), true);
+            try
+            {
+                this.unlinkedFragmentationRules = new List<DrbFragmentationRule>();
+
+                // templating logic.
+                // first line is always the lipid class + adduct identifier.
+                // remaining lines are fragmentation rules following:
+                // Template Name / Unique ID, Formula Balancer, Mass Balancer, Intensity, Charge, Transition Type, Is Fragment, Evidence Type, Activation Type, Msn Order, Parent Transition Id
+                // final line terminating a fragmentation template is a triple dash symbol "---".
+
+
+                while (reader.ReadNextRecord())
+                {
+                    
+                    var currentTemplateString = reader["Template Name / Unique ID"];
+
+                    // retrieve FragmentationTemplates from compiled lipid class adduct combinations.
+                    var matchingTemplates = DataGridBinding_FragmentationTemplates.Where(template => template.LipidClass_AdductCombo.Equals(currentTemplateString));
+
+                    // in case there's not a match, throw an error
+                    if (matchingTemplates.Count() == 0)
+                    {
+                        throw new ArgumentException("No existing lipid class and adduct combinations found for the lipid fragmentation template `" + currentTemplateString + "`. Please be sure to define this lipid class and adduct.");
+                    }
+                    else if (matchingTemplates.Count() == 1)
+                    {
+                        DrbFragmentationTemplate thisFragmentationTemplate = matchingTemplates.First();
+                        
+                        // iterate through until out of lines, or you hit a `---` symbol 
+                        while (reader.ReadNextRecord())
+                        {
+                            // end of this template. End parsing logic and break out of this loop
+                            if (reader["Template Name / Unique ID"].Equals("---"))
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                // parse out all relevant fragmentation rule properties
+                                int id = Convert.ToInt32(reader["Template Name / Unique ID"]);
+
+                                // massBalancer will always be defined.
+                                // formulaBalancer will be null if a mass shift is used in the fragmentation rule instead of a formula.
+                                ChemicalFormula formulaBalancer;
+                                double massBalancer;
+
+                                if (ChemicalFormula.IsValidChemicalFormula(reader["Formula Balancer"]))
+                                {
+                                    formulaBalancer = new ChemicalFormula(reader["Formula Balancer"]);
+                                    massBalancer = formulaBalancer.MonoisotopicMass;
+                                }
+                                else
+                                {
+                                    massBalancer = Convert.ToDouble(reader["Formula Balancer"]);
+                                }
+
+                                int relativeIntensity = Convert.ToInt32(reader["Intensity"]);
+                                int fragmentCharge = Convert.ToInt32(reader["Charge"]);
+                                string transitionType = reader["Transition Type"];
+                                bool isFragment = Convert.ToBoolean(reader["Is Fragment"]);
+                                EvidenceType evidenceType = thisFragmentationTemplate.ParseEvidenceType(reader["Evidence Type"]);
+                                //ActivationType activationType = reader["Intensity"];
+                                //int relativeIntensity = reader["Intensity"];
+                                //int relativeIntensity = reader["Intensity"];
+                            }
+                        }
+                    }
+                    else
+                    {
+                        throw new ArgumentException("Multiple lipid class and adduct combinations found for the lipid fragmentation template `" + currentTemplateString + "`. Please double check to see if this lipid class is defined multiple times in the library\n\n");
+                    }
+                }
+
+
+            }
+            catch (ArgumentException e)
+            {
+                var messageBoxQuery = e.Message;
+                var messageBoxShortPrompt = "Lipid Fragmentation Template Loading Error!";
+                var messageBoxButtonOptions = MessageBoxButton.OK;
+                var messageBoxImage = MessageBoxImage.Error;
+
+                var messageBoxResult = MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
+            }
+            catch (Exception e)
+            {
+                var messageBoxQuery = "Unexpected error occured while loading lipid fragmentation templates on line " + reader.CurrentRecordIndex + ". Please use the below error message to help troubleshoot:\n\n" + e.Message;
+                var messageBoxShortPrompt = "Lipid Fragmentation Template Loading Error!";
+                var messageBoxButtonOptions = MessageBoxButton.OK;
+                var messageBoxImage = MessageBoxImage.Error;
+
+                var messageBoxResult = MessageBox.Show(messageBoxQuery, messageBoxShortPrompt, messageBoxButtonOptions, messageBoxImage);
+            }
+
+
+            /*
             ObservableCollection<TestTreeViewObject> testObjects = TestTreeViewObject.GenerateSampleData();
 
             TreeView_FragmentationTemplates.ItemsSource = testObjects;
 
             var t = "";
+            */
         }
 
         // Completed 2022-01-19 DRB

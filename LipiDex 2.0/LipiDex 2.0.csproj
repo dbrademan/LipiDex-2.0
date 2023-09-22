@@ -55,6 +55,12 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CSMSL, Version=0.1.8622.25983, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\packages\Coon.CSMSL.Thermo.0.1.0\lib\net48\CSMSL.dll</HintPath>
+    </Reference>
+    <Reference Include="CSMSL.Thermo, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\packages\Coon.CSMSL.Thermo.0.1.0\lib\net48\CSMSL.Thermo.dll</HintPath>
+    </Reference>
     <Reference Include="LumenWorks.Framework.IO, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5ad3ea2f85776344, processorArchitecture=MSIL">
       <HintPath>..\packages\LumenWorksCsvReader.4.0.0\lib\net461\LumenWorks.Framework.IO.dll</HintPath>
     </Reference>
@@ -347,12 +353,6 @@
     <Content Include="Resources\Icons\spectrumSearcherIcon.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\CSMSL.DotNetFramework\CSMSL\CSMSL.csproj">
-      <Project>{30e1c3b3-d2a5-42a3-be43-8089cdb2ef0e}</Project>
-      <Name>CSMSL</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

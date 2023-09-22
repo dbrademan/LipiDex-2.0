@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:LipiDex_2._0.LibraryGenerator"
         mc:Ignorable="d"
         Title="Library Generator - Library Editor" Height="660" Width="1265" Icon="../Resources/Icons/libraryGeneratorIcon.png" MinWidth="1265" MinHeight="560">
-    <TabControl x:Name="tabControl" Margin="10,15,10,11" >
+    <TabControl x:Name="tabControl" Margin="10,15,10,11" SelectionChanged="TabControl_SelectionChanged">
         <TabItem Header="Backbones">
             <Grid ClipToBounds="True" ShowGridLines="True" Background="#FFE5E5E5">
                 <Grid.ColumnDefinitions>
@@ -557,7 +557,7 @@
                 </GroupBox>
             </Grid>
         </TabItem>
-        <TabItem Header="Fragmentation Rules">
+        <TabItem Header="Fragmentation Rules" Name="TabItem_FragmentationRules">
             <Grid ClipToBounds="True" ShowGridLines="True" Background="#FFE5E5E5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1052*"></ColumnDefinition>
@@ -625,7 +625,7 @@
                     Margin="10,50,10,10"
                     ScrollViewer.HorizontalScrollBarVisibility="Auto" 
                     ScrollViewer.VerticalScrollBarVisibility="Auto"
-                    ItemsSource="{Binding testObject}"
+                    ItemsSource="{Binding DataGridBinding_}"
                 >
                     <TreeView.ItemTemplate>
                         <HierarchicalDataTemplate ItemsSource="{Binding Children}">
